@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover" name="viewport">
+  <meta content="web_blank" name="shell-type">
+  <title>Admin Authentication - Ma'din Suffa Campus Vavoor</title>
+  
+  <!-- Google Fonts & Material Symbols -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+  
+  <style>
+    @layer base {
+      html, body { margin: 0; padding: 0; }
+      body { -webkit-tap-highlight-color: transparent; }
+    }
+    ::-webkit-scrollbar { display: none; }
+  </style>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "outline": "#727781",
+            "on-secondary": "#ffffff",
+            "surface-container-low": "#f2f3ff",
+            "secondary-fixed-dim": "#9fcaff",
+            "on-tertiary-fixed": "#0f2000",
+            "error": "#ba1a1a",
+            "on-secondary-fixed-variant": "#00497e",
+            "primary": "#003e6b",
+            "primary-container": "#005691",
+            "surface-tint": "#1a619d",
+            "error-container": "#ffdad6",
+            "on-tertiary": "#ffffff",
+            "outline-variant": "#c1c7d1",
+            "surface-container-high": "#e2e7ff",
+            "tertiary": "#264400",
+            "on-error": "#ffffff",
+            "on-tertiary-fixed-variant": "#2e4f00",
+            "tertiary-container": "#375d00",
+            "on-primary-container": "#a0cbff",
+            "surface-variant": "#dae2fd",
+            "tertiary-fixed-dim": "#96d947",
+            "on-error-container": "#93000a",
+            "on-background": "#131b2e",
+            "inverse-primary": "#9ecaff",
+            "surface-dim": "#d2d9f4",
+            "background": "#faf8ff",
+            "on-secondary-container": "#003d6b",
+            "on-primary-fixed": "#001d36",
+            "primary-fixed": "#d1e4ff",
+            "surface-container": "#eaedff",
+            "tertiary-fixed": "#b1f661",
+            "surface-container-lowest": "#ffffff",
+            "surface": "#faf8ff",
+            "inverse-surface": "#2d3039",
+            "on-surface": "#131b2e",
+            "secondary-container": "#57aafe",
+            "secondary": "#0061a5",
+            "inverse-on-surface": "#eef0ff",
+            "surface-bright": "#faf8ff",
+            "on-primary": "#ffffff",
+            "primary-fixed-dim": "#9ecaff",
+            "secondary-fixed": "#d2e4ff",
+            "surface-container-highest": "#dae2fd",
+            "on-primary-fixed-variant": "#00497c"
+          },
+          fontFamily: {
+            "subheading": ["Outfit", "sans-serif"],
+            "body-sm": ["Inter", "sans-serif"],
+            "label-sm": ["Outfit", "sans-serif"],
+            "label-lg": ["Outfit", "sans-serif"],
+            "body-lg": ["Inter", "sans-serif"],
+            "headline-md": ["Playfair Display", "serif"],
+            "label-md": ["Outfit", "sans-serif"],
+            "body-md": ["Inter", "sans-serif"],
+            "headline-sm": ["Playfair Display", "serif"],
+            "headline-lg": ["Playfair Display", "serif"],
+            "display-hero": ["Playfair Display", "serif"]
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body class="bg-background font-body-md text-on-surface antialiased min-h-screen flex flex-col justify-between">
+  <main class="w-full flex-1 flex flex-col lg:flex-row min-h-screen">
+    <!-- Left Hero Column: Campus Brand & Architecture Showcase -->
+    <div class="relative lg:w-1/2 xl:w-5/12 bg-primary text-on-primary flex flex-col justify-between p-5 sm:p-10 lg:p-14 xl:p-16 overflow-hidden min-h-[300px] sm:min-h-[380px] lg:min-h-screen">
+      <!-- Background Campus Image & Deep Duotone Overlay -->
+      <div class="absolute inset-0 z-0">
+        <img alt="Ma'din Suffa Campus Architecture" class="w-full h-full object-cover object-center opacity-30 transform scale-105 filter saturate-125" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA2x1A7orWrMzHOQqKvQD9KLw-kBBxvV8SumrU3IAuJ6XhqIo2D0Rf7csr4yWaZQFucZFsEBPJbolDe0yUuuvRxdcMbTIBzJMqIbW_l6-M1XI0aCq49iB20qdVmDQJpWq-pyRiYsQ2Us2oDNqbfEiqZBAkGS7tMhRIuEDe2BOXXGnplQ6fdmsbLIjR7hyexxFz3Md3q2dHFh2bT33G6gvbnc9WlOeoH7DoKedzVW-F0s57VBdrW6R_u6r4eKOgtd0Uj">
+        <div class="absolute inset-0 bg-gradient-to-t from-slate-950/95 via-slate-950/80 to-slate-950/70 backdrop-blur-[2px]"></div>
+      </div>
+      
+      <!-- Top Left Identity & Affiliation -->
+      <div class="relative z-10 flex flex-col gap-3 sm:gap-4">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-white/15 backdrop-blur-md flex items-center justify-center border border-white/20 shadow-inner shrink-0">
+            <span class="material-symbols-outlined text-white text-[22px] sm:text-[24px]">account_balance</span>
+          </div>
+          <div>
+            <p class="font-label-sm uppercase tracking-widest text-[10px] sm:text-[11px] text-blue-200 font-bold drop-shadow-sm">Academic Gateway</p>
+            <p class="font-headline-sm text-base sm:text-lg text-white font-bold leading-tight drop-shadow-sm">Ma'din Suffa Campus</p>
+          </div>
+        </div>
+        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-900/70 backdrop-blur-md border border-white/20 w-fit shadow-sm max-w-full">
+          <span class="material-symbols-outlined text-[15px] sm:text-[16px] text-emerald-400 shrink-0">verified</span>
+          <span class="font-label-sm text-[11px] sm:text-xs text-slate-200 font-medium truncate">Affiliated with Jamiathul Hind • INS7572</span>
+        </div>
+      </div>
+      
+      <!-- Mid Hero Highlights & Vision -->
+      <div class="relative z-10 my-4 sm:my-6 lg:my-auto max-w-lg">
+        <div class="hidden sm:block h-1 w-12 bg-emerald-400 mb-4 sm:mb-6 rounded-full"></div>
+        <h2 class="font-headline-lg text-2xl sm:text-3xl lg:text-4xl xl:text-5xl text-white font-bold leading-tight mb-2 sm:mb-4 drop-shadow-md">
+          Nurturing Wisdom, Leadership &amp; Sacred Learning
+        </h2>
+        <p class="font-body-md text-slate-200 text-xs sm:text-sm lg:text-base leading-relaxed mb-4 sm:mb-6 lg:mb-8 drop-shadow hidden sm:block">
+          Central administrative management portal for Vavoor Campus. Access media cell archives, student databases, curriculum administration, and institutional communications with end-to-end security.
+        </p>
+        <div class="grid grid-cols-2 gap-2.5 sm:gap-4 pt-3 sm:pt-4 border-t border-white/20">
+          <div class="bg-slate-900/60 backdrop-blur-md rounded-xl p-2.5 sm:p-3.5 border border-white/20 shadow-sm">
+            <span class="font-headline-sm text-xl sm:text-2xl font-bold text-white block">30+</span>
+            <span class="font-label-sm text-[10px] sm:text-xs text-slate-300 font-medium leading-tight">Institutions under Ma'din Network</span>
+          </div>
+          <div class="bg-slate-900/60 backdrop-blur-md rounded-xl p-2.5 sm:p-3.5 border border-white/20 shadow-sm">
+            <span class="font-headline-sm text-xl sm:text-2xl font-bold text-white block">INS7572</span>
+            <span class="font-label-sm text-[10px] sm:text-xs text-slate-300 font-medium leading-tight">Accredited Institution Code</span>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Bottom Left Contact Helpline & Location Details -->
+      <div class="relative z-10 pt-3 sm:pt-6 border-t border-white/20 flex flex-wrap items-center justify-between gap-2 text-[11px] sm:text-xs font-label-md">
+        <div class="inline-flex items-center gap-1.5 bg-slate-900/60 px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-lg border border-white/15 text-slate-200 backdrop-blur-sm">
+          <span class="material-symbols-outlined text-[15px] sm:text-[16px] text-emerald-400">location_on</span>
+          <span>Suffa Campus, Vavoor</span>
+        </div>
+        <div class="inline-flex items-center gap-1.5 bg-slate-900/60 px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-lg border border-white/15 text-slate-200 backdrop-blur-sm">
+          <span class="material-symbols-outlined text-[15px] sm:text-[16px] text-blue-300">call</span>
+          <span>+91 95626 20731</span>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Right Column: Authentication Panel with Ma'din Logo and Form -->
+    <div class="lg:w-1/2 xl:w-7/12 bg-surface flex flex-col justify-between p-4 sm:p-8 md:p-12 lg:p-14 xl:p-18 overflow-y-auto min-h-screen relative">
+      <!-- Top Utility Bar: Return to Website & Portal Build -->
+      <div class="w-full flex items-center justify-between pb-4 sm:pb-6 border-b border-outline-variant/40">
+        <a class="inline-flex items-center gap-1.5 font-label-md text-xs sm:text-sm font-semibold text-slate-600 hover:text-slate-900 transition-colors duration-200 group" href="../index.html">
+          <span class="material-symbols-outlined text-[18px] sm:text-[20px] transition-transform duration-200 group-hover:-translate-x-1 text-slate-600 group-hover:text-slate-900">arrow_back</span>
+          <span class="hidden sm:inline">Return to Public Website</span>
+          <span class="sm:hidden">Public Website</span>
+        </a>
+        <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-100 border border-slate-200 text-slate-600 font-label-sm text-[11px] sm:text-xs shrink-0">
+          <span class="w-2 h-2 rounded-full bg-emerald-600 animate-pulse"></span>
+          <span class="font-medium"><span class="hidden sm:inline">Academic Gateway </span>v4.1 • Live</span>
+        </div>
+      </div>
+      
+      <!-- Core Login Section: Centered & Generously Sized for Desktop -->
+      <div class="w-full max-w-lg mx-auto py-6 sm:py-10 flex flex-col justify-center">
+        <!-- Official Dual Logo Representation -->
+        <div class="mb-6 sm:mb-8 text-center sm:text-left">
+          <div class="bg-white p-3 sm:p-4 rounded-xl border border-slate-200 shadow-sm inline-flex items-center justify-center max-w-[260px] sm:max-w-sm w-full mb-4">
+            <img alt="Ma'din Academy and Ma'din Suffa Campus Logo" class="h-12 sm:h-16 w-auto object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAnY9RKGWTf0nd0dvzWhRgdU2gNFn_MOeaGYYt9wHaSy_H6f_I3-JM_lRgkHr76DbkftBrANXhPVpUcV2-O91t7yoip4RY9xBuzxDG61BRaJNqiLGGlp2QW9O9UwZMVcaa5BOW9QBV_uhXPcQ1Z8WqVoRej-V8tYlZkBHlNvNaHd9Swt-y-oaKnyQ5wjidu5g7dTNjyPCVLLhB6FbCOczCldNn_XqPkmh-TgyGqU4xrLix9CIPh9I5K13NGXjoUSh08">
+          </div>
+          <h1 class="font-headline-md text-xl sm:text-2xl lg:text-3xl font-bold text-slate-900 tracking-tight mb-2">Institutional Management Portal</h1>
+          <p class="font-body-md text-slate-600 text-xs sm:text-sm">Please enter your authorized institutional credentials to access your administrative workspace.</p>
+        </div>
+        
+        <!-- Quick Role Preset Selector for Fast Sign-In -->
+        <div class="mb-5 sm:mb-6 bg-surface-container-low p-3 sm:p-4 rounded-xl border border-outline-variant/30">
+          <div class="text-[11px] uppercase tracking-wider font-label-sm text-slate-700 font-semibold mb-2.5 flex items-center justify-between">
+            <span class="flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-[14px] text-slate-500">person_pin</span>Quick Role Preset Switcher
+            </span>
+            <span class="text-[10px] text-blue-700 bg-blue-50 border border-blue-200 px-2 py-0.5 rounded font-bold">Auto-fill</span>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2" id="rolePills">
+            <button class="role-pill text-left px-3 py-2.5 rounded-lg bg-blue-900 text-white font-label-sm text-xs shadow-sm hover:bg-blue-950 transition-all duration-150 flex items-center justify-between cursor-pointer border border-transparent" data-role="media" data-name="Media Cell Admin" data-user="media.vavoor@madin.edu.in" data-pass="Suffa@Media2026" type="button">
+              <span class="font-medium">Media Admin</span>
+              <span class="material-symbols-outlined text-[16px]">photo_camera</span>
+            </button>
+            <button class="role-pill text-left px-3 py-2.5 rounded-lg bg-white text-slate-800 font-label-sm text-xs shadow-sm hover:bg-slate-50 transition-all duration-150 flex items-center justify-between border border-slate-200 cursor-pointer" data-role="super" data-name="Super Administrator" data-user="admin@madin.edu.in" data-pass="Suffa@Admin2026" type="button">
+              <span class="font-medium">Super Admin</span>
+              <span class="material-symbols-outlined text-[16px] text-slate-500">shield_person</span>
+            </button>
+            <button class="role-pill text-left px-3 py-2.5 rounded-lg bg-white text-slate-800 font-label-sm text-xs shadow-sm hover:bg-slate-50 transition-all duration-150 flex items-center justify-between border border-slate-200 cursor-pointer" data-role="admissions" data-name="Admissions Registrar" data-user="admissions.suffa@madin.edu.in" data-pass="Suffa@Admit2026" type="button">
+              <span class="font-medium">Admissions</span>
+              <span class="material-symbols-outlined text-[16px] text-slate-500">school</span>
+            </button>
+          </div>
+        </div>
+        
+        <!-- Form Inputs: Well-Padded, Crisp and Readable -->
+        <form class="flex flex-col gap-4 sm:gap-5" id="loginForm" onsubmit="event.preventDefault(); handleSubmit();">
+          <div>
+            <label class="block font-label-md text-xs sm:text-sm font-semibold text-slate-700 mb-1.5" for="identifier">Institutional ID or Official Email Address</label>
+            <div class="relative flex items-center">
+              <span class="material-symbols-outlined absolute left-3.5 text-slate-400 text-[20px] sm:text-[22px] pointer-events-none">badge</span>
+              <input class="w-full pl-11 pr-4 py-2.5 sm:py-3 rounded-lg bg-white border border-slate-300 text-slate-900 font-body-md text-base sm:text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent shadow-sm transition-all" id="identifier" name="identifier" placeholder="admin@madin.edu.in or INS7572-STAFF" required="" type="text" value="media.vavoor@madin.edu.in">
+            </div>
+          </div>
+          
+          <div>
+            <div class="flex items-center justify-between mb-1.5">
+              <label class="block font-label-md text-xs sm:text-sm font-semibold text-slate-700" for="password">Institutional Password</label>
+              <a class="font-label-sm text-[11px] sm:text-xs font-medium text-blue-700 hover:text-blue-800 hover:underline transition-colors" href="javascript:void(0)" onclick="alert('For security assistance or password recovery, please contact campus IT Helpdesk at info@suffavavoor.net or call +91 95626 20731.')">Forgot Password?</a>
+            </div>
+            <div class="relative flex items-center">
+              <span class="material-symbols-outlined absolute left-3.5 text-slate-400 text-[20px] sm:text-[22px] pointer-events-none">lock</span>
+              <input class="w-full pl-11 pr-12 py-2.5 sm:py-3 rounded-lg bg-white border border-slate-300 text-slate-900 font-body-md text-base sm:text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent shadow-sm transition-all" id="password" name="password" placeholder="••••••••••••" required="" type="password" value="Suffa@Media2026">
+              <button aria-label="Toggle password visibility" class="absolute right-2 text-slate-400 hover:text-slate-700 p-2 flex items-center justify-center transition-colors cursor-pointer" id="togglePasswordBtn" type="button" onclick="togglePasswordVisibility()">
+                <span class="material-symbols-outlined text-[20px] text-slate-500" id="eyeIcon">visibility</span>
+              </button>
+            </div>
+          </div>
+          
+          <div class="flex flex-wrap items-center justify-between gap-2 pt-0.5">
+            <label class="inline-flex items-center gap-2 cursor-pointer select-none">
+              <input checked="" class="w-4 h-4 rounded text-blue-900 focus:ring-0 accent-blue-900 cursor-pointer" id="rememberDevice" type="checkbox">
+              <span class="font-body-sm text-xs font-medium text-slate-700">Remember this authorized device</span>
+            </label>
+            <div class="flex items-center gap-1.5 text-[11px] sm:text-xs font-label-sm text-slate-500">
+              <span class="w-2 h-2 rounded-full bg-blue-600"></span>
+              <span>Max Session: 8 hours</span>
+            </div>
+          </div>
+          
+          <button class="w-full mt-2 py-3.5 px-6 rounded-lg bg-blue-900 hover:bg-blue-950 text-white font-subheading text-sm sm:text-base font-semibold shadow-md hover:shadow-lg flex items-center justify-center gap-2.5 transition-all duration-200 active:scale-[0.99] cursor-pointer" id="signInBtn" type="submit">
+            <span id="signInBtnText">Sign In to Portal Workspace</span>
+            <span class="material-symbols-outlined text-[20px]" id="signInBtnIcon">arrow_forward</span>
+          </button>
+        </form>
+        
+        <!-- Feedback Alert Box -->
+        <div id="loginFeedback" class="hidden mt-4 p-3 rounded-lg border text-xs font-body-sm items-center gap-2.5">
+          <span class="material-symbols-outlined text-[20px]" id="feedbackIcon"></span>
+          <span id="feedbackText"></span>
+        </div>
+        
+        <!-- Security Badge Information -->
+        <div class="mt-5 sm:mt-6 p-3.5 sm:p-4 rounded-xl bg-slate-50 border border-slate-200 flex items-start gap-2.5 sm:gap-3 text-slate-600">
+          <span class="material-symbols-outlined text-[20px] sm:text-[22px] text-emerald-700 shrink-0 mt-0.5">security</span>
+          <p class="font-body-sm text-[11px] sm:text-xs leading-relaxed text-slate-600">
+            Protected by 256-bit Institutional SSL &amp; Role-Based Access Control (RBAC). All authentication attempts are audited under the Jamiathul Hind academic network charter.
+          </p>
+        </div>
+      </div>
+      
+      <!-- Desktop Bottom Footer Links -->
+      <div class="w-full pt-4 sm:pt-6 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-2 text-center sm:text-left text-[11px] sm:text-xs text-slate-500 font-label-sm">
+        <span>Campus IT Helpdesk: info@suffavavoor.net</span>
+        <p>© 2026 Ma'din Suffa Campus. All Rights Reserved.</p>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    let activeRole = 'media';
+    let activeRoleName = 'Media Cell Admin';
+
+    // Role preset switching
+    const rolePills = document.querySelectorAll('.role-pill');
+    rolePills.forEach(pill => {
+      pill.addEventListener('click', () => {
+        rolePills.forEach(p => {
+          p.className = 'role-pill text-left px-3 py-2.5 rounded-lg bg-white text-slate-800 font-label-sm text-xs shadow-sm hover:bg-slate-50 transition-all duration-150 flex items-center justify-between border border-slate-200 cursor-pointer';
+          const icon = p.querySelector('.material-symbols-outlined');
+          if (icon) icon.className = 'material-symbols-outlined text-[16px] text-slate-500';
+        });
+
+        pill.className = 'role-pill text-left px-3 py-2.5 rounded-lg bg-blue-900 text-white font-label-sm text-xs shadow-sm hover:bg-blue-950 transition-all duration-150 flex items-center justify-between cursor-pointer border border-transparent';
+        const activeIcon = pill.querySelector('.material-symbols-outlined');
+        if (activeIcon) activeIcon.className = 'material-symbols-outlined text-[16px] text-white';
+
+        const user = pill.getAttribute('data-user');
+        const pass = pill.getAttribute('data-pass');
+        activeRole = pill.getAttribute('data-role');
+        activeRoleName = pill.getAttribute('data-name');
+
+        document.getElementById('identifier').value = user;
+        document.getElementById('password').value = pass;
+      });
+    });
+
+    // Password visibility toggle
+    function togglePasswordVisibility() {
+      const passInput = document.getElementById('password');
+      const eyeIcon = document.getElementById('eyeIcon');
+      if (passInput.type === 'password') {
+        passInput.type = 'text';
+        eyeIcon.textContent = 'visibility_off';
+      } else {
+        passInput.type = 'password';
+        eyeIcon.textContent = 'visibility';
+      }
+    }
+
+    // Submit handler
+    function handleSubmit() {
+      const idInput = document.getElementById('identifier').value.trim();
+      const passInput = document.getElementById('password').value;
+      const remember = document.getElementById('rememberDevice').checked;
+
+      const btn = document.getElementById('signInBtn');
+      const btnText = document.getElementById('signInBtnText');
+      const btnIcon = document.getElementById('signInBtnIcon');
+      const feedback = document.getElementById('loginFeedback');
+      const feedbackText = document.getElementById('feedbackText');
+      const feedbackIcon = document.getElementById('feedbackIcon');
+
+      // Visual loading state
+      btn.disabled = true;
+      btnText.textContent = 'Verifying Credentials...';
+      btnIcon.textContent = 'progress_activity';
+      btnIcon.classList.add('animate-spin');
+
+      setTimeout(() => {
+        if (!idInput || !passInput) {
+          btn.disabled = false;
+          btnText.textContent = 'Sign In to Portal Workspace';
+          btnIcon.textContent = 'arrow_forward';
+          btnIcon.classList.remove('animate-spin');
+          
+          feedback.className = 'mt-4 p-3 rounded-lg border border-red-200 bg-red-50 text-red-700 text-xs font-body-sm flex items-center gap-2.5';
+          feedbackIcon.textContent = 'error';
+          feedbackText.textContent = 'Please enter both your institutional identifier and password.';
+          return;
+        }
+
+        // Determine destination based on role
+        let targetPage = '../admin.html';
+        if (activeRole === 'admissions' || idInput.includes('admissions')) {
+          targetPage = 'admissions.html';
+          activeRoleName = 'Admissions Registrar';
+        } else if (activeRole === 'super' || idInput.includes('admin@')) {
+          targetPage = '../admin.html';
+          activeRoleName = 'Super Administrator';
+        }
+
+        // Save session
+        const sessionData = {
+          identifier: idInput,
+          role: activeRole,
+          roleName: activeRoleName,
+          loggedInAt: new Date().toISOString(),
+          remember: remember
+        };
+
+        if (remember) {
+          localStorage.setItem('suffa_auth', JSON.stringify(sessionData));
+          localStorage.setItem('suffa_admin_auth', JSON.stringify(sessionData));
+        } else {
+          sessionStorage.setItem('suffa_auth', JSON.stringify(sessionData));
+          sessionStorage.setItem('suffa_admin_auth', JSON.stringify(sessionData));
+        }
+
+        // Success state
+        feedback.className = 'mt-4 p-3 rounded-lg border border-emerald-200 bg-emerald-50 text-emerald-800 text-xs font-body-sm flex items-center gap-2.5';
+        feedbackIcon.textContent = 'check_circle';
+        feedbackText.textContent = `Authentication successful. Redirecting to ${activeRoleName} dashboard...`;
+
+        btnText.textContent = 'Authorized • Entering Portal';
+        btnIcon.textContent = 'check';
+        btnIcon.classList.remove('animate-spin');
+
+        setTimeout(() => {
+          window.location.href = targetPage;
+        }, 600);
+      }, 700);
+    }
+  </script>
+</body>
+</html>

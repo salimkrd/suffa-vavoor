@@ -1,0 +1,14 @@
+{
+  "name": "suffa-vavoor-gallery-server",
+  "version": "1.0.0",
+  "description": "Shared Backend & Gallery API for Ma'din Suffa Campus",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "multer": "^1.4.5-lts.1"
+  }
+}

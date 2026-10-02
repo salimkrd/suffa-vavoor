@@ -1,0 +1,1349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover" name="viewport">
+  <title>Admin Portal - Ma'din Suffa Campus Vavoor</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+  
+  <script src="gallery-api.js"></script>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "tertiary-fixed-dim": "#96d947",
+            "tertiary-fixed": "#b1f661",
+            "inverse-primary": "#9ecaff",
+            "secondary": "#0061a5",
+            "secondary-fixed": "#d2e4ff",
+            "secondary-fixed-dim": "#9fcaff",
+            "primary": "#003e6b",
+            "primary-container": "#005691",
+            "primary-fixed": "#d1e4ff",
+            "surface-container-low": "#f2f3ff",
+            "surface-container": "#eaedff",
+            "surface-container-high": "#e2e7ff",
+            "surface-container-highest": "#dae2fd",
+            "outline": "#727781",
+            "outline-variant": "#c1c7d1",
+            "on-surface": "#131b2e",
+            "on-surface-variant": "#414750",
+            "tertiary": "#264400",
+            "tertiary-container": "#375d00"
+          },
+          fontFamily: {
+            "subheading": ["Outfit", "sans-serif"],
+            "headline-md": ["Playfair Display", "serif"],
+            "label-md": ["Outfit", "sans-serif"],
+            "label-sm": ["Outfit", "sans-serif"],
+            "body-md": ["Inter", "sans-serif"],
+            "body-sm": ["Inter", "sans-serif"]
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    @layer base {
+      html, body { margin: 0; padding: 0; background-color: #f4f6fc; }
+      body { -webkit-tap-highlight-color: transparent; }
+    }
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: #f1f5f9; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    .tab-content { display: none; }
+    .tab-content.active-tab { display: flex; flex-direction: column; }
+    .pb-safe { padding-bottom: max(env(safe-area-inset-bottom, 0px), 8px); }
+  </style>
+</head>
+<body class="bg-[#f4f6fc] font-body-md text-on-surface antialiased min-h-screen flex flex-col">
+  <!-- TOP HEADER -->
+  <header class="fixed top-0 left-0 right-0 h-16 bg-white/95 backdrop-blur-md border-b border-outline-variant/30 shadow-sm z-50 flex items-center justify-between px-3 sm:px-6">
+    <div class="flex items-center gap-2 sm:gap-3 min-w-0">
+      <!-- Hamburger Menu Button (Mobile & Tablet < lg) -->
+      <button id="mobileMenuBtn" onclick="toggleMobileSidebar()" class="lg:hidden p-2 -ml-1 text-slate-700 hover:text-primary hover:bg-slate-100 rounded-lg flex items-center justify-center transition" aria-label="Toggle navigation menu">
+        <span class="material-symbols-outlined text-[24px]">menu</span>
+      </button>
+
+      <a href="index.html" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-primary-container flex items-center justify-center text-white shadow-sm ring-2 ring-primary/10 transition-transform hover:scale-105 shrink-0" title="View Public Website">
+        <span class="material-symbols-outlined text-[20px] sm:text-[22px]">account_balance</span>
+      </a>
+
+      <div class="flex flex-col min-w-0">
+        <div class="flex items-center gap-1.5 sm:gap-2">
+          <span class="font-subheading text-sm sm:text-[15px] font-bold text-primary tracking-tight truncate">Ma'din Suffa Campus</span>
+          <span class="px-1.5 py-0.2 rounded bg-tertiary-fixed text-emerald-950 font-label-sm text-[9px] sm:text-[10px] font-bold tracking-wider uppercase shrink-0">Portal</span>
+        </div>
+        <span class="font-body-sm text-[10px] sm:text-[11px] text-outline truncate hidden sm:block">Vavoor • Affiliated with Jamiathul Hind (INS7572)</span>
+        <span class="font-body-sm text-[10px] text-outline truncate sm:hidden">Vavoor • INS7572</span>
+      </div>
+    </div>
+    
+    <!-- Tab Pills in Header for quick access (Desktop lg+) -->
+    <div class="hidden lg:flex items-center gap-1.5 bg-surface-container p-1 rounded-xl border border-surface-container-high">
+      <button onclick="switchTab('gallery')" class="tab-btn px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-primary text-white shadow-sm" id="btn-tab-gallery">
+        <span class="material-symbols-outlined text-[16px]">photo_library</span> Gallery Manager
+      </button>
+      <button onclick="switchTab('admissions')" class="tab-btn px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-700 hover:text-primary transition flex items-center gap-1.5" id="btn-tab-admissions">
+        <span class="material-symbols-outlined text-[16px]">school</span> Admissions Desk
+        <span class="px-1.5 py-0.2 rounded text-[10px] bg-emerald-100 text-emerald-800 font-bold" id="headerNewCount">14</span>
+      </button>
+      <button onclick="switchTab('audit')" class="tab-btn px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-700 hover:text-primary transition flex items-center gap-1.5" id="btn-tab-audit">
+        <span class="material-symbols-outlined text-[16px]">manage_history</span> Audit Log
+      </button>
+      <button onclick="switchTab('settings')" class="tab-btn px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-700 hover:text-primary transition flex items-center gap-1.5" id="btn-tab-settings">
+        <span class="material-symbols-outlined text-[16px]">settings</span> Settings
+      </button>
+    </div>
+
+    <!-- Right Controls -->
+    <div class="flex items-center gap-1.5 sm:gap-3 shrink-0">
+      <a class="inline-flex items-center gap-1 sm:gap-1.5 px-2.5 py-1.5 sm:px-3 sm:py-1.5 rounded-lg bg-secondary-fixed text-on-secondary-fixed hover:bg-blue-100 font-label-md text-xs font-semibold transition shadow-sm border border-secondary/15" href="index.html" target="_blank" title="View Public Website">
+        <span class="material-symbols-outlined text-[16px]">open_in_new</span>
+        <span class="hidden md:inline">Public Website</span>
+      </a>
+      <div class="h-6 w-px bg-outline-variant/40 mx-0.5 sm:mx-1"></div>
+      <div class="flex items-center gap-2 pl-0.5 sm:pl-1">
+        <div class="hidden xl:flex flex-col text-right">
+          <span class="font-label-md text-[13px] font-bold text-on-surface leading-tight" id="topAdminName">Super Administrator</span>
+          <span class="font-body-sm text-[11px] text-outline">admin@madin.edu.in</span>
+        </div>
+        <button onclick="switchTab('settings')" title="Admin Profile & Settings" class="focus:outline-none focus:ring-2 focus:ring-primary rounded-full cursor-pointer">
+          <img alt="Admin Profile" class="w-8 h-8 sm:w-9 sm:h-9 rounded-full object-cover ring-2 ring-primary/20" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAg4G_ErV-rGoFi4yuPykvHqtg_9HFhn6vDCn6j8uVui_VBsOCNJvwE70Q5120tKi626M2L7OFXCexGr_PlTtW3Y9U0xBbNyXJA86G023d5Ehjm419zCdjimJjAOeBtU5wDs78Sz9O7qZiEijyobCT3MgP9yQKpChMiF6XI77ipYTW1dCA1TyZ6oDFlBKaau11IC2xGbHGCmS-_5H7ILCll3heNxaJCiy9N_JrvogDS8iALErj2e_BOExXKIXxRQl2HJntG0tjYTlJ5">
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Sidebar Backdrop Overlay -->
+  <div id="sidebarBackdrop" onclick="closeMobileSidebar()" class="fixed inset-0 bg-slate-950/50 backdrop-blur-xs z-40 transition-opacity duration-300 opacity-0 pointer-events-none lg:hidden"></div>
+
+  <!-- BODY LAYOUT WITH SIDEBAR -->
+  <div class="pt-16 flex min-h-[calc(100vh-4rem)]">
+    <!-- SIDEBAR (Slide-over on mobile/tablet, permanent fixed on lg+) -->
+    <aside id="adminSidebar" class="fixed top-16 left-0 bottom-0 w-[260px] sm:w-[240px] bg-white border-r border-outline-variant/30 flex flex-col justify-between z-40 overflow-y-auto transition-transform duration-300 transform -translate-x-full lg:translate-x-0 shadow-2xl lg:shadow-none">
+      <div class="p-3.5 sm:p-4 flex flex-col gap-3 sm:gap-4">
+        <!-- Mobile Header in Drawer -->
+        <div class="flex items-center justify-between lg:hidden pb-2 border-b border-slate-100">
+          <span class="text-xs font-bold text-primary font-subheading flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-[16px] text-secondary">domain</span>
+            Navigation Menu
+          </span>
+          <button onclick="closeMobileSidebar()" class="p-1 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100" aria-label="Close navigation menu">
+            <span class="material-symbols-outlined text-[20px]">close</span>
+          </button>
+        </div>
+
+        <div class="px-2.5 py-1.5 rounded-lg bg-surface-container flex items-center justify-between border border-surface-container-high/60">
+          <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-[16px] text-secondary">admin_panel_settings</span>
+            <span class="font-label-sm text-[11px] uppercase tracking-wider font-bold text-on-surface-variant">Admin Console</span>
+          </div>
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+        </div>
+
+        <nav class="flex flex-col gap-1">
+          <button onclick="switchTab('gallery'); closeMobileSidebar();" class="side-nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-xs font-bold transition text-left bg-primary text-white shadow-sm" id="side-gallery">
+            <span class="material-symbols-outlined text-[18px]">photo_library</span>
+            <span>Gallery Manager</span>
+          </button>
+          <button onclick="switchTab('admissions'); closeMobileSidebar();" class="side-nav-btn w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-semibold text-slate-700 hover:bg-slate-50 transition text-left" id="side-admissions">
+            <div class="flex items-center gap-3">
+              <span class="material-symbols-outlined text-[18px] text-slate-400">school</span>
+              <span>Admissions Desk</span>
+            </div>
+            <span class="px-1.5 py-0.2 rounded text-[10px] font-bold bg-secondary-fixed text-on-secondary-fixed">14</span>
+          </button>
+          <button onclick="openUploadDrawer(); closeMobileSidebar();" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-xs font-semibold text-slate-700 hover:bg-slate-50 transition text-left cursor-pointer">
+            <span class="material-symbols-outlined text-[18px] text-slate-400">cloud_upload</span>
+            <span>+ Upload Photo</span>
+          </button>
+          <button onclick="switchTab('audit'); closeMobileSidebar();" class="side-nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-xs font-semibold text-slate-700 hover:bg-slate-50 transition text-left" id="side-audit">
+            <span class="material-symbols-outlined text-[18px] text-slate-400">manage_history</span>
+            <span>Activity Audit Log</span>
+          </button>
+          <button onclick="switchTab('settings'); closeMobileSidebar();" class="side-nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-xs font-semibold text-slate-700 hover:bg-slate-50 transition text-left" id="side-settings">
+            <span class="material-symbols-outlined text-[18px] text-slate-400">settings</span>
+            <span>System Settings</span>
+          </button>
+          <a href="index.html#gallery" target="_blank" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-xs font-semibold text-slate-700 hover:bg-slate-50 transition">
+            <span class="material-symbols-outlined text-[18px] text-slate-400">visibility</span>
+            <span>Public Website</span>
+          </a>
+        </nav>
+      </div>
+
+      <div class="p-3 border-t border-slate-200 bg-slate-50 text-center flex flex-col gap-2">
+        <div class="p-2 rounded bg-white border border-slate-200 text-left">
+          <span class="text-[10px] text-slate-500 font-bold block uppercase">Campus Code</span>
+          <span class="font-mono text-xs font-bold text-primary">INS7572-VAVOOR</span>
+        </div>
+        <a href="javascript:void(0)" onclick="logoutAdmin()" class="py-1 text-xs text-red-600 hover:underline font-medium cursor-pointer flex items-center justify-center gap-1">
+          <span class="material-symbols-outlined text-[15px]">logout</span> Switch / Log Out
+        </a>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT VIEW AREA (Offset 0 on mobile, 240px on lg+) -->
+    <main class="ml-0 lg:ml-[240px] flex-1 p-3.5 sm:p-6 lg:p-8 flex flex-col gap-4 sm:gap-6 pb-24 lg:pb-8 transition-all min-w-0">
+
+      <!-- ================= TAB 1: GALLERY MANAGER ================= -->
+      <section id="tab-gallery" class="tab-content active-tab gap-4 sm:gap-6">
+        <!-- Headline & Actions -->
+        <div class="bg-white rounded-xl p-4 sm:p-6 shadow-sm border border-outline-variant/30 flex flex-col xl:flex-row xl:items-center justify-between gap-4">
+          <div>
+            <div class="flex items-center gap-2 mb-1 flex-wrap">
+              <span class="px-2 py-0.5 rounded bg-primary-fixed text-primary font-label-sm text-[10px] sm:text-[11px] font-bold uppercase tracking-wider">Media Cell Hub</span>
+              <span class="text-outline-variant">•</span>
+              <span class="text-[11px] sm:text-[12px] text-outline font-body-sm">INS7572 Verified Production</span>
+            </div>
+            <h1 class="font-headline-md text-xl sm:text-2xl lg:text-[26px] text-primary font-bold">Campus Photo Gallery Management</h1>
+            <p class="text-xs sm:text-sm text-slate-600 mt-1 max-w-2xl">
+              Publish, arrange order, and sync official photographs with the public hero carousel.
+            </p>
+          </div>
+          <div class="grid grid-cols-2 sm:flex sm:flex-wrap items-center gap-2 w-full xl:w-auto">
+            <button onclick="toggleReorderMode()" id="reorderBtn" class="px-3 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold flex items-center justify-center gap-1.5 transition">
+              <span class="material-symbols-outlined text-[16px]">swap_vert</span>
+              <span id="reorderBtnText">Reorder</span>
+            </button>
+            <button onclick="triggerPublishSync()" class="px-3 py-2 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-xs font-bold flex items-center justify-center gap-1.5 transition border border-emerald-200">
+              <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+              <span>Sync Live</span>
+            </button>
+            <button onclick="openUploadDrawer()" class="col-span-2 sm:col-auto px-4 py-2 rounded-lg bg-primary hover:bg-primary-container text-white text-xs font-bold flex items-center justify-center gap-1.5 shadow-sm transition">
+              <span class="material-symbols-outlined text-[17px]">add_photo_alternate</span>
+              <span>+ Upload Media</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 4 Stats Cards -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
+          <div class="bg-white p-3 sm:p-4 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
+            <div>
+              <span class="text-[10px] sm:text-[11px] uppercase font-bold text-slate-400">Total Assets</span>
+              <h3 class="text-lg sm:text-2xl font-bold text-primary mt-0.5" id="statGalleryTotal">20 Photos</h3>
+            </div>
+            <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-blue-50 text-primary flex items-center justify-center shrink-0">
+              <span class="material-symbols-outlined text-[18px] sm:text-[22px]">collections</span>
+            </div>
+          </div>
+          <div class="bg-white p-3 sm:p-4 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
+            <div>
+              <span class="text-[10px] sm:text-[11px] uppercase font-bold text-slate-400">Live Carousel</span>
+              <h3 class="text-lg sm:text-2xl font-bold text-emerald-700 mt-0.5" id="statGalleryLive">18 Published</h3>
+            </div>
+            <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center shrink-0">
+              <span class="material-symbols-outlined text-[18px] sm:text-[22px]">bolt</span>
+            </div>
+          </div>
+          <div class="bg-white p-3 sm:p-4 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
+            <div>
+              <span class="text-[10px] sm:text-[11px] uppercase font-bold text-slate-400">Staged Drafts</span>
+              <h3 class="text-lg sm:text-2xl font-bold text-amber-600 mt-0.5" id="statGalleryDrafts">2 Items</h3>
+            </div>
+            <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center shrink-0">
+              <span class="material-symbols-outlined text-[18px] sm:text-[22px]">unpublished</span>
+            </div>
+          </div>
+          <div class="bg-white p-3 sm:p-4 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
+            <div>
+              <span class="text-[10px] sm:text-[11px] uppercase font-bold text-slate-400">CDN Edge</span>
+              <h3 class="text-lg sm:text-2xl font-bold text-blue-600 mt-0.5">0.42s WebP</h3>
+            </div>
+            <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
+              <span class="material-symbols-outlined text-[18px] sm:text-[22px]">speed</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2 Columns: Gallery Grid Left + Live Carousel Preview Right -->
+        <div class="grid grid-cols-1 xl:grid-cols-12 gap-5 sm:gap-6 items-start">
+          <div class="xl:col-span-8 flex flex-col gap-4 min-w-0">
+            <!-- Search & Filters -->
+            <div class="bg-white p-3 sm:p-3.5 rounded-xl border border-slate-200 shadow-sm flex flex-col md:flex-row items-stretch md:items-center justify-between gap-2.5 sm:gap-3">
+              <div class="relative flex-1">
+                <span class="material-symbols-outlined absolute left-3 top-2.5 text-slate-400 text-[18px]">search</span>
+                <input type="text" id="gallerySearch" onkeyup="filterCards()" placeholder="Search title, category or tags..." class="w-full pl-9 pr-3 py-2 text-xs bg-slate-50 rounded-lg border border-slate-200 focus:outline-none focus:border-primary">
+              </div>
+              <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5 max-w-full">
+                <button class="cat-pill active px-3 py-1.5 rounded-lg text-xs font-semibold bg-primary text-white shrink-0 cursor-pointer" onclick="setCategoryFilter('All')">All</button>
+                <button class="cat-pill px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:text-primary shrink-0 cursor-pointer" onclick="setCategoryFilter('Campus')">Campus</button>
+                <button class="cat-pill px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:text-primary shrink-0 cursor-pointer" onclick="setCategoryFilter('Academics')">Academics</button>
+                <button class="cat-pill px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:text-primary shrink-0 cursor-pointer" onclick="setCategoryFilter('Events')">Events</button>
+                <button class="cat-pill px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:text-primary shrink-0 cursor-pointer" onclick="setCategoryFilter('Qur\'an & Tajweed')">Qur'an &amp; Tajweed</button>
+              </div>
+            </div>
+
+            <!-- Cards Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5 sm:gap-4" id="cardsGrid">
+              <!-- Dynamically populated by JS -->
+            </div>
+          </div>
+
+          <!-- Right Column Preview Player -->
+          <div class="xl:col-span-4 flex flex-col gap-4 xl:sticky xl:top-20">
+            <div class="bg-white p-4 sm:p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col gap-3">
+              <div class="flex items-center justify-between border-b pb-2">
+                <span class="text-xs font-bold text-primary flex items-center gap-1.5">
+                  <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                  Live Public Preview
+                </span>
+                <span class="text-[10px] font-bold px-2 py-0.5 bg-emerald-100 text-emerald-800 rounded-full">ACTIVE</span>
+              </div>
+              <div class="relative h-44 sm:h-48 rounded-lg overflow-hidden bg-slate-900 shadow-inner">
+                <img id="liveSlideImg" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD12uhA0vx2HQGFf7Bp5H0VBjMOAX3sV_yJatIBH7BXY1VISalgYsafUoEzbw6Yc6o1czR8uFuBzw5hWOgGGFcOxffkoKNJm8hdOCca097QOS7KWWdOK-_5J4q4FJopHc2_EDiBUDC5X3XCL37dmrerPS1WQ3VKr66RqRqo7z8J3hBfYll5LO9m2z2qj1CESlwhzyqXzeP2UzvdRonzImIhsZE7NmnMe5yHzr-fJteCxj6fIRGP2AinKUbMBAWzJSPU" class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent flex flex-col justify-end p-3 text-white">
+                  <span class="text-[9px] text-emerald-400 font-bold tracking-wider uppercase">MA'DIN SUFFA CAMPUS • VAVOOR</span>
+                  <span class="text-xs font-bold truncate mt-0.5" id="liveSlideTitle">Campus Administrative Quadrangle</span>
+                </div>
+              </div>
+              <div class="text-[11px] text-slate-500 flex justify-between">
+                <span>Transition: Ken Burns</span>
+                <span>Interval: 4.5s</span>
+              </div>
+              <button onclick="triggerPublishSync()" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold transition shadow-sm flex items-center justify-center gap-1.5">
+                <span class="material-symbols-outlined text-[16px]">sync</span>
+                <span>Deploy Carousel to Public Site</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= TAB 2: ADMISSIONS DESK ================= -->
+      <section id="tab-admissions" class="tab-content gap-4 sm:gap-6">
+        <div class="bg-white rounded-xl p-4 sm:p-6 shadow-sm border border-outline-variant/30 flex flex-col xl:flex-row xl:items-center justify-between gap-4">
+          <div>
+            <div class="flex items-center gap-2 mb-1 flex-wrap">
+              <span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-label-sm text-[10px] sm:text-[11px] font-bold uppercase tracking-wider">Admissions Directorate</span>
+              <span class="text-outline-variant">•</span>
+              <span class="text-[11px] sm:text-[12px] text-outline font-body-sm">Intake 2026-27</span>
+            </div>
+            <h1 class="font-headline-md text-xl sm:text-2xl lg:text-[26px] text-primary font-bold">Admissions &amp; Candidate Registry</h1>
+            <p class="text-xs sm:text-sm text-slate-600 mt-1 max-w-2xl">
+              Track student admissions enquiries, send immediate WhatsApp responses, and manage Tajweed entrance interviews.
+            </p>
+          </div>
+          <div class="flex items-center gap-2 w-full sm:w-auto">
+            <button onclick="exportApplicantsCSV()" class="flex-1 sm:flex-initial px-3.5 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold flex items-center justify-center gap-1.5 transition">
+              <span class="material-symbols-outlined text-[16px]">download</span> Export CSV
+            </button>
+            <button onclick="openWalkinModal()" class="flex-1 sm:flex-initial px-4 py-2 rounded-lg bg-primary hover:bg-primary-container text-white text-xs font-bold flex items-center justify-center gap-1.5 shadow-sm transition">
+              <span class="material-symbols-outlined text-[17px]">person_add</span> + Add Walk-In
+            </button>
+          </div>
+        </div>
+
+        <!-- Table Container with Horizontal Scroll -->
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+          <div class="p-3 sm:p-4 border-b border-slate-200 bg-slate-50 flex items-center justify-between flex-wrap gap-2">
+            <span class="text-xs font-bold text-slate-700 uppercase tracking-wider">Recent Candidate Inquiries</span>
+            <span class="text-[11px] sm:text-xs text-slate-500 font-medium">Affiliation Code: INS7572</span>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs sm:text-sm min-w-[560px]">
+              <thead class="bg-slate-50 border-b text-slate-600 font-semibold text-[11px] sm:text-xs uppercase tracking-wider">
+                <tr>
+                  <th class="py-3 px-4">Applicant &amp; Guardian</th>
+                  <th class="py-3 px-4">Contact</th>
+                  <th class="py-3 px-4">Program Track</th>
+                  <th class="py-3 px-4">Status</th>
+                  <th class="py-3 px-4 text-right">Direct Action</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100" id="admissionsTableBody">
+                <tr class="hover:bg-slate-50 transition">
+                  <td class="py-3 px-4">
+                    <p class="font-bold text-slate-900">Ahmad Hashim</p>
+                    <p class="text-[11px] text-slate-500">Guardian: Mohammed Hashim (Manjeri)</p>
+                  </td>
+                  <td class="py-3 px-4 font-mono font-medium">+91 94471 28900</td>
+                  <td class="py-3 px-4">
+                    <span class="px-2 py-0.5 bg-blue-50 text-blue-800 rounded-full text-xs font-semibold">Islamic Sciences &amp; Hadith</span>
+                  </td>
+                  <td class="py-3 px-4">
+                    <span class="px-2 py-0.5 bg-amber-100 text-amber-800 rounded-full text-xs font-bold">New Enquiry</span>
+                  </td>
+                  <td class="py-3 px-4 text-right">
+                    <button onclick="replyWhatsApp('Ahmad Hashim', '919447128900', 'Islamic Sciences & Hadith')" class="px-2.5 py-1.5 bg-emerald-600 text-white rounded-lg text-xs font-bold hover:bg-emerald-700 transition inline-flex items-center gap-1">
+                      <span>WhatsApp</span>
+                    </button>
+                  </td>
+                </tr>
+                <tr class="hover:bg-slate-50 transition">
+                  <td class="py-3 px-4">
+                    <p class="font-bold text-slate-900">Muhammed Fayis</p>
+                    <p class="text-[11px] text-slate-500">Guardian: Abdul Kareem (Kondotty)</p>
+                  </td>
+                  <td class="py-3 px-4 font-mono font-medium">+91 98462 77114</td>
+                  <td class="py-3 px-4">
+                    <span class="px-2 py-0.5 bg-purple-50 text-purple-800 rounded-full text-xs font-semibold">Sharia &amp; Dual Degree</span>
+                  </td>
+                  <td class="py-3 px-4">
+                    <span class="px-2 py-0.5 bg-blue-100 text-blue-800 rounded-full text-xs font-bold">Interview Scheduled</span>
+                  </td>
+                  <td class="py-3 px-4 text-right">
+                    <button onclick="replyWhatsApp('Muhammed Fayis', '919846277114', 'Sharia & University Dual Degree')" class="px-2.5 py-1.5 bg-emerald-600 text-white rounded-lg text-xs font-bold hover:bg-emerald-700 transition inline-flex items-center gap-1">
+                      <span>WhatsApp</span>
+                    </button>
+                  </td>
+                </tr>
+                <tr class="hover:bg-slate-50 transition">
+                  <td class="py-3 px-4">
+                    <p class="font-bold text-slate-900">Sayyid Bilal Al Bukhari</p>
+                    <p class="text-[11px] text-slate-500">Guardian: Sayyid Alavi (Kozhikode)</p>
+                  </td>
+                  <td class="py-3 px-4 font-mono font-medium">+91 97455 33021</td>
+                  <td class="py-3 px-4">
+                    <span class="px-2 py-0.5 bg-emerald-50 text-emerald-800 rounded-full text-xs font-semibold">Tahfeez Advanced Halaqa</span>
+                  </td>
+                  <td class="py-3 px-4">
+                    <span class="px-2 py-0.5 bg-emerald-100 text-emerald-800 rounded-full text-xs font-bold">Confirmed</span>
+                  </td>
+                  <td class="py-3 px-4 text-right">
+                    <button onclick="replyWhatsApp('Sayyid Bilal', '919745533021', 'Tahfeez Advanced Halaqa')" class="px-2.5 py-1.5 bg-emerald-600 text-white rounded-lg text-xs font-bold hover:bg-emerald-700 transition inline-flex items-center gap-1">
+                      <span>WhatsApp</span>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= TAB 3: AUDIT LOG ================= -->
+      <section id="tab-audit" class="tab-content gap-4 sm:gap-6">
+        <div class="bg-white rounded-xl p-4 sm:p-6 shadow-sm border border-outline-variant/30 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+          <div>
+            <h1 class="font-headline-md text-xl sm:text-2xl text-primary font-bold">Activity Audit Trail</h1>
+            <p class="text-xs text-slate-600 mt-1">Immutable security ledger for administrative operations under INS7572.</p>
+          </div>
+          <button onclick="showToast('Audit report exported.')" class="px-3.5 py-2 bg-slate-100 text-slate-800 rounded-lg text-xs font-semibold hover:bg-slate-200 transition">
+            Export Audit
+          </button>
+        </div>
+        <div class="bg-white rounded-xl border border-slate-200 divide-y text-xs sm:text-sm">
+          <div class="p-3.5 sm:p-4 flex items-start gap-3">
+            <div class="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 mt-0.5">
+              <span class="material-symbols-outlined text-[18px]">publish</span>
+            </div>
+            <div class="min-w-0 flex-1">
+              <p class="font-bold text-slate-900">Live Website Carousel Synchronized</p>
+              <p class="text-xs text-slate-600 mt-0.5">18 active photo assets pushed to production edge by <em>admin@madin.edu.in</em>.</p>
+              <span class="text-[10px] text-slate-400 mt-1 block">10 mins ago • IP: 103.248.112.4</span>
+            </div>
+          </div>
+          <div class="p-3.5 sm:p-4 flex items-start gap-3">
+            <div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 mt-0.5">
+              <span class="material-symbols-outlined text-[18px]">login</span>
+            </div>
+            <div class="min-w-0 flex-1">
+              <p class="font-bold text-slate-900">Administrative Sign-In</p>
+              <p class="text-xs text-slate-600 mt-0.5">Authenticated via SSL with Super Admin privileges.</p>
+              <span class="text-[10px] text-slate-400 mt-1 block">25 mins ago • Session: 8 Hours</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= TAB 4: SETTINGS ================= -->
+      <section id="tab-settings" class="tab-content gap-4 sm:gap-6">
+        <div class="bg-white rounded-xl p-4 sm:p-6 shadow-sm border border-outline-variant/30 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+          <div>
+            <h1 class="font-headline-md text-xl sm:text-2xl text-primary font-bold">Portal &amp; System Settings</h1>
+            <p class="text-xs text-slate-600 mt-1">Configure institutional profile, carousel timing, and Firebase cloud hooks.</p>
+          </div>
+          <button onclick="showToast('Configurations successfully saved.')" class="px-4 py-2 bg-primary text-white rounded-lg text-xs font-bold hover:bg-primary-container transition">
+            Save Changes
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="bg-white p-4 sm:p-5 rounded-xl border border-slate-200 flex flex-col gap-3 text-xs">
+            <h3 class="font-bold text-primary text-sm">Campus Information</h3>
+            <div>
+              <label class="font-semibold text-slate-600">Institution Title</label>
+              <input type="text" class="w-full mt-1 p-2.5 bg-slate-50 border border-slate-200 rounded-lg text-base sm:text-xs" value="Ma'din Suffa Campus, Vavoor">
+            </div>
+            <div>
+              <label class="font-semibold text-slate-600">Affiliation Code</label>
+              <input type="text" class="w-full mt-1 p-2.5 bg-slate-50 border border-slate-200 rounded-lg font-mono text-base sm:text-xs" value="INS7572">
+            </div>
+            <div>
+              <label class="font-semibold text-slate-600">Central Helpline</label>
+              <input type="text" class="w-full mt-1 p-2.5 bg-slate-50 border border-slate-200 rounded-lg text-base sm:text-xs" value="+91 95626 20731">
+            </div>
+          </div>
+
+          <div class="bg-white p-4 sm:p-5 rounded-xl border border-slate-200 flex flex-col gap-3 text-xs">
+            <h3 class="font-bold text-primary text-sm">Firebase Cloud Integration</h3>
+            <div>
+              <label class="font-semibold text-slate-600">Project ID</label>
+              <input type="text" class="w-full mt-1 p-2.5 bg-slate-50 border border-slate-200 rounded-lg font-mono text-base sm:text-xs" readonly value="suffa-vavoor-5d3cd">
+            </div>
+            <div>
+              <label class="font-semibold text-slate-600">Measurement ID</label>
+              <input type="text" class="w-full mt-1 p-2.5 bg-slate-50 border border-slate-200 rounded-lg font-mono text-base sm:text-xs" readonly value="G-FB38GGC91M">
+            </div>
+            <div class="p-2.5 bg-emerald-50 text-emerald-800 rounded-lg font-semibold text-[11px] flex items-center gap-2">
+              <span class="material-symbols-outlined text-[16px] text-emerald-600">cloud_done</span>
+              <span>Cloud Firestore &amp; Analytics Active</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- MOBILE BOTTOM NAVIGATION BAR (Phones / Tablets < lg) -->
+  <nav class="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200 shadow-lg lg:hidden flex items-center justify-around px-2 py-1.5 pb-safe" aria-label="Mobile Navigation">
+    <button onclick="switchTab('gallery')" class="mobile-tab-btn flex flex-col items-center justify-center p-1.5 text-primary" id="mob-tab-gallery">
+      <span class="material-symbols-outlined text-[20px]">photo_library</span>
+      <span class="text-[10px] font-bold mt-0.5">Gallery</span>
+    </button>
+    <button onclick="switchTab('admissions')" class="mobile-tab-btn flex flex-col items-center justify-center p-1.5 text-slate-500 hover:text-primary relative" id="mob-tab-admissions">
+      <div class="relative">
+        <span class="material-symbols-outlined text-[20px]">school</span>
+        <span class="absolute -top-1 -right-2 px-1 py-0.2 rounded-full text-[8px] font-bold bg-secondary-fixed text-on-secondary-fixed">14</span>
+      </div>
+      <span class="text-[10px] font-medium mt-0.5">Admissions</span>
+    </button>
+    <button onclick="openUploadDrawer()" class="flex flex-col items-center justify-center -mt-4 bg-primary text-white rounded-full w-12 h-12 shadow-lg ring-4 ring-white hover:bg-primary-container active:scale-95 transition" title="Upload Media" aria-label="Upload Media">
+      <span class="material-symbols-outlined text-[22px]">add</span>
+    </button>
+    <button onclick="switchTab('audit')" class="mobile-tab-btn flex flex-col items-center justify-center p-1.5 text-slate-500 hover:text-primary" id="mob-tab-audit">
+      <span class="material-symbols-outlined text-[20px]">manage_history</span>
+      <span class="text-[10px] font-medium mt-0.5">Audit</span>
+    </button>
+    <button onclick="switchTab('settings')" class="mobile-tab-btn flex flex-col items-center justify-center p-1.5 text-slate-500 hover:text-primary" id="mob-tab-settings">
+      <span class="material-symbols-outlined text-[20px]">settings</span>
+      <span class="text-[10px] font-medium mt-0.5">Settings</span>
+    </button>
+  </nav>
+
+  <!-- UPLOAD MODAL -->
+  <div id="uploadModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden items-center justify-center p-3 sm:p-4">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg p-4 sm:p-6 flex flex-col gap-3.5 sm:gap-4 max-h-[92vh] overflow-y-auto">
+      <div class="flex items-center justify-between pb-2 border-b">
+        <div class="flex items-center gap-2">
+          <span class="material-symbols-outlined text-primary text-[20px]">add_photo_alternate</span>
+          <h3 class="font-subheading text-base font-bold text-primary">Upload Photo to Gallery</h3>
+        </div>
+        <button onclick="closeUploadDrawer()" class="text-slate-400 hover:text-slate-700 text-lg font-bold p-1">✕</button>
+      </div>
+
+      <!-- Dropzone / File Picker -->
+      <div class="border-2 border-dashed border-slate-300 rounded-xl p-4 sm:p-5 text-center bg-slate-50 cursor-pointer hover:bg-slate-100 transition relative" onclick="document.getElementById('fileInp').click()">
+        <input type="file" id="fileInp" class="hidden" accept="image/*" multiple onchange="previewUpload(this)">
+        <div id="uploadDropPrompt" class="flex flex-col items-center">
+          <span class="material-symbols-outlined text-3xl text-secondary">cloud_upload</span>
+          <p class="text-xs text-slate-700 mt-1 font-bold">Tap to choose image or drag photo here</p>
+          <p class="text-[11px] text-slate-400">PNG, JPG, WEBP up to 25MB • Stored permanently</p>
+        </div>
+        <div id="uploadThumbContainer" class="hidden mt-2 flex flex-col items-center">
+          <img id="uploadThumbPreview" src="" alt="Upload Preview" class="h-28 sm:h-32 max-w-full object-cover rounded-lg border shadow-sm">
+          <span class="text-[11px] text-emerald-700 font-semibold mt-1.5 flex items-center gap-1">
+            <span class="material-symbols-outlined text-[14px]">check_circle</span> Image selected • Tap to replace
+          </span>
+        </div>
+      </div>
+
+      <div>
+        <label class="text-xs text-slate-700 font-semibold block mb-1">Photo Title *</label>
+        <input type="text" id="newMediaTitle" placeholder="e.g. Student Convocation Gathering" class="w-full p-2.5 text-base sm:text-xs border rounded-lg focus:ring-1 focus:ring-primary focus:outline-none bg-slate-50">
+      </div>
+
+      <div>
+        <label class="text-xs text-slate-700 font-semibold block mb-1">Caption / Description</label>
+        <textarea id="newMediaCaption" rows="2" placeholder="e.g. Official scholarly proceedings at Ma'din Suffa Campus." class="w-full p-2.5 text-base sm:text-xs border rounded-lg focus:ring-1 focus:ring-primary focus:outline-none bg-slate-50"></textarea>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div>
+          <label class="text-xs text-slate-700 font-semibold block mb-1">Category</label>
+          <select id="newMediaCat" class="w-full p-2.5 text-base sm:text-xs border rounded-lg focus:ring-1 focus:ring-primary focus:outline-none bg-white">
+            <option value="Campus">Campus</option>
+            <option value="Qur'an & Tajweed">Qur'an &amp; Tajweed</option>
+            <option value="Inspiraath '25">Inspiraath '25</option>
+            <option value="Oratory & Stage">Oratory &amp; Stage</option>
+            <option value="Scholars & Colloquium">Scholars &amp; Colloquium</option>
+            <option value="Academics">Academics</option>
+            <option value="Events">Events</option>
+          </select>
+        </div>
+
+        <div class="flex flex-col justify-end">
+          <label class="flex items-center gap-2 p-2.5 border rounded-lg bg-emerald-50/60 border-emerald-200 cursor-pointer">
+            <input type="checkbox" id="newMediaPublish" checked class="rounded text-primary focus:ring-0 accent-primary w-4 h-4">
+            <div class="flex flex-col">
+              <span class="text-xs font-bold text-emerald-900 leading-tight">Publish Immediately</span>
+              <span class="text-[10px] text-emerald-700">Display in public carousel</span>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <div class="flex flex-col-reverse sm:flex-row justify-end gap-2 pt-3 border-t">
+        <button onclick="closeUploadDrawer()" class="px-4 py-2.5 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-lg transition text-center">Cancel</button>
+        <button id="saveUploadBtn" onclick="saveNewUpload()" class="px-5 py-2.5 text-xs bg-primary hover:bg-primary-container text-white font-bold rounded-lg shadow-sm transition flex items-center justify-center gap-1.5">
+          <span class="material-symbols-outlined text-[16px]">save</span>
+          <span>Save &amp; Publish to Gallery</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- EDIT MODAL -->
+  <div id="editModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden items-center justify-center p-3 sm:p-4">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg p-4 sm:p-6 flex flex-col gap-3.5 sm:gap-4 max-h-[92vh] overflow-y-auto">
+      <div class="flex items-center justify-between pb-2 border-b">
+        <div class="flex items-center gap-2">
+          <span class="material-symbols-outlined text-primary text-[20px]">edit_document</span>
+          <h3 class="font-subheading text-base font-bold text-primary">Edit Photo Details</h3>
+        </div>
+        <button onclick="closeEditModal()" class="text-slate-400 hover:text-slate-700 text-lg font-bold p-1">✕</button>
+      </div>
+
+      <input type="hidden" id="editMediaId">
+
+      <div class="flex gap-3 sm:gap-4 items-center bg-slate-50 p-3 rounded-xl border border-slate-200">
+        <img id="editThumbPreview" src="" alt="Current Image" class="w-16 h-14 sm:w-20 sm:h-16 object-cover rounded-lg border shadow-xs bg-slate-200 shrink-0">
+        <div class="flex-1 min-w-0">
+          <p class="text-[10px] sm:text-[11px] text-slate-500 uppercase font-bold tracking-wider">Asset ID</p>
+          <p id="editIdDisplay" class="font-mono text-xs text-primary font-bold truncate"></p>
+          <label class="text-[11px] text-blue-600 hover:underline cursor-pointer inline-flex items-center gap-1 mt-1 font-medium">
+            <span class="material-symbols-outlined text-[13px]">refresh</span> Replace photo file
+            <input type="file" id="editFileInp" class="hidden" accept="image/*" onchange="previewEditUpload(this)">
+          </label>
+        </div>
+      </div>
+
+      <div>
+        <label class="text-xs text-slate-700 font-semibold block mb-1">Photo Title *</label>
+        <input type="text" id="editMediaTitle" class="w-full p-2.5 text-base sm:text-xs border rounded-lg focus:ring-1 focus:ring-primary focus:outline-none bg-white">
+      </div>
+
+      <div>
+        <label class="text-xs text-slate-700 font-semibold block mb-1">Caption / Description</label>
+        <textarea id="editMediaCaption" rows="2" class="w-full p-2.5 text-base sm:text-xs border rounded-lg focus:ring-1 focus:ring-primary focus:outline-none bg-white"></textarea>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div>
+          <label class="text-xs text-slate-700 font-semibold block mb-1">Category</label>
+          <select id="editMediaCat" class="w-full p-2.5 text-base sm:text-xs border rounded-lg focus:ring-1 focus:ring-primary focus:outline-none bg-white">
+            <option value="Campus">Campus</option>
+            <option value="Qur'an & Tajweed">Qur'an &amp; Tajweed</option>
+            <option value="Inspiraath '25">Inspiraath '25</option>
+            <option value="Oratory & Stage">Oratory &amp; Stage</option>
+            <option value="Scholars & Colloquium">Scholars &amp; Colloquium</option>
+            <option value="Academics">Academics</option>
+            <option value="Events">Events</option>
+          </select>
+        </div>
+
+        <div class="flex flex-col justify-end">
+          <label class="flex items-center gap-2 p-2.5 border rounded-lg bg-slate-50 border-slate-200 cursor-pointer">
+            <input type="checkbox" id="editMediaPublish" class="rounded text-primary focus:ring-0 accent-primary w-4 h-4">
+            <div class="flex flex-col">
+              <span class="text-xs font-bold text-slate-800 leading-tight">Published</span>
+              <span class="text-[10px] text-slate-500">Live in public carousel</span>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <div class="flex flex-col-reverse sm:flex-row justify-end gap-2 pt-3 border-t">
+        <button onclick="closeEditModal()" class="px-4 py-2.5 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-lg transition text-center">Cancel</button>
+        <button id="saveEditBtn" onclick="saveEditModal()" class="px-5 py-2.5 text-xs bg-primary hover:bg-primary-container text-white font-bold rounded-lg shadow-sm transition flex items-center justify-center gap-1.5">
+          <span class="material-symbols-outlined text-[16px]">check</span>
+          <span>Save Changes</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- WALKIN APPLICANT MODAL -->
+  <div id="walkinModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden items-center justify-center p-3 sm:p-4">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md p-4 sm:p-5 flex flex-col gap-3 text-xs max-h-[92vh] overflow-y-auto">
+      <div class="flex justify-between items-center pb-2 border-b">
+        <h3 class="font-bold text-primary text-sm">Add Walk-in Applicant</h3>
+        <button onclick="closeWalkinModal()" class="text-slate-400 hover:text-slate-700 text-lg font-bold p-1">✕</button>
+      </div>
+      <div>
+        <label class="font-semibold text-slate-600 block mb-1">Student Name</label>
+        <input type="text" id="wName" class="w-full p-2.5 border rounded-lg text-base sm:text-xs" placeholder="Full name">
+      </div>
+      <div>
+        <label class="font-semibold text-slate-600 block mb-1">Phone</label>
+        <input type="tel" id="wPhone" class="w-full p-2.5 border rounded-lg text-base sm:text-xs" placeholder="+91 ...">
+      </div>
+      <div>
+        <label class="font-semibold text-slate-600 block mb-1">Track</label>
+        <select id="wTrack" class="w-full p-2.5 border rounded-lg text-base sm:text-xs bg-white">
+          <option>Islamic Sciences &amp; Hadith</option>
+          <option>Sharia &amp; University Dual Degree</option>
+          <option>Tahfeez Advanced Halaqa</option>
+        </select>
+      </div>
+      <div class="flex flex-col-reverse sm:flex-row justify-end gap-2 pt-2 border-t">
+        <button onclick="closeWalkinModal()" class="px-3.5 py-2 text-slate-600 rounded-lg hover:bg-slate-100 transition text-center">Cancel</button>
+        <button onclick="saveWalkin()" class="px-4 py-2 bg-primary text-white font-bold rounded-lg shadow-sm hover:bg-primary-container transition text-center">Save Record</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION -->
+  <div id="toast" class="fixed bottom-20 sm:bottom-6 left-4 right-4 sm:left-auto sm:right-6 z-50 hidden bg-primary text-white px-4 py-3 rounded-xl shadow-2xl text-xs font-semibold items-center gap-2 max-w-sm sm:max-w-md mx-auto sm:mx-0">
+    <span class="material-symbols-outlined text-[18px] text-emerald-400 shrink-0">check_circle</span>
+    <span id="toastText" class="truncate flex-1">Action completed</span>
+  </div>
+
+  <script>
+    // Mobile Drawer Navigation Logic
+    function toggleMobileSidebar() {
+      const sidebar = document.getElementById('adminSidebar');
+      const backdrop = document.getElementById('sidebarBackdrop');
+      const isClosed = sidebar.classList.contains('-translate-x-full');
+      if (isClosed) {
+        sidebar.classList.remove('-translate-x-full');
+        backdrop.classList.remove('opacity-0', 'pointer-events-none');
+        backdrop.classList.add('opacity-100', 'pointer-events-auto');
+        document.body.classList.add('overflow-hidden');
+      } else {
+        closeMobileSidebar();
+      }
+    }
+
+    function closeMobileSidebar() {
+      const sidebar = document.getElementById('adminSidebar');
+      const backdrop = document.getElementById('sidebarBackdrop');
+      if (sidebar) sidebar.classList.add('-translate-x-full');
+      if (backdrop) {
+        backdrop.classList.add('opacity-0', 'pointer-events-none');
+        backdrop.classList.remove('opacity-100', 'pointer-events-auto');
+      }
+      document.body.classList.remove('overflow-hidden');
+    }
+
+    // Tab switching logic (Header tabs, Sidebar tabs, Mobile Bottom tabs)
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active-tab'));
+      
+      // Reset desktop header tabs
+      document.querySelectorAll('.tab-btn').forEach(b => {
+        b.className = 'tab-btn px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-700 hover:text-primary transition flex items-center gap-1.5';
+      });
+      
+      // Reset sidebar tabs
+      document.querySelectorAll('.side-nav-btn').forEach(b => {
+        b.className = 'side-nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-xs font-semibold text-slate-700 hover:bg-slate-50 transition text-left';
+      });
+
+      // Reset mobile bottom bar tabs
+      document.querySelectorAll('.mobile-tab-btn').forEach(b => {
+        b.className = 'mobile-tab-btn flex flex-col items-center justify-center p-1.5 text-slate-500 hover:text-primary';
+        const label = b.querySelector('span:last-child');
+        if (label) label.className = 'text-[10px] font-medium mt-0.5';
+      });
+
+      // Activate target section
+      const target = document.getElementById('tab-' + tabId);
+      if (target) target.classList.add('active-tab');
+
+      // Highlight desktop header tab
+      const headerBtn = document.getElementById('btn-tab-' + tabId);
+      if (headerBtn) headerBtn.className = 'tab-btn px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-primary text-white shadow-sm';
+
+      // Highlight sidebar tab
+      const sideBtn = document.getElementById('side-' + tabId);
+      if (sideBtn) sideBtn.className = 'side-nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-xs font-bold transition text-left bg-primary text-white shadow-sm';
+
+      // Highlight mobile bottom bar tab
+      const mobBtn = document.getElementById('mob-tab-' + tabId);
+      if (mobBtn) {
+        mobBtn.className = 'mobile-tab-btn flex flex-col items-center justify-center p-1.5 text-primary';
+        const label = mobBtn.querySelector('span:last-child');
+        if (label) label.className = 'text-[10px] font-bold mt-0.5';
+      }
+
+      // Smooth scroll to top of view
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Admin Session Protection & User Info
+    function checkAdminSession() {
+      const auth = sessionStorage.getItem('suffa_admin_auth') || localStorage.getItem('suffa_admin_auth') || localStorage.getItem('suffa_auth');
+      if (!auth) {
+        window.location.href = 'login.html';
+        return null;
+      }
+      try {
+        const parsed = JSON.parse(auth);
+        const nameEl = document.getElementById('topAdminName');
+        if (nameEl && parsed.user && parsed.user.name) {
+          nameEl.textContent = parsed.user.name;
+        }
+        return parsed;
+      } catch (e) {
+        return null;
+      }
+    }
+
+    function logoutAdmin() {
+      sessionStorage.removeItem('suffa_admin_auth');
+      localStorage.removeItem('suffa_admin_auth');
+      localStorage.removeItem('suffa_auth');
+      showToast('Logged out of Admin Portal.');
+      setTimeout(() => {
+        window.location.href = 'login.html';
+      }, 400);
+    }
+
+    let isReorder = false;
+    let currentGalleryItems = [];
+    let livePreviewInterval = null;
+    let livePreviewIdx = 0;
+
+    // Load Gallery from Shared Backend API
+    async function loadAdminGallery() {
+      try {
+        if (typeof GalleryAPI === 'undefined') return;
+        const items = await GalleryAPI.getAll();
+        currentGalleryItems = items || [];
+        renderAdminCards(currentGalleryItems);
+        updateStats();
+        setupLivePreview();
+      } catch (err) {
+        console.error('Error loading gallery from backend:', err);
+        showToast('Warning: Unable to reach backend API. Check if server is running on port 5000.');
+      }
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function renderAdminCards(items) {
+      const grid = document.getElementById('cardsGrid');
+      if (!grid) return;
+
+      if (!items || items.length === 0) {
+        grid.innerHTML = `
+          <div class="col-span-full py-12 px-4 text-center bg-white rounded-xl border border-slate-200">
+            <span class="material-symbols-outlined text-4xl text-slate-300">photo_library</span>
+            <p class="text-sm font-bold text-slate-700 mt-2">No photos in gallery repository</p>
+            <p class="text-xs text-slate-500 mt-1">Upload an image to start populating the campus gallery.</p>
+            <button onclick="openUploadDrawer()" class="mt-4 px-4 py-2.5 bg-primary text-white text-xs font-bold rounded-lg">+ Upload First Photo</button>
+          </div>
+        `;
+        return;
+      }
+
+      grid.innerHTML = items.map((item, idx) => {
+        const imgUrl = GalleryAPI.resolveImageUrl(item.src);
+        const seq = item.order || idx + 1;
+        const isPub = item.published === true;
+        const dateStr = item.createdAt ? new Date(item.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : '';
+
+        return `
+          <div class="g-card bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden flex flex-col group transition duration-200 hover:shadow-md ${!isPub ? 'opacity-80 bg-slate-50/50' : ''}" data-id="${item.id}" data-category="${escapeHtml(item.category || 'Campus')}" data-status="${isPub ? 'Published' : 'Draft'}">
+            <div class="relative h-40 sm:h-44 bg-slate-100 overflow-hidden">
+              <img src="${imgUrl}" alt="${escapeHtml(item.title)}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" loading="lazy">
+              
+              <!-- Badges Top Left -->
+              <div class="absolute top-2 left-2 flex items-center gap-1">
+                <span class="px-2 py-0.5 rounded-full bg-primary/90 backdrop-blur text-white text-[10px] font-bold">#${seq < 10 ? '0' + seq : seq}</span>
+                ${item.featured ? '<span class="px-1.5 py-0.5 rounded-full bg-amber-500 text-white text-[9px] font-bold uppercase tracking-wider">Featured</span>' : ''}
+              </div>
+
+              <!-- Controls Top Right -->
+              <div class="absolute top-2 right-2 flex items-center gap-1">
+                <!-- Reorder buttons -->
+                <div class="reorder-controls ${isReorder ? 'flex' : 'hidden'} items-center gap-0.5 bg-white/95 rounded-lg p-0.5 shadow-sm border border-slate-200">
+                  <button onclick="moveItemUp('${item.id}')" title="Move earlier in sequence" class="w-7 h-7 rounded flex items-center justify-center text-slate-700 hover:bg-slate-200 transition">
+                    <span class="material-symbols-outlined text-[16px]">arrow_upward</span>
+                  </button>
+                  <button onclick="moveItemDown('${item.id}')" title="Move later in sequence" class="w-7 h-7 rounded flex items-center justify-center text-slate-700 hover:bg-slate-200 transition">
+                    <span class="material-symbols-outlined text-[16px]">arrow_downward</span>
+                  </button>
+                </div>
+
+                <!-- Quick Publish Toggle Button -->
+                <button onclick="handleTogglePublish('${item.id}')" class="w-8 h-8 rounded-full ${isPub ? 'bg-white/95 text-primary hover:bg-emerald-50' : 'bg-slate-800/90 text-slate-300 hover:bg-slate-900'} flex items-center justify-center text-xs shadow transition active:scale-95" title="${isPub ? 'Click to unpublish from website' : 'Click to publish to website'}">
+                  <span class="material-symbols-outlined text-[17px]">${isPub ? 'visibility' : 'visibility_off'}</span>
+                </button>
+              </div>
+
+              <!-- Category Badge Bottom Left -->
+              <div class="absolute bottom-2 left-2">
+                <span class="px-2 py-0.5 rounded-md bg-black/60 backdrop-blur-sm text-white text-[10px] font-medium">
+                  ${escapeHtml(item.category || 'Campus')}
+                </span>
+              </div>
+            </div>
+
+            <!-- Card Body -->
+            <div class="p-3.5 flex flex-col justify-between flex-1">
+              <div>
+                <div class="flex items-center justify-between text-[10px] text-slate-400 mb-1 font-mono">
+                  <span>ID: ${item.id.slice(0, 14)}</span>
+                  <span>${dateStr}</span>
+                </div>
+                <h4 class="font-bold text-xs text-primary truncate card-title" title="${escapeHtml(item.title)}">${escapeHtml(item.title)}</h4>
+                <p class="text-[11px] text-slate-500 mt-1 line-clamp-2">${escapeHtml(item.caption || 'Official event capture for Ma\'din Suffa Campus.')}</p>
+              </div>
+
+              <!-- Card Actions Bottom Bar -->
+              <div class="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between text-[11px]">
+                <button onclick="handleTogglePublish('${item.id}')" class="${isPub ? 'text-emerald-700 hover:text-emerald-800' : 'text-amber-700 hover:text-amber-800'} font-semibold flex items-center gap-1 transition">
+                  <span class="w-1.5 h-1.5 rounded-full ${isPub ? 'bg-emerald-500 animate-pulse' : 'bg-amber-500'}"></span>
+                  <span>${isPub ? 'Published' : 'Draft / Hidden'}</span>
+                </button>
+
+                <div class="flex items-center gap-1.5">
+                  <button onclick="openEditModal('${item.id}')" class="px-2.5 py-1 rounded bg-slate-100 hover:bg-blue-50 text-primary font-semibold flex items-center gap-1 transition">
+                    <span class="material-symbols-outlined text-[14px]">edit</span> Edit
+                  </button>
+                  <button onclick="handleDelete('${item.id}')" class="p-1 rounded text-slate-400 hover:text-red-600 hover:bg-red-50 transition" title="Delete image">
+                    <span class="material-symbols-outlined text-[16px]">delete</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      filterCards();
+    }
+
+    function updateStats() {
+      const all = currentGalleryItems.length;
+      const published = currentGalleryItems.filter(i => i.published === true).length;
+      const drafts = all - published;
+
+      const elTotal = document.getElementById('statGalleryTotal');
+      const elLive = document.getElementById('statGalleryLive');
+      const elDrafts = document.getElementById('statGalleryDrafts');
+
+      if (elTotal) elTotal.textContent = `${all} Photos`;
+      if (elLive) elLive.textContent = `${published} Published`;
+      if (elDrafts) elDrafts.textContent = `${drafts} Items`;
+    }
+
+    function setupLivePreview() {
+      const published = currentGalleryItems.filter(i => i.published === true);
+      const img = document.getElementById('liveSlideImg');
+      const title = document.getElementById('liveSlideTitle');
+      if (!img || !title) return;
+
+      if (published.length === 0) {
+        img.src = 'https://images.unsplash.com/photo-1541829070764-84a7d30dd3f3?auto=format&fit=crop&w=600&q=80';
+        title.textContent = 'No published photos active';
+        return;
+      }
+
+      function updateSlide(idx) {
+        const item = published[idx % published.length];
+        img.src = GalleryAPI.resolveImageUrl(item.src);
+        title.textContent = item.title;
+      }
+
+      updateSlide(0);
+
+      if (livePreviewInterval) clearInterval(livePreviewInterval);
+      livePreviewInterval = setInterval(() => {
+        livePreviewIdx = (livePreviewIdx + 1) % published.length;
+        updateSlide(livePreviewIdx);
+      }, 4000);
+    }
+
+    // Toggle Reorder Sequence Mode
+    function toggleReorderMode() {
+      isReorder = !isReorder;
+      const ctrls = document.querySelectorAll('.reorder-controls');
+      ctrls.forEach(c => c.classList.toggle('hidden', !isReorder));
+      ctrls.forEach(c => c.classList.toggle('flex', isReorder));
+
+      const btn = document.getElementById('reorderBtnText');
+      if (isReorder) {
+        btn.textContent = 'Done Reorder';
+        showToast('Reorder mode active: Tap arrows on cards to arrange sequence.');
+      } else {
+        btn.textContent = 'Reorder';
+        showToast('Gallery order saved.');
+      }
+    }
+
+    // Move Item Up in sequence
+    async function moveItemUp(id) {
+      const idx = currentGalleryItems.findIndex(i => i.id === id);
+      if (idx <= 0) {
+        showToast('Item is already at the top of the sequence.');
+        return;
+      }
+
+      const temp = currentGalleryItems[idx - 1];
+      currentGalleryItems[idx - 1] = currentGalleryItems[idx];
+      currentGalleryItems[idx] = temp;
+
+      const ids = currentGalleryItems.map(i => i.id);
+      renderAdminCards(currentGalleryItems);
+
+      try {
+        await GalleryAPI.reorder(ids);
+        showToast('Moved earlier in sequence.');
+      } catch (err) {
+        showToast('Failed to save new order.');
+      }
+    }
+
+    // Move Item Down in sequence
+    async function moveItemDown(id) {
+      const idx = currentGalleryItems.findIndex(i => i.id === id);
+      if (idx === -1 || idx >= currentGalleryItems.length - 1) {
+        showToast('Item is already at the end of the sequence.');
+        return;
+      }
+
+      const temp = currentGalleryItems[idx + 1];
+      currentGalleryItems[idx + 1] = currentGalleryItems[idx];
+      currentGalleryItems[idx] = temp;
+
+      const ids = currentGalleryItems.map(i => i.id);
+      renderAdminCards(currentGalleryItems);
+
+      try {
+        await GalleryAPI.reorder(ids);
+        showToast('Moved later in sequence.');
+      } catch (err) {
+        showToast('Failed to save new order.');
+      }
+    }
+
+    // Toggle Publish / Unpublish Status
+    async function handleTogglePublish(id) {
+      try {
+        const res = await GalleryAPI.togglePublish(id);
+        const isPub = res.item && res.item.published;
+        showToast(isPub ? 'Photo published to live website.' : 'Photo saved as draft.');
+        await loadAdminGallery();
+      } catch (err) {
+        console.error('Error toggling publish:', err);
+        showToast('Failed to update status.');
+      }
+    }
+
+    // Delete item with confirmation
+    async function handleDelete(id) {
+      if (!confirm('Are you sure you want to permanently delete this photo? It will be removed from both the admin repository and the public gallery.')) {
+        return;
+      }
+
+      try {
+        await GalleryAPI.delete(id);
+        showToast('Photo permanently deleted.');
+        await loadAdminGallery();
+      } catch (err) {
+        console.error('Error deleting photo:', err);
+        showToast('Failed to delete image: ' + err.message);
+      }
+    }
+
+    // Edit Modal Logic
+    function openEditModal(id) {
+      const item = currentGalleryItems.find(i => i.id === id);
+      if (!item) return;
+
+      document.getElementById('editMediaId').value = item.id;
+      document.getElementById('editIdDisplay').textContent = item.id;
+      document.getElementById('editMediaTitle').value = item.title || '';
+      document.getElementById('editMediaCaption').value = item.caption || '';
+      document.getElementById('editMediaCat').value = item.category || 'Campus';
+      document.getElementById('editMediaPublish').checked = item.published === true;
+      document.getElementById('editThumbPreview').src = GalleryAPI.resolveImageUrl(item.src);
+      document.getElementById('editFileInp').value = '';
+
+      document.getElementById('editModal').classList.remove('hidden');
+      document.getElementById('editModal').classList.add('flex');
+    }
+
+    function closeEditModal() {
+      document.getElementById('editModal').classList.add('hidden');
+      document.getElementById('editModal').classList.remove('flex');
+    }
+
+    function previewEditUpload(input) {
+      if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = e => {
+          document.getElementById('editThumbPreview').src = e.target.result;
+        };
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+
+    async function saveEditModal() {
+      const id = document.getElementById('editMediaId').value;
+      const title = document.getElementById('editMediaTitle').value.trim();
+      const caption = document.getElementById('editMediaCaption').value.trim();
+      const category = document.getElementById('editMediaCat').value;
+      const published = document.getElementById('editMediaPublish').checked;
+      const fileInput = document.getElementById('editFileInp');
+
+      if (!title) {
+        alert('Please enter a photo title.');
+        return;
+      }
+
+      const btn = document.getElementById('saveEditBtn');
+      btn.disabled = true;
+      btn.innerHTML = '<span class="material-symbols-outlined text-[16px] animate-spin">progress_activity</span> Saving...';
+
+      try {
+        let payload;
+        if (fileInput.files && fileInput.files[0]) {
+          payload = new FormData();
+          payload.append('image', fileInput.files[0]);
+          payload.append('title', title);
+          payload.append('caption', caption);
+          payload.append('category', category);
+          payload.append('published', published);
+        } else {
+          payload = { title, caption, category, published };
+        }
+
+        await GalleryAPI.update(id, payload);
+        closeEditModal();
+        showToast('Photo details updated & synced.');
+        await loadAdminGallery();
+      } catch (err) {
+        console.error('Error saving edits:', err);
+        showToast('Failed to update photo: ' + err.message);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<span class="material-symbols-outlined text-[16px]">check</span> Save Changes';
+      }
+    }
+
+    // Upload Modal Logic
+    function openUploadDrawer() {
+      document.getElementById('uploadModal').classList.remove('hidden');
+      document.getElementById('uploadModal').classList.add('flex');
+    }
+
+    function closeUploadDrawer() {
+      document.getElementById('uploadModal').classList.add('hidden');
+      document.getElementById('uploadModal').classList.remove('flex');
+      document.getElementById('fileInp').value = '';
+      document.getElementById('newMediaTitle').value = '';
+      document.getElementById('newMediaCaption').value = '';
+      document.getElementById('uploadThumbContainer').classList.add('hidden');
+      document.getElementById('uploadDropPrompt').classList.remove('hidden');
+    }
+
+    function previewUpload(input) {
+      if (input.files && input.files.length > 0) {
+        const file = input.files[0];
+        const reader = new FileReader();
+        reader.onload = e => {
+          document.getElementById('uploadThumbPreview').src = e.target.result;
+          document.getElementById('uploadThumbContainer').classList.remove('hidden');
+          document.getElementById('uploadDropPrompt').classList.add('hidden');
+        };
+        reader.readAsDataURL(file);
+
+        const titleInp = document.getElementById('newMediaTitle');
+        if (!titleInp.value) {
+          const rawName = file.name.replace(/\.[^/.]+$/, '').replace(/[_-]/g, ' ');
+          titleInp.value = rawName.charAt(0).toUpperCase() + rawName.slice(1);
+        }
+      }
+    }
+
+    async function saveNewUpload() {
+      const fileInput = document.getElementById('fileInp');
+      const title = document.getElementById('newMediaTitle').value.trim();
+      const caption = document.getElementById('newMediaCaption').value.trim();
+      const category = document.getElementById('newMediaCat').value;
+      const published = document.getElementById('newMediaPublish').checked;
+
+      if (!fileInput.files || fileInput.files.length === 0) {
+        alert('Please choose an image file to upload.');
+        return;
+      }
+
+      if (!title) {
+        alert('Please enter an image title.');
+        return;
+      }
+
+      const btn = document.getElementById('saveUploadBtn');
+      btn.disabled = true;
+      btn.innerHTML = '<span class="material-symbols-outlined text-[16px] animate-spin">progress_activity</span> Ingesting...';
+
+      try {
+        const formData = new FormData();
+        for (let i = 0; i < fileInput.files.length; i++) {
+          formData.append('images', fileInput.files[i]);
+        }
+        formData.append('title', title);
+        formData.append('caption', caption || 'Official event capture for Ma\'din Suffa Campus.');
+        formData.append('category', category);
+        formData.append('published', published);
+
+        await GalleryAPI.upload(formData);
+        closeUploadDrawer();
+        showToast('Image uploaded & saved to gallery.');
+        await loadAdminGallery();
+      } catch (err) {
+        console.error('Error uploading image:', err);
+        showToast('Upload failed: ' + err.message);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<span class="material-symbols-outlined text-[16px]">save</span> Save & Publish to Gallery';
+      }
+    }
+
+    function setCategoryFilter(cat) {
+      document.querySelectorAll('.cat-pill').forEach(p => {
+        if (p.textContent === cat) {
+          p.className = 'cat-pill active px-3 py-1.5 rounded-lg text-xs font-semibold bg-primary text-white shrink-0 cursor-pointer';
+        } else {
+          p.className = 'cat-pill px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:text-primary shrink-0 cursor-pointer';
+        }
+      });
+      filterCards();
+    }
+
+    function filterCards() {
+      const q = (document.getElementById('gallerySearch').value || '').toLowerCase();
+      const activePill = document.querySelector('.cat-pill.active');
+      const activeCat = activePill ? activePill.textContent : 'All';
+
+      document.querySelectorAll('.g-card').forEach(card => {
+        const title = (card.querySelector('.card-title')?.textContent || '').toLowerCase();
+        const cat = card.dataset.category || '';
+        const matchQ = title.includes(q) || cat.toLowerCase().includes(q);
+        const matchCat = (activeCat === 'All') || (cat === activeCat);
+        card.classList.toggle('hidden', !(matchQ && matchCat));
+      });
+    }
+
+    async function triggerPublishSync() {
+      showToast('Synchronizing with backend and live web nodes...');
+      await loadAdminGallery();
+      const published = currentGalleryItems.filter(i => i.published === true).length;
+      showToast(`Live website carousel fully synchronized (${published} published items).`);
+    }
+
+    // Initialize Dashboard
+    document.addEventListener('DOMContentLoaded', () => {
+      checkAdminSession();
+      loadAdminGallery();
+      if (window.GalleryAPI) {
+        GalleryAPI.subscribe(() => {
+          loadAdminGallery();
+        });
+      }
+    });
+
+    // Admissions functions
+    function replyWhatsApp(name, phone, track) {
+      const num = phone.replace(/[^0-9]/g, '');
+      const msg = `Assalamu Alaikum wa Rahmatullah ${name}.%0A%0AWe received your admission inquiry for *${encodeURIComponent(track)}* at *Ma'din Suffa Campus, Vavoor (Affiliated: Jamiathul Hind - INS7572)*.%0A%0AWe would like to invite you for the Tajweed Halaqa review and academic assessment. Please let us know your convenient time.`;
+      window.open(`https://wa.me/${num}?text=${msg}`, '_blank');
+    }
+
+    function openWalkinModal() {
+      document.getElementById('walkinModal').classList.remove('hidden');
+      document.getElementById('walkinModal').classList.add('flex');
+    }
+    function closeWalkinModal() {
+      document.getElementById('walkinModal').classList.add('hidden');
+      document.getElementById('walkinModal').classList.remove('flex');
+    }
+
+    function saveWalkin() {
+      const name = document.getElementById('wName').value.trim();
+      const phone = document.getElementById('wPhone').value.trim();
+      const track = document.getElementById('wTrack').value;
+      if (!name || !phone) {
+        alert('Please enter name and phone.');
+        return;
+      }
+      const tbody = document.getElementById('admissionsTableBody');
+      const tr = document.createElement('tr');
+      tr.className = 'hover:bg-slate-50 transition border-l-4 border-emerald-500';
+      tr.innerHTML = `
+        <td class="py-3 px-4">
+          <p class="font-bold text-slate-900">${escapeHtml(name)}</p>
+          <p class="text-[11px] text-emerald-700 font-semibold">Walk-in Registration</p>
+        </td>
+        <td class="py-3 px-4 font-mono font-medium">${escapeHtml(phone)}</td>
+        <td class="py-3 px-4">
+          <span class="px-2 py-0.5 bg-blue-50 text-blue-800 rounded-full text-xs font-semibold">${escapeHtml(track)}</span>
+        </td>
+        <td class="py-3 px-4">
+          <span class="px-2 py-0.5 bg-amber-100 text-amber-800 rounded-full text-xs font-bold">New Enquiry</span>
+        </td>
+        <td class="py-3 px-4 text-right">
+          <button onclick="replyWhatsApp('${escapeHtml(name)}', '${escapeHtml(phone)}', '${escapeHtml(track)}')" class="px-2.5 py-1.5 bg-emerald-600 text-white rounded-lg text-xs font-bold hover:bg-emerald-700 transition inline-flex items-center gap-1">
+            <span>WhatsApp</span>
+          </button>
+        </td>
+      `;
+      tbody.prepend(tr);
+      closeWalkinModal();
+      showToast('Applicant recorded successfully.');
+    }
+
+    function exportApplicantsCSV() {
+      let csv = "Name,Phone,Track,Status\n";
+      document.querySelectorAll('#admissionsTableBody tr').forEach(r => {
+        const name = r.cells[0].querySelector('p').textContent;
+        const phone = r.cells[1].textContent;
+        const track = r.cells[2].textContent.trim();
+        const status = r.cells[3].textContent.trim();
+        csv += `"${name}","${phone}","${track}","${status}"\n`;
+      });
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `madin_suffa_candidates.csv`;
+      a.click();
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      document.getElementById('toastText').textContent = msg;
+      toast.classList.remove('hidden');
+      toast.classList.add('flex');
+      setTimeout(() => {
+        toast.classList.add('hidden');
+        toast.classList.remove('flex');
+      }, 3000);
+    }
+  </script>
+</body>
+</html>

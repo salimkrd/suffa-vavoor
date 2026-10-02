@@ -1,0 +1,1247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <meta content="web_dashboard" name="shell-type">
+  <title>Campus Photo Gallery Management - Ma'din Suffa Campus Admin</title>
+  
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+  
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "tertiary-fixed-dim": "#96d947",
+            "tertiary-fixed": "#b1f661",
+            "inverse-primary": "#9ecaff",
+            "on-secondary-fixed": "#001d36",
+            "surface-container-highest": "#dae2fd",
+            "secondary-fixed": "#d2e4ff",
+            "tertiary": "#264400",
+            "inverse-on-surface": "#eef0ff",
+            "on-primary-fixed-variant": "#00497c",
+            "on-surface-variant": "#414750",
+            "error-container": "#ffdad6",
+            "secondary-container": "#57aafe",
+            "secondary": "#0061a5",
+            "tertiary-container": "#375d00",
+            "secondary-fixed-dim": "#9fcaff",
+            "surface-bright": "#faf8ff",
+            "on-secondary-container": "#003d6b",
+            "surface-tint": "#1a619d",
+            "on-tertiary": "#ffffff",
+            "surface-container-low": "#f2f3ff",
+            "primary": "#003e6b",
+            "surface-container-lowest": "#ffffff",
+            "error": "#ba1a1a",
+            "on-tertiary-fixed-variant": "#2e4f00",
+            "outline-variant": "#c1c7d1",
+            "on-background": "#131b2e",
+            "on-error": "#ffffff",
+            "primary-container": "#005691",
+            "on-tertiary-fixed": "#0f2000",
+            "on-primary": "#ffffff",
+            "on-error-container": "#93000a",
+            "on-secondary": "#ffffff",
+            "on-secondary-fixed-variant": "#00497e",
+            "primary-fixed-dim": "#9ecaff",
+            "surface-dim": "#d2d9f4",
+            "on-primary-fixed": "#001d36",
+            "outline": "#727781",
+            "primary-fixed": "#d1e4ff",
+            "background": "#faf8ff",
+            "on-surface": "#131b2e",
+            "surface-variant": "#dae2fd",
+            "inverse-surface": "#283044",
+            "surface-container-high": "#e2e7ff",
+            "surface": "#faf8ff",
+            "on-tertiary-container": "#97da48",
+            "on-primary-container": "#a0cbff",
+            "surface-container": "#eaedff"
+          },
+          fontFamily: {
+            "display-hero": ["Playfair Display", "serif"],
+            "headline-lg": ["Playfair Display", "serif"],
+            "headline-md": ["Playfair Display", "serif"],
+            "headline-sm": ["Playfair Display", "serif"],
+            "subheading": ["Outfit", "sans-serif"],
+            "label-lg": ["Outfit", "sans-serif"],
+            "label-md": ["Outfit", "sans-serif"],
+            "label-sm": ["Outfit", "sans-serif"],
+            "body-lg": ["Inter", "sans-serif"],
+            "body-md": ["Inter", "sans-serif"],
+            "body-sm": ["Inter", "sans-serif"]
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    @layer base {
+      html, body {
+        margin: 0;
+        padding: 0;
+        background-color: #f4f6fc;
+      }
+    }
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 3px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+  </style>
+</head>
+<body class="bg-[#f4f6fc] font-body-md text-on-surface antialiased min-h-screen flex flex-col">
+  <!-- ================= TOP NAVIGATION BAR ================= -->
+  <header class="fixed top-0 left-0 right-0 h-16 bg-white/95 backdrop-blur-md border-b border-outline-variant/30 shadow-sm z-50 flex items-center justify-between px-4 sm:px-6">
+    <!-- Brand / Campus identity -->
+    <div class="flex items-center gap-3 sm:gap-4 min-w-[240px]">
+      <a href="../index.html" class="w-10 h-10 rounded-xl bg-primary-container flex items-center justify-center text-white shadow-sm ring-2 ring-primary/10 transition-transform hover:scale-105" title="View Public Campus Site">
+        <span class="material-symbols-outlined text-[22px]">account_balance</span>
+      </a>
+      <div class="flex flex-col">
+        <div class="flex items-center gap-2">
+          <span class="font-subheading text-[15px] font-bold text-primary tracking-tight">Ma'din Suffa Campus</span>
+          <span class="px-1.5 py-0.2 rounded bg-tertiary-fixed text-on-tertiary-fixed font-label-sm text-[10px] font-bold tracking-wider uppercase">Verified</span>
+        </div>
+        <span class="font-body-sm text-[11px] text-outline truncate">Vavoor • Affiliated with Jamiathul Hind</span>
+      </div>
+    </div>
+    
+    <!-- Center Status Badges -->
+    <div class="hidden lg:flex items-center gap-3">
+      <div class="flex items-center gap-2 px-3 py-1 rounded-full bg-surface-container border border-surface-container-high">
+        <span class="w-2 h-2 rounded-full bg-tertiary-container animate-pulse"></span>
+        <span class="font-label-sm text-[11px] font-semibold text-primary uppercase tracking-wider">Media Cell Directorate</span>
+      </div>
+      <span class="text-outline-variant">•</span>
+      <div class="flex items-center gap-1.5 text-outline font-label-sm text-[12px]">
+        <span class="material-symbols-outlined text-[15px] text-tertiary-container">verified</span>
+        <span>Registry ID: <span class="font-semibold text-on-surface">INS7572-PRODUCTION</span></span>
+      </div>
+    </div>
+    
+    <!-- Right Quick Actions & Profile -->
+    <div class="flex items-center gap-2 sm:gap-3">
+      <a class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-secondary-fixed text-on-secondary-fixed hover:bg-secondary-fixed-dim text-label-md font-semibold transition shadow-sm border border-secondary/15" href="../index.html" target="_blank">
+        <span class="material-symbols-outlined text-[16px]">open_in_new</span>
+        <span class="hidden sm:inline">Quick View Public Website</span>
+      </a>
+      <div class="h-6 w-px bg-outline-variant/40 mx-1"></div>
+      
+      <!-- User Profile Dropdown -->
+      <div class="relative group">
+        <button class="flex items-center gap-2.5 pl-1 py-1 rounded-lg hover:bg-slate-50 transition" id="profileDropdownBtn">
+          <div class="hidden md:flex flex-col text-right">
+            <span class="font-label-md text-[13px] font-bold text-on-surface leading-tight" id="headerAdminName">Super Admin</span>
+            <span class="font-body-sm text-[11px] text-outline" id="headerAdminRole">Media Cell Admin</span>
+          </div>
+          <img alt="Admin Profile" class="w-9 h-9 rounded-full object-cover ring-2 ring-primary/20 shadow-sm" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAg4G_ErV-rGoFi4yuPykvHqtg_9HFhn6vDCn6j8uVui_VBsOCNJvwE70Q5120tKi626M2L7OFXCexGr_PlTtW3Y9U0xBbNyXJA86G023d5Ehjm419zCdjimJjAOeBtU5wDs78Sz9O7qZiEijyobCT3MgP9yQKpChMiF6XI77ipYTW1dCA1TyZ6oDFlBKaau11IC2xGbHGCmS-_5H7ILCll3heNxaJCiy9N_JrvogDS8iALErj2e_BOExXKIXxRQl2HJntG0tjYTlJ5">
+          <span class="material-symbols-outlined text-[18px] text-slate-400 group-hover:text-slate-600 transition">expand_more</span>
+        </button>
+        <!-- Dropdown Menu -->
+        <div class="absolute right-0 mt-1 w-48 bg-white rounded-xl shadow-xl border border-slate-200 py-1.5 hidden group-hover:block z-50">
+          <div class="px-4 py-2 border-b border-slate-100">
+            <p class="text-xs font-semibold text-slate-900" id="dropdownEmail">admin@madin.edu.in</p>
+            <p class="text-[11px] text-slate-500 font-label-sm">Active Session: 8 hrs</p>
+          </div>
+          <a href="settings.html" class="flex items-center gap-2 px-4 py-2 text-xs text-slate-700 hover:bg-slate-50">
+            <span class="material-symbols-outlined text-[16px] text-slate-500">settings</span> Portal Settings
+          </a>
+          <a href="audit-log.html" class="flex items-center gap-2 px-4 py-2 text-xs text-slate-700 hover:bg-slate-50">
+            <span class="material-symbols-outlined text-[16px] text-slate-500">history</span> Audit Trail
+          </a>
+          <div class="border-t border-slate-100 my-1"></div>
+          <button onclick="logoutAdmin()" class="w-full text-left flex items-center gap-2 px-4 py-2 text-xs text-red-600 hover:bg-red-50">
+            <span class="material-symbols-outlined text-[16px] text-red-500">logout</span> End Session (Log Out)
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= LAYOUT CONTAINER (SIDEBAR + MAIN) ================= -->
+  <div class="pt-16 flex min-h-[calc(100vh-4rem)]">
+    <!-- ================= LEFT NAVIGATION SIDEBAR (260px fixed) ================= -->
+    <aside class="fixed top-16 left-0 bottom-0 w-[260px] bg-white border-r border-outline-variant/30 flex flex-col justify-between z-40 overflow-y-auto">
+      <div class="p-4 flex flex-col gap-5">
+        <!-- Sub-tag header -->
+        <div class="px-2.5 py-1.5 rounded-lg bg-surface-container flex items-center justify-between border border-surface-container-high/60">
+          <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-[16px] text-secondary">domain</span>
+            <span class="font-label-sm text-[11px] uppercase tracking-wider font-bold text-on-surface-variant">Suffa Portal</span>
+          </div>
+          <span class="w-1.5 h-1.5 rounded-full bg-tertiary-fixed-dim"></span>
+        </div>
+        
+        <!-- Navigation items -->
+        <nav class="flex flex-col gap-1.5">
+          <a class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg bg-primary text-white font-label-md text-[13px] font-semibold shadow-sm" href="gallery.html">
+            <span class="material-symbols-outlined text-[20px]">photo_library</span>
+            <span>Gallery Manager</span>
+          </a>
+          <button onclick="openUploadDrawer()" class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-low font-label-md text-[13px] transition text-left cursor-pointer">
+            <div class="flex items-center gap-3">
+              <span class="material-symbols-outlined text-[20px] text-outline">cloud_upload</span>
+              <span>Upload Queue</span>
+            </div>
+            <span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-secondary-fixed text-on-secondary-fixed">2 Ready</span>
+          </button>
+          <a class="flex items-center justify-between px-3.5 py-2.5 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-low font-label-md text-[13px] transition" href="admissions.html">
+            <div class="flex items-center gap-3">
+              <span class="material-symbols-outlined text-[20px] text-outline">school</span>
+              <span>Admissions Desk</span>
+            </div>
+            <span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800">New</span>
+          </a>
+          <button onclick="setFilterCategory('Campus')" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-low font-label-md text-[13px] transition text-left">
+            <span class="material-symbols-outlined text-[20px] text-outline">label</span>
+            <span>Categories &amp; Tags</span>
+          </button>
+          <a class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-low font-label-md text-[13px] transition" href="../index.html#gallery" target="_blank">
+            <span class="material-symbols-outlined text-[20px] text-outline">visibility</span>
+            <span>Public Website Preview</span>
+          </a>
+          <a class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-low font-label-md text-[13px] transition" href="audit-log.html">
+            <span class="material-symbols-outlined text-[20px] text-outline">manage_history</span>
+            <span>Activity Audit Log</span>
+          </a>
+          <a class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-low font-label-md text-[13px] transition" href="settings.html">
+            <span class="material-symbols-outlined text-[20px] text-outline">settings</span>
+            <span>Portal Settings</span>
+          </a>
+        </nav>
+      </div>
+      
+      <!-- Sidebar Footer / Verification Badge -->
+      <div class="p-4 border-t border-outline-variant/20 bg-surface-container-lowest flex flex-col gap-2">
+        <div class="p-3 rounded-lg bg-surface-container border border-surface-container-high/60 flex items-center gap-2.5">
+          <span class="material-symbols-outlined text-tertiary-container text-[20px]">verified_user</span>
+          <div class="flex flex-col min-w-0">
+            <span class="font-label-sm text-[10px] uppercase font-bold text-on-surface-variant">Suffa Registry ID</span>
+            <span class="font-body-sm text-[11px] font-semibold text-primary truncate">CAMPUS-VAVOOR-7572</span>
+          </div>
+        </div>
+        <button onclick="logoutAdmin()" class="w-full flex items-center justify-center gap-2 py-2 text-xs font-semibold text-red-600 hover:bg-red-50 rounded-lg transition">
+          <span class="material-symbols-outlined text-[16px]">logout</span> Sign Out
+        </button>
+        <p class="text-[11px] text-center text-outline-variant">© 2026 Ma'din Suffa Campus</p>
+      </div>
+    </aside>
+
+    <!-- ================= MAIN CONTENT AREA (offset by 260px sidebar) ================= -->
+    <main class="ml-[260px] flex-1 p-6 lg:p-8 flex flex-col gap-6">
+      <!-- Institutional Headline & Top Action Bar -->
+      <div class="bg-white rounded-xl p-6 shadow-sm border border-outline-variant/30 flex flex-col xl:flex-row xl:items-center justify-between gap-4">
+        <div>
+          <div class="flex items-center gap-2 mb-1.5">
+            <span class="px-2 py-0.5 rounded bg-primary-fixed text-primary font-label-sm text-[11px] font-bold uppercase tracking-wider">Ma'din Suffa Media Cell</span>
+            <span class="text-outline-variant">•</span>
+            <span class="font-body-sm text-[12px] text-outline">INS7572 Verified Production Hub</span>
+          </div>
+          <h1 class="font-headline-md text-2xl lg:text-[28px] text-primary font-bold tracking-tight">Campus Photo Gallery Management</h1>
+          <p class="font-body-md text-sm text-on-surface-variant mt-1 max-w-3xl">
+            Manage, sequence, tag, and publish official campus captures directly to the public website carousel and institutional archives.
+          </p>
+        </div>
+        <!-- Action Buttons -->
+        <div class="flex flex-wrap items-center gap-2.5 self-start xl:self-center">
+          <button class="px-4 py-2 rounded-lg bg-surface-container-high hover:bg-surface-variant text-on-surface font-label-md text-xs font-semibold flex items-center gap-1.5 transition border border-outline-variant/30 cursor-pointer" id="toggleReorderBtn" onclick="toggleReorderMode()">
+            <span class="material-symbols-outlined text-[17px]">swap_vert</span>
+            <span id="reorderBtnText">Reorder Sequence</span>
+          </button>
+          <button class="px-4 py-2 rounded-lg bg-surface-container-low hover:bg-tertiary-fixed/40 text-tertiary-container font-label-md text-xs font-bold flex items-center gap-1.5 transition border border-tertiary/20 cursor-pointer" onclick="triggerPublishSync()">
+            <span class="w-2 h-2 rounded-full bg-tertiary-fixed-dim animate-ping"></span>
+            <span>Sync Live Carousel</span>
+          </button>
+          <button class="px-4 py-2 rounded-lg bg-primary hover:bg-primary-container text-white font-label-md text-xs font-bold flex items-center gap-1.5 transition shadow-sm cursor-pointer" onclick="openUploadDrawer()">
+            <span class="material-symbols-outlined text-[18px]">add_photo_alternate</span>
+            <span>+ Upload New Media</span>
+          </button>
+        </div>
+      </div>
+      
+      <!-- Quick Analytics Row (4 Stats) -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <!-- Card 1 -->
+        <div class="bg-white p-4 rounded-xl border border-outline-variant/30 shadow-sm flex items-center justify-between">
+          <div class="flex flex-col">
+            <span class="font-label-sm text-[11px] uppercase tracking-wider text-outline font-semibold">Total Assets</span>
+            <span class="font-headline-sm text-2xl text-primary font-bold mt-0.5" id="statTotalAssets">20 Photos</span>
+          </div>
+          <div class="w-11 h-11 rounded-lg bg-primary-fixed flex items-center justify-center text-primary">
+            <span class="material-symbols-outlined text-[24px]">collections</span>
+          </div>
+        </div>
+        <!-- Card 2 -->
+        <div class="bg-white p-4 rounded-xl border border-outline-variant/30 shadow-sm flex items-center justify-between">
+          <div class="flex flex-col">
+            <span class="font-label-sm text-[11px] uppercase tracking-wider text-outline font-semibold">Live Carousel</span>
+            <span class="font-headline-sm text-2xl text-tertiary-container font-bold mt-0.5" id="statLiveCarousel">18 Published</span>
+          </div>
+          <div class="w-11 h-11 rounded-lg bg-tertiary-fixed flex items-center justify-center text-on-tertiary-fixed">
+            <span class="material-symbols-outlined text-[24px]">bolt</span>
+          </div>
+        </div>
+        <!-- Card 3 -->
+        <div class="bg-white p-4 rounded-xl border border-outline-variant/30 shadow-sm flex items-center justify-between">
+          <div class="flex flex-col">
+            <span class="font-label-sm text-[11px] uppercase tracking-wider text-outline font-semibold">Staged / Draft</span>
+            <span class="font-headline-sm text-2xl text-on-surface-variant font-bold mt-0.5" id="statDraftCount">2 Items</span>
+          </div>
+          <div class="w-11 h-11 rounded-lg bg-surface-container-high flex items-center justify-center text-on-surface-variant">
+            <span class="material-symbols-outlined text-[24px]">unpublished</span>
+          </div>
+        </div>
+        <!-- Card 4 -->
+        <div class="bg-white p-4 rounded-xl border border-outline-variant/30 shadow-sm flex items-center justify-between">
+          <div class="flex flex-col">
+            <span class="font-label-sm text-[11px] uppercase tracking-wider text-outline font-semibold">CDN &amp; Speed</span>
+            <span class="font-headline-sm text-2xl text-secondary font-bold mt-0.5">0.42s WebP</span>
+          </div>
+          <div class="w-11 h-11 rounded-lg bg-secondary-fixed flex items-center justify-center text-on-secondary-fixed">
+            <span class="material-symbols-outlined text-[24px]">speed</span>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Main Layout: 2 Columns (Main Grid Left + Right Sticky Rail) -->
+      <div class="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
+        <!-- ================= LEFT AREA: Toolbar & Gallery Grid (8 cols on xl) ================= -->
+        <div class="xl:col-span-8 flex flex-col gap-4">
+          <!-- Filter, Search & Category Navigation Bar -->
+          <div class="bg-white p-4 rounded-xl border border-outline-variant/30 shadow-sm flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3">
+            <div class="relative flex-1 max-w-md">
+              <span class="material-symbols-outlined absolute left-3 top-2.5 text-outline text-[18px]">search</span>
+              <input class="w-full pl-9 pr-3 py-2 text-sm bg-surface-container-low rounded-lg border border-transparent focus:border-primary/30 focus:bg-white text-on-surface placeholder-outline focus:outline-none transition" id="gallerySearchInput" onkeyup="filterGalleryCards()" placeholder="Search titles, tags, or captions..." type="text">
+            </div>
+            <!-- Categories pills & status filter -->
+            <div class="flex flex-wrap items-center gap-2">
+              <div class="flex items-center bg-surface-container rounded-lg p-1 border border-surface-container-high">
+                <button class="category-btn active px-3 py-1 rounded-md text-xs font-semibold bg-primary text-white transition cursor-pointer" onclick="setFilterCategory('All')">All</button>
+                <button class="category-btn px-3 py-1 rounded-md text-xs font-semibold text-on-surface-variant hover:text-primary transition cursor-pointer" onclick="setFilterCategory('Campus')">Campus</button>
+                <button class="category-btn px-3 py-1 rounded-md text-xs font-semibold text-on-surface-variant hover:text-primary transition cursor-pointer" onclick="setFilterCategory('Academic Activities')">Academics</button>
+                <button class="category-btn px-3 py-1 rounded-md text-xs font-semibold text-on-surface-variant hover:text-primary transition cursor-pointer" onclick="setFilterCategory('Events')">Events</button>
+                <button class="category-btn px-3 py-1 rounded-md text-xs font-semibold text-on-surface-variant hover:text-primary transition cursor-pointer" onclick="setFilterCategory('Arts & Culture')">Arts</button>
+              </div>
+              <select class="px-3 py-2 bg-surface-container-low border border-surface-container-high rounded-lg text-xs font-semibold text-on-surface focus:outline-none cursor-pointer" id="statusFilter" onchange="filterGalleryCards()">
+                <option value="All">Status: All</option>
+                <option value="Published">Published Only</option>
+                <option value="Draft / Hidden">Draft / Hidden Only</option>
+              </select>
+            </div>
+          </div>
+          
+          <!-- Responsive 2-Column Gallery Grid -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="galleryGrid">
+            <!-- Card 1 -->
+            <div class="gallery-card bg-white rounded-xl border border-outline-variant/30 shadow-sm overflow-hidden flex flex-col group hover:shadow-md transition" data-category="Campus" data-id="1" data-status="Published">
+              <div class="relative h-48 w-full bg-surface-container overflow-hidden">
+                <img alt="Campus Administrative & Academic Quadrangle" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB5gntFiMdqGmMyQdoONh0WBxTw3SuQ-JMlHRJk5mV1mSwsDB2Bf-PMOaYV2u-4g24_1qwX2751ncZdbfZmNUNzb3EWtQZcq9zr57zlYBHjpqtMLji7uig2zOLCLOm_TRgduGxzZQ7vNE6Cljp2NEJjw7ZdnFwWDCSxjsN2WXS-xWB5N1tOYz9Go1H36dlzyF5To-5DIG7geU9nn2zJ-OiVcG7X2RhTkrBa5r28mWFhZav2h2M0IJxjnEjuVDSslpuv">
+                <div class="absolute top-2.5 left-2.5 flex items-center gap-1.5">
+                  <span class="card-seq px-2 py-0.5 rounded-full bg-primary/90 backdrop-blur-md text-white font-label-sm text-[11px] font-bold">#01</span>
+                  <span class="px-2 py-0.5 rounded-full bg-tertiary-fixed text-on-tertiary-fixed font-label-sm text-[11px] font-bold flex items-center gap-1">
+                    <span class="material-symbols-outlined text-[13px]">star</span> Featured Cover
+                  </span>
+                </div>
+                <div class="absolute top-2.5 right-2.5 flex items-center gap-1">
+                  <button class="w-7 h-7 rounded-full bg-white/90 backdrop-blur text-primary hover:bg-white flex items-center justify-center shadow-sm cursor-pointer" onclick="toggleCardPublish(this)" title="Toggle Visibility">
+                    <span class="material-symbols-outlined text-[16px]">visibility</span>
+                  </button>
+                  <span class="reorder-handle hidden w-7 h-7 rounded-full bg-white/90 backdrop-blur text-on-surface cursor-grab active:cursor-grabbing flex items-center justify-center shadow-sm">
+                    <span class="material-symbols-outlined text-[16px]">drag_indicator</span>
+                  </span>
+                </div>
+                <div class="absolute bottom-2.5 left-2.5">
+                  <span class="px-2.5 py-0.5 rounded-full bg-primary-container text-white font-label-sm text-[11px] font-semibold">Campus</span>
+                </div>
+              </div>
+              <div class="p-4 flex flex-col justify-between flex-1">
+                <div>
+                  <h3 class="font-subheading text-[15px] text-primary font-bold leading-tight line-clamp-1">Campus Administrative & Academic Quadrangle</h3>
+                  <p class="font-body-sm text-[12px] text-on-surface-variant line-clamp-2 mt-1">Aerial panoramic capture showcasing the primary scholastic complex and central courtyard pavilion at Vavoor.</p>
+                </div>
+                <div class="mt-3 pt-2.5 border-t border-outline-variant/20 flex items-center justify-between">
+                  <div class="flex items-center gap-1.5">
+                    <span class="w-2 h-2 rounded-full bg-tertiary-fixed-dim"></span>
+                    <span class="status-label font-label-sm text-[11px] text-tertiary-container font-semibold">Published</span>
+                  </div>
+                  <div class="flex items-center gap-1">
+                    <button class="px-2.5 py-1 rounded bg-surface-container hover:bg-surface-variant text-on-surface font-label-sm text-[11px] font-medium flex items-center gap-1 cursor-pointer" onclick="openEditModal('Campus Administrative & Academic Quadrangle', 'Campus', 'Aerial panoramic capture showcasing the primary scholastic complex and central courtyard pavilion at Vavoor.', 'Quadrangle panorama with stone arches')">
+                      <span class="material-symbols-outlined text-[14px]">edit_note</span> Edit
+                    </button>
+                    <button class="p-1 rounded text-outline hover:text-error hover:bg-error-container/30 transition cursor-pointer" onclick="confirmDelete(this)">
+                      <span class="material-symbols-outlined text-[16px]">delete</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Card 2 -->
+            <div class="gallery-card bg-white rounded-xl border border-outline-variant/30 shadow-sm overflow-hidden flex flex-col group hover:shadow-md transition" data-category="Academic Activities" data-id="2" data-status="Published">
+              <div class="relative h-48 w-full bg-surface-container overflow-hidden">
+                <img alt="Qur'an Recitation Circle & Tilawah Halaqah" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAdJSk_B0AQpLkiJ6Be6yEqUUL0-s_yX6ZyvW-AZ4j1SLDA7GK_wlP4oJH6wOTCQCXQraVZvq0SbeOpRIkfX8JAzlFZPx7EX-NmFsl65Y6p2AOczxrBKTdRxOpc0G5V01Jy5fMlBCpUsEJVzZaDaaf4kiP-9vm2rcXG0aeT7ddqy_1i0MfDK05KcIhLfGfM2RqxTIH9dXLKCVSOkGYwYDwwHGXCbxXBU7Gr1XApiuiqy7Ffwcat0i_G0c0QwK2-J0Pp">
+                <div class="absolute top-2.5 left-2.5 flex items-center gap-1.5">
+                  <span class="card-seq px-2 py-0.5 rounded-full bg-primary/90 backdrop-blur-md text-white font-label-sm text-[11px] font-bold">#02</span>
+                </div>
+                <div class="absolute top-2.5 right-2.5 flex items-center gap-1">
+                  <button class="w-7 h-7 rounded-full bg-white/90 backdrop-blur text-primary hover:bg-white flex items-center justify-center shadow-sm cursor-pointer" onclick="toggleCardPublish(this)" title="Toggle Visibility">
+                    <span class="material-symbols-outlined text-[16px]">visibility</span>
+                  </button>
+                  <span class="reorder-handle hidden w-7 h-7 rounded-full bg-white/90 backdrop-blur text-on-surface cursor-grab active:cursor-grabbing flex items-center justify-center shadow-sm">
+                    <span class="material-symbols-outlined text-[16px]">drag_indicator</span>
+                  </span>
+                </div>
+                <div class="absolute bottom-2.5 left-2.5">
+                  <span class="px-2.5 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-sm text-[11px] font-semibold">Academic Activities</span>
+                </div>
+              </div>
+              <div class="p-4 flex flex-col justify-between flex-1">
+                <div>
+                  <h3 class="font-subheading text-[15px] text-primary font-bold leading-tight line-clamp-1">Qur'an Recitation Circle & Tilawah Halaqah</h3>
+                  <p class="font-body-sm text-[12px] text-on-surface-variant line-clamp-2 mt-1">Students engaged in traditional memorization and Tajweed study sessions under faculty supervision in the Suffa Study Hall.</p>
+                </div>
+                <div class="mt-3 pt-2.5 border-t border-outline-variant/20 flex items-center justify-between">
+                  <div class="flex items-center gap-1.5">
+                    <span class="w-2 h-2 rounded-full bg-tertiary-fixed-dim"></span>
+                    <span class="status-label font-label-sm text-[11px] text-tertiary-container font-semibold">Published</span>
+                  </div>
+                  <div class="flex items-center gap-1">
+                    <button class="px-2.5 py-1 rounded bg-surface-container hover:bg-surface-variant text-on-surface font-label-sm text-[11px] font-medium flex items-center gap-1 cursor-pointer" onclick="openEditModal('Qur\'an Recitation Circle & Tilawah Halaqah', 'Academic Activities', 'Students engaged in traditional memorization and Tajweed study sessions.', 'Students in circular recitation group with rehal')">
+                      <span class="material-symbols-outlined text-[14px]">edit_note</span> Edit
+                    </button>
+                    <button class="p-1 rounded text-outline hover:text-error hover:bg-error-container/30 transition cursor-pointer" onclick="confirmDelete(this)">
+                      <span class="material-symbols-outlined text-[16px]">delete</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Card 3 -->
+            <div class="gallery-card bg-white rounded-xl border border-outline-variant/30 shadow-sm overflow-hidden flex flex-col group hover:shadow-md transition" data-category="Events" data-id="3" data-status="Published">
+              <div class="relative h-48 w-full bg-surface-container overflow-hidden">
+                <img alt="Inspiraath '25 Interschool Art Fest Inaugural" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDtStxeIbmTpK_fg-OTytFQHtQ8rZy9uqQDcFeBUyZimV0RG2m-501SFhV17Xxh-FelhALL-zLs4mrEo-W1hhJEW7TqdMKJQR_RyPs52oRbs9IRMORQs-BSP8dwSai74Z9TFai19pJn0V4sCuGz6SkmKUjLTSzniq-9Gp4IK0KhRA8Uw8RnhMyQHAS5gpttX_QZwyzAzeNG0uyL9USDLb0mdTjZMTUlJePBWBqkAjIm5eC3TelX_EgBwpmsgSe_pO9e">
+                <div class="absolute top-2.5 left-2.5 flex items-center gap-1.5">
+                  <span class="card-seq px-2 py-0.5 rounded-full bg-primary/90 backdrop-blur-md text-white font-label-sm text-[11px] font-bold">#03</span>
+                </div>
+                <div class="absolute top-2.5 right-2.5 flex items-center gap-1">
+                  <button class="w-7 h-7 rounded-full bg-white/90 backdrop-blur text-primary hover:bg-white flex items-center justify-center shadow-sm cursor-pointer" onclick="toggleCardPublish(this)" title="Toggle Visibility">
+                    <span class="material-symbols-outlined text-[16px]">visibility</span>
+                  </button>
+                  <span class="reorder-handle hidden w-7 h-7 rounded-full bg-white/90 backdrop-blur text-on-surface cursor-grab active:cursor-grabbing flex items-center justify-center shadow-sm">
+                    <span class="material-symbols-outlined text-[16px]">drag_indicator</span>
+                  </span>
+                </div>
+                <div class="absolute bottom-2.5 left-2.5">
+                  <span class="px-2.5 py-0.5 rounded-full bg-surface-container-highest text-primary font-label-sm text-[11px] font-semibold">Events</span>
+                </div>
+              </div>
+              <div class="p-4 flex flex-col justify-between flex-1">
+                <div>
+                  <h3 class="font-subheading text-[15px] text-primary font-bold leading-tight line-clamp-1">Inspiraath '25 Interschool Art Fest Inaugural</h3>
+                  <p class="font-body-sm text-[12px] text-on-surface-variant line-clamp-2 mt-1">Campus grand assembly welcoming delegates and showcasing calligraphic banners and stage decorations.</p>
+                </div>
+                <div class="mt-3 pt-2.5 border-t border-outline-variant/20 flex items-center justify-between">
+                  <div class="flex items-center gap-1.5">
+                    <span class="w-2 h-2 rounded-full bg-tertiary-fixed-dim"></span>
+                    <span class="status-label font-label-sm text-[11px] text-tertiary-container font-semibold">Published</span>
+                  </div>
+                  <div class="flex items-center gap-1">
+                    <button class="px-2.5 py-1 rounded bg-surface-container hover:bg-surface-variant text-on-surface font-label-sm text-[11px] font-medium flex items-center gap-1 cursor-pointer" onclick="openEditModal('Inspiraath \'25 Interschool Art Fest Inaugural', 'Events', 'Campus grand assembly welcoming delegates and showcasing calligraphic banners.', 'Festival banner with audience in auditorium')">
+                      <span class="material-symbols-outlined text-[14px]">edit_note</span> Edit
+                    </button>
+                    <button class="p-1 rounded text-outline hover:text-error hover:bg-error-container/30 transition cursor-pointer" onclick="confirmDelete(this)">
+                      <span class="material-symbols-outlined text-[16px]">delete</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Card 4 -->
+            <div class="gallery-card bg-white rounded-xl border border-outline-variant/30 shadow-sm overflow-hidden flex flex-col group hover:shadow-md transition" data-category="Arts & Culture" data-id="4" data-status="Published">
+              <div class="relative h-48 w-full bg-surface-container overflow-hidden">
+                <img alt="Student Scholastic Oratory Presentation" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDrSVpTak-ocP4eRPPZBqXxdmP2Vh8Tkh0VxzIJiYqv3VjOMQYmrrRMrRHai0afZMzCYMHVF3k3M8Ct9PPa5J1tYPYl3DkZU0t2SvwDzNZBZblg3eVLljgTBfNTEw2X2S00srUaCfy6F1oyzN-q0mExTQoNIpcYYtqQzBWUFXc5g5d-8mtlGVNwEf23Z6OTMAcEFGLM3AWQTAa8HjNMzJ0ejEEjic0fsgmKoDgNjj8VA2AtNQ9mX9y7WYlkMBeWmFbX">
+                <div class="absolute top-2.5 left-2.5 flex items-center gap-1.5">
+                  <span class="card-seq px-2 py-0.5 rounded-full bg-primary/90 backdrop-blur-md text-white font-label-sm text-[11px] font-bold">#04</span>
+                </div>
+                <div class="absolute top-2.5 right-2.5 flex items-center gap-1">
+                  <button class="w-7 h-7 rounded-full bg-white/90 backdrop-blur text-primary hover:bg-white flex items-center justify-center shadow-sm cursor-pointer" onclick="toggleCardPublish(this)" title="Toggle Visibility">
+                    <span class="material-symbols-outlined text-[16px]">visibility</span>
+                  </button>
+                  <span class="reorder-handle hidden w-7 h-7 rounded-full bg-white/90 backdrop-blur text-on-surface cursor-grab active:cursor-grabbing flex items-center justify-center shadow-sm">
+                    <span class="material-symbols-outlined text-[16px]">drag_indicator</span>
+                  </span>
+                </div>
+                <div class="absolute bottom-2.5 left-2.5">
+                  <span class="px-2.5 py-0.5 rounded-full bg-surface-variant text-on-surface-variant font-label-sm text-[11px] font-semibold">Arts & Culture</span>
+                </div>
+              </div>
+              <div class="p-4 flex flex-col justify-between flex-1">
+                <div>
+                  <h3 class="font-subheading text-[15px] text-primary font-bold leading-tight line-clamp-1">Student Scholastic Oratory Presentation</h3>
+                  <p class="font-body-sm text-[12px] text-on-surface-variant line-clamp-2 mt-1">Youth leadership symposium in Arabic and English eloquence delivered by senior Suffa academy scholars.</p>
+                </div>
+                <div class="mt-3 pt-2.5 border-t border-outline-variant/20 flex items-center justify-between">
+                  <div class="flex items-center gap-1.5">
+                    <span class="w-2 h-2 rounded-full bg-tertiary-fixed-dim"></span>
+                    <span class="status-label font-label-sm text-[11px] text-tertiary-container font-semibold">Published</span>
+                  </div>
+                  <div class="flex items-center gap-1">
+                    <button class="px-2.5 py-1 rounded bg-surface-container hover:bg-surface-variant text-on-surface font-label-sm text-[11px] font-medium flex items-center gap-1 cursor-pointer" onclick="openEditModal('Student Scholastic Oratory Presentation', 'Arts & Culture', 'Youth leadership symposium in Arabic and English eloquence.', 'Young speaker on podium addressing student gallery')">
+                      <span class="material-symbols-outlined text-[14px]">edit_note</span> Edit
+                    </button>
+                    <button class="p-1 rounded text-outline hover:text-error hover:bg-error-container/30 transition cursor-pointer" onclick="confirmDelete(this)">
+                      <span class="material-symbols-outlined text-[16px]">delete</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Card 5 -->
+            <div class="gallery-card bg-white rounded-xl border border-outline-variant/30 shadow-sm overflow-hidden flex flex-col group hover:shadow-md transition" data-category="Arts & Culture" data-id="5" data-status="Published">
+              <div class="relative h-48 w-full bg-surface-container overflow-hidden">
+                <img alt="Classical Nasheed & Choral Performance" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCovvBGEyAqKf9b0Hsr_NFM_TfOQsbcFKWo4cUh288FmSdSJ4hozyqu74VBjhgdjq2_dpeZOMq14SOM6nrh3Q44-Co4XFobE2tqDmHzQ9f34dlzeO0eMd_txqMj2_mse0QZG-iPkQY5nBIP8IDsusuSR1UjGfNcwRGj8fBxiSSw4CmgMtiNXGep773Xbs7k1psPz7ERKbsjDy4JSGo0BoRij39Zf6Xt96JuoO-wiRfFcrO3I81a1qvEgUID4o41nfk2">
+                <div class="absolute top-2.5 left-2.5 flex items-center gap-1.5">
+                  <span class="card-seq px-2 py-0.5 rounded-full bg-primary/90 backdrop-blur-md text-white font-label-sm text-[11px] font-bold">#05</span>
+                </div>
+                <div class="absolute top-2.5 right-2.5 flex items-center gap-1">
+                  <button class="w-7 h-7 rounded-full bg-white/90 backdrop-blur text-primary hover:bg-white flex items-center justify-center shadow-sm cursor-pointer" onclick="toggleCardPublish(this)" title="Toggle Visibility">
+                    <span class="material-symbols-outlined text-[16px]">visibility</span>
+                  </button>
+                  <span class="reorder-handle hidden w-7 h-7 rounded-full bg-white/90 backdrop-blur text-on-surface cursor-grab active:cursor-grabbing flex items-center justify-center shadow-sm">
+                    <span class="material-symbols-outlined text-[16px]">drag_indicator</span>
+                  </span>
+                </div>
+                <div class="absolute bottom-2.5 left-2.5">
+                  <span class="px-2.5 py-0.5 rounded-full bg-surface-variant text-on-surface-variant font-label-sm text-[11px] font-semibold">Arts & Culture</span>
+                </div>
+              </div>
+              <div class="p-4 flex flex-col justify-between flex-1">
+                <div>
+                  <h3 class="font-subheading text-[15px] text-primary font-bold leading-tight line-clamp-1">Classical Nasheed & Choral Performance</h3>
+                  <p class="font-body-sm text-[12px] text-on-surface-variant line-clamp-2 mt-1">Spiritual vocal ensemble night commemorating the Prophetic traditions and campus cultural heritage.</p>
+                </div>
+                <div class="mt-3 pt-2.5 border-t border-outline-variant/20 flex items-center justify-between">
+                  <div class="flex items-center gap-1.5">
+                    <span class="w-2 h-2 rounded-full bg-tertiary-fixed-dim"></span>
+                    <span class="status-label font-label-sm text-[11px] text-tertiary-container font-semibold">Published</span>
+                  </div>
+                  <div class="flex items-center gap-1">
+                    <button class="px-2.5 py-1 rounded bg-surface-container hover:bg-surface-variant text-on-surface font-label-sm text-[11px] font-medium flex items-center gap-1 cursor-pointer" onclick="openEditModal('Classical Nasheed & Choral Performance', 'Arts & Culture', 'Spiritual vocal ensemble night commemorating Prophetic traditions.', 'Chorus group in traditional white attire on stage')">
+                      <span class="material-symbols-outlined text-[14px]">edit_note</span> Edit
+                    </button>
+                    <button class="p-1 rounded text-outline hover:text-error hover:bg-error-container/30 transition cursor-pointer" onclick="confirmDelete(this)">
+                      <span class="material-symbols-outlined text-[16px]">delete</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Card 6 -->
+            <div class="gallery-card bg-white rounded-xl border border-outline-variant/30 shadow-sm overflow-hidden flex flex-col group hover:shadow-md transition" data-category="Academic Activities" data-id="6" data-status="Published">
+              <div class="relative h-48 w-full bg-surface-container overflow-hidden">
+                <img alt="Faculty & Guest Scholar Symposium" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDA9LEw95jaM9hqXIViZfN90CP5y2ggTxKWCWxRkVTOmIJA0eJBzXK4kl832jkxDcjMowXD4Oxm_8u9x2W_5RTf4dPI5bUoB2IY6M9W6RL1TpTOI-GjbYdMlfup6EvRgwokHrMp3dGv7tB3rskWARso_4LgYKjGkbrVtCEXoyvl4gPwPa1ENSm6970DQ_CqHlTrpWE4B6YN3Y33naEW2yRrF9DKywpZ9VwBjDTpn-sGtMc_pgI4aJsJPcGaYQBuu7ur">
+                <div class="absolute top-2.5 left-2.5 flex items-center gap-1.5">
+                  <span class="card-seq px-2 py-0.5 rounded-full bg-primary/90 backdrop-blur-md text-white font-label-sm text-[11px] font-bold">#06</span>
+                </div>
+                <div class="absolute top-2.5 right-2.5 flex items-center gap-1">
+                  <button class="w-7 h-7 rounded-full bg-white/90 backdrop-blur text-primary hover:bg-white flex items-center justify-center shadow-sm cursor-pointer" onclick="toggleCardPublish(this)" title="Toggle Visibility">
+                    <span class="material-symbols-outlined text-[16px]">visibility</span>
+                  </button>
+                  <span class="reorder-handle hidden w-7 h-7 rounded-full bg-white/90 backdrop-blur text-on-surface cursor-grab active:cursor-grabbing flex items-center justify-center shadow-sm">
+                    <span class="material-symbols-outlined text-[16px]">drag_indicator</span>
+                  </span>
+                </div>
+                <div class="absolute bottom-2.5 left-2.5">
+                  <span class="px-2.5 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-sm text-[11px] font-semibold">Academic Activities</span>
+                </div>
+              </div>
+              <div class="p-4 flex flex-col justify-between flex-1">
+                <div>
+                  <h3 class="font-subheading text-[15px] text-primary font-bold leading-tight line-clamp-1">Faculty & Guest Scholar Symposium</h3>
+                  <p class="font-body-sm text-[12px] text-on-surface-variant line-clamp-2 mt-1">Interactive scholastic discourse on contemporary Fiqh and science with visiting scholars from Jamiathul Hind.</p>
+                </div>
+                <div class="mt-3 pt-2.5 border-t border-outline-variant/20 flex items-center justify-between">
+                  <div class="flex items-center gap-1.5">
+                    <span class="w-2 h-2 rounded-full bg-tertiary-fixed-dim"></span>
+                    <span class="status-label font-label-sm text-[11px] text-tertiary-container font-semibold">Published</span>
+                  </div>
+                  <div class="flex items-center gap-1">
+                    <button class="px-2.5 py-1 rounded bg-surface-container hover:bg-surface-variant text-on-surface font-label-sm text-[11px] font-medium flex items-center gap-1 cursor-pointer" onclick="openEditModal('Faculty & Guest Scholar Symposium', 'Academic Activities', 'Scholastic discourse on contemporary Fiqh with visiting scholars.', 'Faculty roundtable discussion with microphones')">
+                      <span class="material-symbols-outlined text-[14px]">edit_note</span> Edit
+                    </button>
+                    <button class="p-1 rounded text-outline hover:text-error hover:bg-error-container/30 transition cursor-pointer" onclick="confirmDelete(this)">
+                      <span class="material-symbols-outlined text-[16px]">delete</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Card 7 (Draft / Hidden) -->
+            <div class="gallery-card bg-white/80 rounded-xl border border-dashed border-outline-variant shadow-sm overflow-hidden flex flex-col group opacity-85 hover:opacity-100 hover:shadow-md transition" data-category="Students" data-id="7" data-status="Draft / Hidden">
+              <div class="relative h-48 w-full bg-surface-container overflow-hidden">
+                <img alt="Interactive Dialogue & Panel Discussion" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD7X8nGHjih2JAZXsy_dghc56iVlHXv4CEyTDqYV9H9sEUVBFjOasxtBORWJ34_6k2XtM_neszWttGFMjX974ckTGHqIh7pUaaAPmOiWz6T-58tXOo3IVlcUHvrQ1h5zSxorzdKNYC6Zc9FR5b39aCZokpJdv8bq_lvyYre-BKddJhiG5gvFWnrxAkNkIOOPAxaZZy3nT2W33WwDpInjSiJh0orrZduH_k7Z1n28kk3sQUPMns_AgMVMrDJf_yMN38F">
+                <div class="absolute top-2.5 left-2.5 flex items-center gap-1.5">
+                  <span class="card-seq px-2 py-0.5 rounded-full bg-outline/90 backdrop-blur-md text-white font-label-sm text-[11px] font-bold">#07</span>
+                  <span class="px-2 py-0.5 rounded-full bg-surface-container-highest text-on-surface-variant font-label-sm text-[11px] font-semibold">Unlisted Draft</span>
+                </div>
+                <div class="absolute top-2.5 right-2.5 flex items-center gap-1">
+                  <button class="w-7 h-7 rounded-full bg-white/90 backdrop-blur text-outline hover:bg-white flex items-center justify-center shadow-sm cursor-pointer" onclick="toggleCardPublish(this)" title="Toggle Visibility">
+                    <span class="material-symbols-outlined text-[16px]">visibility_off</span>
+                  </button>
+                  <span class="reorder-handle hidden w-7 h-7 rounded-full bg-white/90 backdrop-blur text-on-surface cursor-grab active:cursor-grabbing flex items-center justify-center shadow-sm">
+                    <span class="material-symbols-outlined text-[16px]">drag_indicator</span>
+                  </span>
+                </div>
+                <div class="absolute bottom-2.5 left-2.5">
+                  <span class="px-2.5 py-0.5 rounded-full bg-surface-container-high text-on-surface-variant font-label-sm text-[11px] font-semibold">Students</span>
+                </div>
+              </div>
+              <div class="p-4 flex flex-col justify-between flex-1">
+                <div>
+                  <h3 class="font-subheading text-[15px] text-on-surface font-bold leading-tight line-clamp-1">Interactive Dialogue & Panel Discussion</h3>
+                  <p class="font-body-sm text-[12px] text-outline line-clamp-2 mt-1">Youth mentoring workshop with campus alumni exploring higher academic pursuits in national universities.</p>
+                </div>
+                <div class="mt-3 pt-2.5 border-t border-outline-variant/20 flex items-center justify-between">
+                  <div class="flex items-center gap-1.5">
+                    <span class="w-2 h-2 rounded-full bg-outline"></span>
+                    <span class="status-label font-label-sm text-[11px] text-outline font-semibold">Draft / Hidden</span>
+                  </div>
+                  <div class="flex items-center gap-1">
+                    <button class="px-2.5 py-1 rounded bg-surface-container hover:bg-surface-variant text-on-surface font-label-sm text-[11px] font-medium flex items-center gap-1 cursor-pointer" onclick="openEditModal('Interactive Dialogue & Panel Discussion', 'Students', 'Youth mentoring workshop with campus alumni.', 'Panel speakers seated with audience')">
+                      <span class="material-symbols-outlined text-[14px]">edit_note</span> Edit
+                    </button>
+                    <button class="p-1 rounded text-outline hover:text-error hover:bg-error-container/30 transition cursor-pointer" onclick="confirmDelete(this)">
+                      <span class="material-symbols-outlined text-[16px]">delete</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Card 8 -->
+            <div class="gallery-card bg-white rounded-xl border border-outline-variant/30 shadow-sm overflow-hidden flex flex-col group hover:shadow-md transition" data-category="Events" data-id="8" data-status="Published">
+              <div class="relative h-48 w-full bg-surface-container overflow-hidden">
+                <img alt="Qur'an Memorization Award Ceremony" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCJf_VSs1XAoSXIML0c_okB6bbAO-m2O2m6cVQlgKkzbXWyciynP3oGtnjCjwO7mGfDj7xt7g-OiSeLjzdILMafLGc0K9VY8FfKBBlU5TNxmHAbvae1LYl7F7yydqS-Gs_wAK2TmZ_uuBj8DyGVPEMfoyWhdE9GCuBOpehzjPITF4ZFIL9VF8xyIJEOvOo-CI0JW1JWclUjkUz-tyG_uKaF__bmw8U_nXtZmFN7YRbjL_GTLBznAdWWehtoZQCMj7OB">
+                <div class="absolute top-2.5 left-2.5 flex items-center gap-1.5">
+                  <span class="card-seq px-2 py-0.5 rounded-full bg-primary/90 backdrop-blur-md text-white font-label-sm text-[11px] font-bold">#08</span>
+                </div>
+                <div class="absolute top-2.5 right-2.5 flex items-center gap-1">
+                  <button class="w-7 h-7 rounded-full bg-white/90 backdrop-blur text-primary hover:bg-white flex items-center justify-center shadow-sm cursor-pointer" onclick="toggleCardPublish(this)" title="Toggle Visibility">
+                    <span class="material-symbols-outlined text-[16px]">visibility</span>
+                  </button>
+                  <span class="reorder-handle hidden w-7 h-7 rounded-full bg-white/90 backdrop-blur text-on-surface cursor-grab active:cursor-grabbing flex items-center justify-center shadow-sm">
+                    <span class="material-symbols-outlined text-[16px]">drag_indicator</span>
+                  </span>
+                </div>
+                <div class="absolute bottom-2.5 left-2.5">
+                  <span class="px-2.5 py-0.5 rounded-full bg-surface-container-highest text-primary font-label-sm text-[11px] font-semibold">Events</span>
+                </div>
+              </div>
+              <div class="p-4 flex flex-col justify-between flex-1">
+                <div>
+                  <h3 class="font-subheading text-[15px] text-primary font-bold leading-tight line-clamp-1">Qur'an Memorization Award Ceremony</h3>
+                  <p class="font-body-sm text-[12px] text-on-surface-variant line-clamp-2 mt-1">Honoring outstanding Hafiz scholars with institutional certificates in the presence of distinguished patrons.</p>
+                </div>
+                <div class="mt-3 pt-2.5 border-t border-outline-variant/20 flex items-center justify-between">
+                  <div class="flex items-center gap-1.5">
+                    <span class="w-2 h-2 rounded-full bg-tertiary-fixed-dim"></span>
+                    <span class="status-label font-label-sm text-[11px] text-tertiary-container font-semibold">Published</span>
+                  </div>
+                  <div class="flex items-center gap-1">
+                    <button class="px-2.5 py-1 rounded bg-surface-container hover:bg-surface-variant text-on-surface font-label-sm text-[11px] font-medium flex items-center gap-1 cursor-pointer" onclick="openEditModal('Qur\'an Memorization Award Ceremony', 'Events', 'Honoring outstanding Hafiz scholars with institutional certificates.', 'Student receiving award certificate from chief guest')">
+                      <span class="material-symbols-outlined text-[14px]">edit_note</span> Edit
+                    </button>
+                    <button class="p-1 rounded text-outline hover:text-error hover:bg-error-container/30 transition cursor-pointer" onclick="confirmDelete(this)">
+                      <span class="material-symbols-outlined text-[16px]">delete</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- ================= RIGHT RAIL: Public Carousel Sync + Staged Queue (4 cols / ~380px) ================= -->
+        <div class="xl:col-span-4 flex flex-col gap-4 sticky top-20">
+          <!-- Live Carousel Sync Card -->
+          <div class="bg-white p-5 rounded-xl border border-outline-variant/30 shadow-sm flex flex-col gap-4">
+            <div class="flex items-center justify-between pb-3 border-b border-surface-container-high">
+              <div class="flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-tertiary-container animate-pulse"></span>
+                <span class="font-label-md text-sm font-bold text-primary">Public Carousel Sync</span>
+              </div>
+              <span class="font-label-sm text-[10px] px-2 py-0.5 rounded-full bg-tertiary-fixed text-on-tertiary-fixed font-bold tracking-wider">LIVE ONLINE</span>
+            </div>
+            
+            <!-- Mini Live Slider Preview Player -->
+            <div class="flex flex-col gap-2">
+              <div class="flex items-center justify-between text-xs">
+                <span class="font-medium text-on-surface-variant">Current Slide Render View</span>
+                <span class="text-outline font-semibold" id="sliderCounter">Slide 1 of 7</span>
+              </div>
+              <div class="relative w-full h-44 rounded-lg overflow-hidden bg-primary shadow-inner">
+                <img alt="Slider view preview" class="w-full h-full object-cover transition-opacity duration-300" id="publicPreviewSlide" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD12uhA0vx2HQGFf7Bp5H0VBjMOAX3sV_yJatIBH7BXY1VISalgYsafUoEzbw6Yc6o1czR8uFuBzw5hWOgGGFcOxffkoKNJm8hdOCca097QOS7KWWdOK-_5J4q4FJopHc2_EDiBUDC5X3XCL37dmrerPS1WQ3VKr66RqRqo7z8J3hBfYll5LO9m2z2qj1CESlwhzyqXzeP2UzvdRonzImIhsZE7NmnMe5yHzr-fJteCxj6fIRGP2AinKUbMBAWzJSPU">
+                <div class="absolute inset-0 bg-gradient-to-t from-primary/95 via-primary/30 to-transparent flex flex-col justify-end p-3 text-white">
+                  <span class="font-label-sm text-[9px] text-tertiary-fixed font-bold tracking-wider uppercase">MA'DIN SUFFA CAMPUS • VAVOOR</span>
+                  <span class="font-label-md text-[13px] font-semibold truncate leading-tight mt-0.5" id="previewSlideCaption">Campus Administrative & Academic Quadrangle</span>
+                </div>
+                <button class="absolute left-2 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-white/80 hover:bg-white text-primary flex items-center justify-center text-xs shadow-sm transition cursor-pointer" onclick="cyclePreviewSlide(-1)">
+                  <span class="material-symbols-outlined text-[16px]">chevron_left</span>
+                </button>
+                <button class="absolute right-2 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-white/80 hover:bg-white text-primary flex items-center justify-center text-xs shadow-sm transition cursor-pointer" onclick="cyclePreviewSlide(1)">
+                  <span class="material-symbols-outlined text-[16px]">chevron_right</span>
+                </button>
+              </div>
+            </div>
+            
+            <!-- Carousel Technical Settings -->
+            <div class="bg-surface-container-low p-3 rounded-lg flex flex-col gap-2 text-xs border border-surface-container-high/60">
+              <div class="flex items-center justify-between">
+                <span class="text-outline">Auto-Slide Interval:</span>
+                <span class="font-semibold text-primary">4.5 Seconds</span>
+              </div>
+              <div class="flex items-center justify-between">
+                <span class="text-outline">Transition Effect:</span>
+                <span class="font-semibold text-primary">Ken Burns Crossfade</span>
+              </div>
+              <div class="flex items-center justify-between">
+                <span class="text-outline">Target Placement:</span>
+                <span class="font-semibold text-secondary">Hero Slider #1 (Vavoor)</span>
+              </div>
+            </div>
+            
+            <!-- Sequence Push Actions -->
+            <div class="flex flex-col gap-2 pt-1">
+              <button class="w-full py-2.5 rounded-lg bg-tertiary-container hover:bg-tertiary text-white font-label-md text-xs font-bold flex items-center justify-center gap-1.5 transition shadow-sm cursor-pointer" onclick="publishToLiveSite()">
+                <span class="material-symbols-outlined text-[18px]">publish</span>
+                <span>Push Active Sequence to Live</span>
+              </button>
+              <a class="w-full py-2 rounded-lg bg-surface-container hover:bg-surface-variant text-on-surface font-label-md text-xs font-semibold text-center flex items-center justify-center gap-1.5 transition border border-outline-variant/30" href="../index.html#gallery" target="_blank">
+                <span class="material-symbols-outlined text-[16px]">open_in_new</span>
+                <span>Preview Live Page in New Tab</span>
+              </a>
+            </div>
+          </div>
+          
+          <!-- Staged Media Pipeline Widget -->
+          <div class="bg-white p-5 rounded-xl border border-outline-variant/30 shadow-sm flex flex-col gap-3">
+            <div class="flex items-center justify-between pb-2 border-b border-surface-container-high">
+              <span class="font-label-md text-sm font-bold text-primary">Staged Media Pipeline</span>
+              <span class="px-2 py-0.5 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-[10px] font-semibold">2 In-Flight</span>
+            </div>
+            
+            <!-- Staged Item 1 -->
+            <div class="p-2.5 rounded-lg bg-surface-container-low border border-surface-container-high/60 flex items-center gap-3">
+              <div class="w-12 h-12 rounded bg-surface-variant overflow-hidden flex-shrink-0">
+                <img alt="Upload thumbnail" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA-6XWkdvagzIw4dAivD9bN_gZiWbQPz2rB8mkq8dCtvSbtslDS7vMnDwyILB23odCUDoYA20t2POHPtOW5lMSMmsCxdZtWfsE8jx1hY89vMSZjU9qE70NL4HmXMiWAV9r6kT9uAQ-LyEIKftsAA5pwjKfzsZyZLMj-m8yy9SwhXCyoOiQ-I3ApQimG9NrYoFLaUKtAf7KGfyWzgmrkMeN5ynP4OmhOcXuaqlc1yzI_GhOESTIx1i2JGiqiRPKqqeuD">
+              </div>
+              <div class="flex flex-col min-w-0 flex-1">
+                <span class="font-label-sm text-xs font-semibold text-primary truncate">suffa_convocation_09.jpg</span>
+                <div class="w-full bg-surface-container-highest rounded-full h-1.5 mt-1 overflow-hidden">
+                  <div class="bg-tertiary-container h-1.5 rounded-full w-full"></div>
+                </div>
+                <span class="font-label-sm text-[10px] text-tertiary-container mt-0.5 font-semibold">Optimized 1.4MB • Ready</span>
+              </div>
+              <button class="text-secondary hover:text-primary p-1 cursor-pointer" onclick="openUploadDrawer()">
+                <span class="material-symbols-outlined text-[18px]">tune</span>
+              </button>
+            </div>
+            
+            <!-- Staged Item 2 -->
+            <div class="p-2.5 rounded-lg bg-surface-container-low border border-surface-container-high/60 flex items-center gap-3">
+              <div class="w-12 h-12 rounded bg-surface-variant overflow-hidden flex-shrink-0">
+                <img alt="Upload thumbnail" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDA0Bj0Zbo9Xjf2BbQQXegtxdr0kNbNA5SKUUZjV4v0EwOXE3gD6aPUPlM28VnFrogixZGO4z4nD4FyrfRV9dIloE84rp0fnVHrUDZuDltMqAqOPH6l-gpgDSqotiQ2ubAI4mBuhJoxlxBuUzV6NBaGu2TPQU0z6aO9UuX9Nn4gAvHY571GaRI9C4lAExYwchlvo8h3VRJBG7QlICK4S69FwwLX-t1ZBn6x8FZAz-w6j2Spm4XrgDw9gUaoHyQtbsaj">
+              </div>
+              <div class="flex flex-col min-w-0 flex-1">
+                <span class="font-label-sm text-xs font-semibold text-primary truncate">islamic_calligraphy_exhibit.jpg</span>
+                <div class="w-full bg-surface-container-highest rounded-full h-1.5 mt-1 overflow-hidden">
+                  <div class="bg-tertiary-container h-1.5 rounded-full w-full"></div>
+                </div>
+                <span class="font-label-sm text-[10px] text-tertiary-container mt-0.5 font-semibold">Optimized 2.1MB • Ready</span>
+              </div>
+              <button class="text-secondary hover:text-primary p-1 cursor-pointer" onclick="openUploadDrawer()">
+                <span class="material-symbols-outlined text-[18px]">tune</span>
+              </button>
+            </div>
+            
+            <!-- Batch Dropzone trigger -->
+            <button class="w-full py-2 rounded-lg border-2 border-dashed border-outline-variant hover:border-primary/50 hover:bg-surface-container-low text-outline hover:text-primary font-label-sm text-xs font-semibold text-center transition cursor-pointer" onclick="openUploadDrawer()">
+              + Open Multi-File Batch Uploader
+            </button>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- ================= BATCH UPLOAD MODAL / DRAWER ================= -->
+  <div class="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm hidden items-center justify-center p-4" id="uploadModal">
+    <div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto flex flex-col p-6 gap-4">
+      <div class="flex items-center justify-between pb-3 border-b border-outline-variant/30">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-lg bg-primary-fixed flex items-center justify-center text-primary">
+            <span class="material-symbols-outlined text-[22px]">cloud_upload</span>
+          </div>
+          <div>
+            <h2 class="font-subheading text-lg font-bold text-primary">Batch Media Uploader</h2>
+            <p class="font-body-sm text-xs text-outline">Ma'din Suffa Campus Official Media Repository</p>
+          </div>
+        </div>
+        <button class="w-8 h-8 rounded-full hover:bg-surface-container flex items-center justify-center text-outline hover:text-on-surface cursor-pointer" onclick="closeUploadDrawer()">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+      
+      <!-- Drag & Drop Zone -->
+      <div class="border-2 border-dashed border-secondary/40 rounded-xl p-8 flex flex-col items-center justify-center text-center bg-surface-container-low hover:bg-surface-container transition cursor-pointer" onclick="document.getElementById('fileUploadInput').click()">
+        <input type="file" id="fileUploadInput" class="hidden" accept="image/*" multiple onchange="handleFileSelect(this)">
+        <div class="w-12 h-12 rounded-full bg-secondary-fixed flex items-center justify-center text-secondary mb-2">
+          <span class="material-symbols-outlined text-[28px]">add_photo_alternate</span>
+        </div>
+        <span class="font-label-md text-sm font-bold text-primary">Drag &amp; drop high-resolution photos here</span>
+        <span class="font-body-sm text-xs text-outline mt-1">or <span class="text-secondary font-semibold underline">Browse Files</span> from workstation (JPG, PNG, WebP up to 25MB)</span>
+      </div>
+      
+      <!-- Auto Optimization Info Banner -->
+      <div class="p-3 rounded-lg bg-tertiary-fixed/30 border border-tertiary/20 flex items-start gap-2.5">
+        <span class="material-symbols-outlined text-tertiary text-[20px] mt-0.5">bolt</span>
+        <div class="flex flex-col">
+          <span class="font-label-sm text-[11px] font-bold uppercase text-on-tertiary-fixed">Automatic Web Optimization Active</span>
+          <span class="font-body-sm text-xs text-on-tertiary-fixed leading-tight mt-0.5">
+            Uploaded images are automatically compressed, converted to WebP with responsive 2x retina crops, and pushed directly to the Suffa CDN for instant carousel loading.
+          </span>
+        </div>
+      </div>
+      
+      <!-- Pending Queue Preview Item -->
+      <div class="flex flex-col gap-2 bg-surface-container-low p-3.5 rounded-lg border border-surface-container-high/60">
+        <span class="font-label-sm text-[11px] text-outline uppercase font-semibold">Pending Ingest Queue (1 file ready)</span>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 items-center">
+          <div class="h-20 rounded-lg overflow-hidden bg-surface-variant">
+            <img alt="Staged upload" class="w-full h-full object-cover" id="uploadThumbPreview" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDLsKhTJm1bh_IaB7B7h2ycnSJRixW82hBJsYd6vWf0j6TQEMIzqX5fWTfdDsuDHCLRlEtwxf_NvZDdxvTGuCgnIftO-1N0f55SyomZTxWcwc5Vxu-CXLInZyfEvqW_H56lIu2K5cp0HRFBtRCaNeA0y37rM_RrYXJMQ9aLGpbb0szMjcf4clvF33Y9Ia81XvHtUIGGhFwLb_1ugN3OWdBVGHc08n1P0PpIDj1TLUJ86aHmKwpjUeUzBRCirGIN-Viu">
+          </div>
+          <div class="sm:col-span-2 flex flex-col gap-2">
+            <input class="px-3 py-1.5 text-xs bg-white rounded-md border border-outline-variant/40 text-on-surface focus:outline-none" id="uploadInputTitle" placeholder="Title (e.g. Student Research Symposium)" type="text" value="Scholastic Assembly Hall Ceremony">
+            <div class="grid grid-cols-2 gap-2">
+              <select class="px-2.5 py-1 text-xs bg-white rounded-md border border-outline-variant/40 text-on-surface focus:outline-none" id="uploadInputCategory">
+                <option value="Academic Activities">Academic Activities</option>
+                <option value="Campus">Campus</option>
+                <option value="Events">Events</option>
+                <option value="Arts & Culture">Arts & Culture</option>
+              </select>
+              <label class="flex items-center gap-1.5 text-xs text-on-surface cursor-pointer select-none">
+                <input checked="" class="rounded text-primary focus:ring-0" id="uploadInputPublish" type="checkbox">
+                <span>Publish Immediately</span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="flex items-center justify-end gap-2.5 pt-3 border-t border-outline-variant/30">
+        <button class="px-4 py-2 rounded-lg bg-surface-container hover:bg-surface-variant text-on-surface font-label-md text-xs font-semibold cursor-pointer" onclick="closeUploadDrawer()">Cancel</button>
+        <button class="px-4 py-2 rounded-lg bg-primary hover:bg-primary-container text-white font-label-md text-xs font-bold shadow-sm cursor-pointer" onclick="commitUpload()">Complete Ingest &amp; Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= EDIT METADATA MODAL ================= -->
+  <div class="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm hidden items-center justify-center p-4" id="editModal">
+    <div class="bg-white rounded-xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto flex flex-col p-6 gap-4">
+      <div class="flex items-center justify-between pb-3 border-b border-outline-variant/30">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-lg bg-secondary-fixed flex items-center justify-center text-secondary">
+            <span class="material-symbols-outlined text-[20px]">edit_document</span>
+          </div>
+          <div>
+            <h2 class="font-subheading text-lg font-bold text-primary">Edit Photo Information</h2>
+            <p class="font-body-sm text-xs text-outline">Manage labels, accessibility, and display properties</p>
+          </div>
+        </div>
+        <button class="w-8 h-8 rounded-full hover:bg-surface-container flex items-center justify-center text-outline hover:text-on-surface cursor-pointer" onclick="closeEditModal()">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+      
+      <form class="flex flex-col gap-3" onsubmit="saveMetadata(event)">
+        <div class="flex flex-col gap-1">
+          <label class="font-label-sm text-xs font-semibold text-outline">Image Title (Public Display)</label>
+          <input class="px-3 py-2 text-sm bg-surface-container-low rounded-lg border border-outline-variant/30 text-on-surface focus:outline-none focus:bg-white" id="editModalTitle" type="text" required>
+        </div>
+        <div class="flex flex-col gap-1">
+          <label class="font-label-sm text-xs font-semibold text-outline">Category Classification</label>
+          <select class="w-full px-3 py-2 text-sm bg-surface-container-low rounded-lg border border-outline-variant/30 text-on-surface focus:outline-none focus:bg-white cursor-pointer" id="editModalCategory">
+            <option value="Campus">Campus</option>
+            <option value="Academic Activities">Academic Activities</option>
+            <option value="Students">Students</option>
+            <option value="Events">Events</option>
+            <option value="Arts & Culture">Arts & Culture</option>
+            <option value="Workshops">Workshops</option>
+          </select>
+        </div>
+        <div class="flex flex-col gap-1">
+          <label class="font-label-sm text-xs font-semibold text-outline">Detailed Caption</label>
+          <textarea class="px-3 py-2 text-sm bg-surface-container-low rounded-lg border border-outline-variant/30 text-on-surface focus:outline-none focus:bg-white" id="editModalCaption" rows="3"></textarea>
+        </div>
+        <div class="flex flex-col gap-1">
+          <label class="font-label-sm text-xs font-semibold text-outline">Accessibility Alt Text (WCAG)</label>
+          <input class="px-3 py-2 text-sm bg-surface-container-low rounded-lg border border-outline-variant/30 text-on-surface focus:outline-none focus:bg-white" id="editModalAlt" type="text">
+        </div>
+        <div class="flex items-center justify-end gap-2.5 pt-3 border-t border-outline-variant/30 mt-2">
+          <button class="px-4 py-2 rounded-lg bg-surface-container hover:bg-surface-variant text-on-surface font-label-md text-xs font-semibold cursor-pointer" onclick="closeEditModal()" type="button">Cancel</button>
+          <button class="px-4 py-2 rounded-lg bg-primary hover:bg-primary-container text-white font-label-md text-xs font-bold shadow-sm cursor-pointer" type="submit">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= TOAST NOTIFICATION ================= -->
+  <div class="fixed bottom-6 right-6 z-50 hidden bg-primary text-white px-4 py-3 rounded-lg shadow-xl items-center gap-2.5 transition" id="toastNotification">
+    <span class="material-symbols-outlined text-tertiary-fixed text-[20px]" id="toastIcon">check_circle</span>
+    <span class="font-label-md text-xs font-semibold" id="toastMessage">Changes synced successfully</span>
+  </div>
+
+  <!-- ================= SCRIPT LOGIC ================= -->
+  <script>
+    let isReorderMode = false;
+    let currentPreviewIndex = 0;
+    let currentEditCard = null;
+    
+    // Check authentication from session/local storage
+    document.addEventListener('DOMContentLoaded', () => {
+      const stored = localStorage.getItem('suffa_auth') || sessionStorage.getItem('suffa_auth');
+      if (stored) {
+        try {
+          const auth = JSON.parse(stored);
+          if (auth.roleName) {
+            document.getElementById('headerAdminName').textContent = auth.roleName;
+          }
+          if (auth.identifier) {
+            document.getElementById('dropdownEmail').textContent = auth.identifier;
+            document.getElementById('headerAdminRole').textContent = auth.identifier.split('@')[0].toUpperCase();
+          }
+        } catch(e) {}
+      }
+      updateStats();
+    });
+
+    const previewSlides = [
+      { title: "Campus Administrative & Academic Quadrangle", img: "https://lh3.googleusercontent.com/aida-public/AB6AXuD12uhA0vx2HQGFf7Bp5H0VBjMOAX3sV_yJatIBH7BXY1VISalgYsafUoEzbw6Yc6o1czR8uFuBzw5hWOgGGFcOxffkoKNJm8hdOCca097QOS7KWWdOK-_5J4q4FJopHc2_EDiBUDC5X3XCL37dmrerPS1WQ3VKr66RqRqo7z8J3hBfYll5LO9m2z2qj1CESlwhzyqXzeP2UzvdRonzImIhsZE7NmnMe5yHzr-fJteCxj6fIRGP2AinKUbMBAWzJSPU" },
+      { title: "Qur'an Recitation Circle & Tilawah Halaqah", img: "https://lh3.googleusercontent.com/aida-public/AB6AXuCnJUzBzvfJWmoNUjYmpbLIIjyxHyLchEwhmps1sZq9LSuhoSsKFVFwGZ5vlDlx-kCiZ4lpLShDMNPPe1uB9zC7MZd9c_4LMF7CV_aW231oedpJZzfuui6D4u73dAmFRItvtHXzbgX43DIqAr0qfCqQMLKiuCAUNdDGIQpohUiEHJ9y5yGCTwFUhtJABBSM6QDOudj3aHCgiH5WOTGO-6Ep6_pxHIhQfWOC5SFnxO6xZJcD7K6HD_nqPaPIk708-6HE" },
+      { title: "Inspiraath '25 Interschool Art Fest Inaugural", img: "https://lh3.googleusercontent.com/aida-public/AB6AXuDnUv8JrRFGFEeN2j0Daywz61pb6JOaRb-PH894ac4vj_NSSX0xTLF0rl0ho6DoXeMsYkq5pV_0G9L0556957iFoAA390y6mnqIFS1VQ2qiyhAAKy_wEjsCzjThAKU8jQCuyUNxmFB5UscUglLhAdCutpe_JZTaM4VDA4C1A8-dF2j9_vsGXbR3hewrt1CDPUftV5r7gearNKrbWSmSw9YvNht5qFiEUPyuj3NBoFsMpBCfQXjr4QHYRJLQveNHDayk" },
+      { title: "Student Scholastic Oratory Presentation", img: "https://lh3.googleusercontent.com/aida-public/AB6AXuBQRvM_4wCnyEt1cirnc87xTd18cZkH-A2AVAtv1xG8vAIBAySgbbnirheYWDK8ZT7MEDsrMGJmyAV1VpxJIwUfwoCoo6OgKApdhE75gHU6CLDh5YDNNfi8L1WkR2_w1PqlkGtInzNbe8NNVwZm0tlFoNG-xlWIFXr8nzdzk3sM3CM31sfAHHBgla-J20mMfDhlp6XBmOa4Hf6SigdHGqPU4_tSYg6uV3rIEhfHrMJMqziy_AK7j85C2yjojW0TM_Oc" },
+      { title: "Classical Nasheed & Choral Performance", img: "https://lh3.googleusercontent.com/aida-public/AB6AXuDFLjW8H4_J9zbLEbY042xH1_XXGKgUsgZ6g87pmQ-R_uJHT4llAc0HZpIl67bUuhV_yneWUDktH_ucWnhdkN9AkLXY6lk_N_AePUQS55alFkYwNmq1-WExzzcW5T0_snNOnNhf-YOFkp3MkwSRUzFeyZj9dW9MeD2vpeK6ZKR5zDlKjuNzWQIyICiR-3hlcncfnnfsiiwWgOdiauVhbCjcCz9Abzo53N7i3PSRJ1QW53H3o_ZdHRlgcAu0XOBLJGXy" },
+      { title: "Faculty & Guest Scholar Symposium", img: "https://lh3.googleusercontent.com/aida-public/AB6AXuBjcPX220V3bO8qsJIgprLN-qvZCIaGu7C5gLctYhd8LD54XClkdLNoYG3x-o_aghXlPQalqj0F6cc3iKJalSLBxpRtb2mJzGuZuzDQxa2KJcdCMf3I62T8tK9lQPuAoSYtCsOTFsJWYuEO52V_tZobQ9jtvyhuyatZCGJ6uZL2KHXR6KyTr7gm2cCyroAReoMsknUEFaHsMGNKFblZPXx0hrhv8TgMEHyU0vMbJ4qKLkrc5Gkxaj-SR1E5kRStNnh2" },
+      { title: "Qur'an Memorization Award Ceremony", img: "https://lh3.googleusercontent.com/aida-public/AB6AXuAQw6I4Gj9qJP2Uct3FTz9GNIMQooJOrtyhpTS_drOpRJDer1e6uRk1ziQelwMACELEDG0218O3n4j-QaUjULiESOZxw4uhb_82eSlSGJzWTrduYdDIYs1HuqPCJFkiYWAXpMBL-opXGyaOvXZtLfr9ji7iRkQ34ywqNnqB-Fcr_pq_9gcvuw762oY4EL4OT6Gj2LvM_mxIsQlGDKDOnHgOq6wlwvEErr_D4-aYMHZCF1mASVAt9GtI7DfqOL3kIAdc" }
+    ];
+
+    let toastTimer = null;
+    function showToast(msg, icon = 'check_circle') {
+      const toast = document.getElementById('toastNotification');
+      const toastMsg = document.getElementById('toastMessage');
+      const toastIcon = document.getElementById('toastIcon');
+      toastMsg.textContent = msg;
+      toastIcon.textContent = icon;
+      toast.classList.remove('hidden');
+      toast.classList.add('flex');
+      if (toastTimer) clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        toast.classList.add('hidden');
+        toast.classList.remove('flex');
+      }, 3200);
+    }
+
+    function logoutAdmin() {
+      if (confirm('Log out from Ma\'din Suffa administrative workspace?')) {
+        localStorage.removeItem('suffa_auth');
+        sessionStorage.removeItem('suffa_auth');
+        window.location.href = 'login.html';
+      }
+    }
+
+    function cyclePreviewSlide(direction) {
+      currentPreviewIndex = (currentPreviewIndex + direction + previewSlides.length) % previewSlides.length;
+      const imgElem = document.getElementById('publicPreviewSlide');
+      const capElem = document.getElementById('previewSlideCaption');
+      const counterElem = document.getElementById('sliderCounter');
+
+      imgElem.style.opacity = '0.3';
+      setTimeout(() => {
+        imgElem.src = previewSlides[currentPreviewIndex].img;
+        capElem.textContent = previewSlides[currentPreviewIndex].title;
+        counterElem.textContent = `Slide ${currentPreviewIndex + 1} of ${previewSlides.length}`;
+        imgElem.style.opacity = '1';
+      }, 150);
+    }
+
+    function toggleReorderMode() {
+      isReorderMode = !isReorderMode;
+      const btnText = document.getElementById('reorderBtnText');
+      const btn = document.getElementById('toggleReorderBtn');
+      const handles = document.querySelectorAll('.reorder-handle');
+
+      if (isReorderMode) {
+        btnText.textContent = 'Save Reorder';
+        btn.classList.add('bg-secondary-fixed', 'text-on-secondary-fixed');
+        handles.forEach(h => h.classList.remove('hidden'));
+        showToast('Reorder mode active. Use drag handles to arrange carousel priority.');
+      } else {
+        btnText.textContent = 'Reorder Sequence';
+        btn.classList.remove('bg-secondary-fixed', 'text-on-secondary-fixed');
+        handles.forEach(h => h.classList.add('hidden'));
+        
+        // Re-index displayed badges
+        const cards = document.querySelectorAll('.gallery-card');
+        cards.forEach((c, idx) => {
+          const seq = c.querySelector('.card-seq');
+          if (seq) seq.textContent = '#' + String(idx + 1).padStart(2, '0');
+        });
+        showToast('Sequence updated and synchronized with live slider.');
+      }
+    }
+
+    function toggleCardPublish(btn) {
+      const card = btn.closest('.gallery-card');
+      const statusLabel = card.querySelector('.status-label');
+      const dot = card.querySelector('.w-2.h-2.rounded-full');
+      const icon = btn.querySelector('.material-symbols-outlined');
+      const isCurrentlyPublished = card.dataset.status === 'Published';
+
+      if (isCurrentlyPublished) {
+        card.dataset.status = 'Draft / Hidden';
+        card.classList.add('opacity-75');
+        statusLabel.textContent = 'Draft / Hidden';
+        statusLabel.className = 'status-label font-label-sm text-[11px] text-outline font-semibold';
+        if (dot) dot.className = 'w-2 h-2 rounded-full bg-outline';
+        icon.textContent = 'visibility_off';
+        showToast('Photo unlisted from public slider.');
+      } else {
+        card.dataset.status = 'Published';
+        card.classList.remove('opacity-75');
+        statusLabel.textContent = 'Published';
+        statusLabel.className = 'status-label font-label-sm text-[11px] text-tertiary-container font-semibold';
+        if (dot) dot.className = 'w-2 h-2 rounded-full bg-tertiary-fixed-dim';
+        icon.textContent = 'visibility';
+        showToast('Photo published to live slider.');
+      }
+      updateStats();
+    }
+
+    function confirmDelete(btn) {
+      if (confirm("Remove this capture from Suffa Campus gallery? This action is archived in the activity log.")) {
+        const card = btn.closest('.gallery-card');
+        card.style.opacity = '0';
+        card.style.transform = 'scale(0.95)';
+        setTimeout(() => {
+          card.remove();
+          showToast('Photo asset removed from repository.');
+          updateStats();
+        }, 250);
+      }
+    }
+
+    function updateStats() {
+      const allCards = document.querySelectorAll('.gallery-card');
+      const published = document.querySelectorAll('.gallery-card[data-status="Published"]');
+      const drafts = document.querySelectorAll('.gallery-card[data-status="Draft / Hidden"]');
+      
+      const statTotal = document.getElementById('statTotalAssets');
+      const statLive = document.getElementById('statLiveCarousel');
+      const statDraft = document.getElementById('statDraftCount');
+      
+      if (statTotal) statTotal.textContent = `${allCards.length} Photos`;
+      if (statLive) statLive.textContent = `${published.length} Published`;
+      if (statDraft) statDraft.textContent = `${drafts.length} Items`;
+    }
+
+    function filterGalleryCards() {
+      const query = document.getElementById('gallerySearchInput').value.toLowerCase();
+      const statusFilter = document.getElementById('statusFilter').value;
+      const activeCategoryBtn = document.querySelector('.category-btn.active');
+      const activeCategory = activeCategoryBtn ? activeCategoryBtn.textContent.trim() : 'All';
+
+      const cards = document.querySelectorAll('.gallery-card');
+      cards.forEach(card => {
+        const title = card.querySelector('h3').textContent.toLowerCase();
+        const caption = card.querySelector('p').textContent.toLowerCase();
+        const category = card.dataset.category || '';
+        const status = card.dataset.status || '';
+
+        const matchesQuery = title.includes(query) || caption.includes(query);
+        const matchesCategory = (activeCategory === 'All') || (category.toLowerCase().includes(activeCategory.toLowerCase()));
+        const matchesStatus = (statusFilter === 'All') || (status === statusFilter);
+
+        if (matchesQuery && matchesCategory && matchesStatus) {
+          card.classList.remove('hidden');
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+    }
+
+    function setFilterCategory(cat) {
+      document.querySelectorAll('.category-btn').forEach(btn => {
+        if (btn.textContent.trim().toLowerCase() === cat.toLowerCase() || (cat === 'All' && btn.textContent.trim() === 'All')) {
+          btn.className = 'category-btn active px-3 py-1 rounded-md text-xs font-semibold bg-primary text-white transition cursor-pointer';
+        } else {
+          btn.className = 'category-btn px-3 py-1 rounded-md text-xs font-semibold text-on-surface-variant hover:text-primary transition cursor-pointer';
+        }
+      });
+      filterGalleryCards();
+    }
+
+    function openEditModal(title, category, caption, alt) {
+      currentEditCard = event ? event.target.closest('.gallery-card') : null;
+      document.getElementById('editModalTitle').value = title;
+      document.getElementById('editModalCategory').value = category;
+      document.getElementById('editModalCaption').value = caption;
+      document.getElementById('editModalAlt').value = alt;
+      document.getElementById('editModal').classList.remove('hidden');
+      document.getElementById('editModal').classList.add('flex');
+    }
+
+    function closeEditModal() {
+      document.getElementById('editModal').classList.add('hidden');
+      document.getElementById('editModal').classList.remove('flex');
+    }
+
+    function saveMetadata(e) {
+      e.preventDefault();
+      const title = document.getElementById('editModalTitle').value;
+      const cat = document.getElementById('editModalCategory').value;
+      const caption = document.getElementById('editModalCaption').value;
+      
+      if (currentEditCard) {
+        const h3 = currentEditCard.querySelector('h3');
+        const p = currentEditCard.querySelector('p');
+        if (h3) h3.textContent = title;
+        if (p) p.textContent = caption;
+        currentEditCard.dataset.category = cat;
+      }
+      
+      closeEditModal();
+      showToast('Media metadata and accessibility tags saved.');
+    }
+
+    function openUploadDrawer() {
+      document.getElementById('uploadModal').classList.remove('hidden');
+      document.getElementById('uploadModal').classList.add('flex');
+    }
+
+    function closeUploadDrawer() {
+      document.getElementById('uploadModal').classList.add('hidden');
+      document.getElementById('uploadModal').classList.remove('flex');
+    }
+
+    function handleFileSelect(input) {
+      if (input.files && input.files[0]) {
+        const file = input.files[0];
+        document.getElementById('uploadInputTitle').value = file.name.replace(/\.[^/.]+$/, "");
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          document.getElementById('uploadThumbPreview').src = e.target.result;
+        }
+        reader.readAsDataURL(file);
+      }
+    }
+
+    function commitUpload() {
+      const title = document.getElementById('uploadInputTitle').value.trim() || 'Suffa Campus Event Capture';
+      const category = document.getElementById('uploadInputCategory').value;
+      const isPublish = document.getElementById('uploadInputPublish').checked;
+      const imgSrc = document.getElementById('uploadThumbPreview').src;
+
+      const grid = document.getElementById('galleryGrid');
+      const newCard = document.createElement('div');
+      newCard.className = 'gallery-card bg-white rounded-xl border border-outline-variant/30 shadow-sm overflow-hidden flex flex-col group hover:shadow-md transition';
+      newCard.dataset.category = category;
+      newCard.dataset.id = Date.now();
+      newCard.dataset.status = isPublish ? 'Published' : 'Draft / Hidden';
+      if (!isPublish) newCard.classList.add('opacity-75');
+
+      newCard.innerHTML = `
+        <div class="relative h-48 w-full bg-surface-container overflow-hidden">
+          <img alt="${title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="${imgSrc}">
+          <div class="absolute top-2.5 left-2.5 flex items-center gap-1.5">
+            <span class="card-seq px-2 py-0.5 rounded-full bg-primary/90 backdrop-blur-md text-white font-label-sm text-[11px] font-bold">New</span>
+            <span class="px-2 py-0.5 rounded-full bg-emerald-500 text-white font-label-sm text-[10px] font-bold">Just Added</span>
+          </div>
+          <div class="absolute top-2.5 right-2.5 flex items-center gap-1">
+            <button class="w-7 h-7 rounded-full bg-white/90 backdrop-blur text-primary hover:bg-white flex items-center justify-center shadow-sm cursor-pointer" onclick="toggleCardPublish(this)" title="Toggle Visibility">
+              <span class="material-symbols-outlined text-[16px]">${isPublish ? 'visibility' : 'visibility_off'}</span>
+            </button>
+            <span class="reorder-handle hidden w-7 h-7 rounded-full bg-white/90 backdrop-blur text-on-surface cursor-grab active:cursor-grabbing flex items-center justify-center shadow-sm">
+              <span class="material-symbols-outlined text-[16px]">drag_indicator</span>
+            </span>
+          </div>
+          <div class="absolute bottom-2.5 left-2.5">
+            <span class="px-2.5 py-0.5 rounded-full bg-primary-container text-white font-label-sm text-[11px] font-semibold">${category}</span>
+          </div>
+        </div>
+        <div class="p-4 flex flex-col justify-between flex-1">
+          <div>
+            <h3 class="font-subheading text-[15px] text-primary font-bold leading-tight line-clamp-1">${title}</h3>
+            <p class="font-body-sm text-[12px] text-on-surface-variant line-clamp-2 mt-1">Official event media captured for Ma'din Suffa Campus archives.</p>
+          </div>
+          <div class="mt-3 pt-2.5 border-t border-outline-variant/20 flex items-center justify-between">
+            <div class="flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full ${isPublish ? 'bg-tertiary-fixed-dim' : 'bg-outline'}"></span>
+              <span class="status-label font-label-sm text-[11px] ${isPublish ? 'text-tertiary-container' : 'text-outline'} font-semibold">${isPublish ? 'Published' : 'Draft / Hidden'}</span>
+            </div>
+            <div class="flex items-center gap-1">
+              <button class="px-2.5 py-1 rounded bg-surface-container hover:bg-surface-variant text-on-surface font-label-sm text-[11px] font-medium flex items-center gap-1 cursor-pointer" onclick="openEditModal('${title}', '${category}', 'Official event media captured for Ma\\'din Suffa Campus archives.', '${title}')">
+                <span class="material-symbols-outlined text-[14px]">edit_note</span> Edit
+              </button>
+              <button class="p-1 rounded text-outline hover:text-error hover:bg-error-container/30 transition cursor-pointer" onclick="confirmDelete(this)">
+                <span class="material-symbols-outlined text-[16px]">delete</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+
+      grid.prepend(newCard);
+      closeUploadDrawer();
+      updateStats();
+      showToast('Media asset successfully ingested and placed in gallery.');
+    }
+
+    function triggerPublishSync() {
+      showToast('Synchronizing with Ma\'din Suffa web nodes...');
+      setTimeout(() => {
+        showToast('Live website carousel fully synchronized (18 active items).');
+      }, 1000);
+    }
+
+    function publishToLiveSite() {
+      showToast('Pushing carousel sequence to production server...');
+      setTimeout(() => {
+        showToast('Deployed successfully to www.madin.edu.in/vavoor');
+      }, 1200);
+    }
+  </script>
+</body>
+</html>
