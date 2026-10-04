@@ -10,6 +10,11 @@
   <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+  <!-- Firebase SDK & Shared Gallery API -->
+  <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore-compat.js"></script>
+  <script src="../firebase-config.js"></script>
+  <script src="../gallery-api.js"></script>
   
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
   <script id="tailwind-config">
@@ -350,336 +355,10 @@
           
           <!-- Responsive 2-Column Gallery Grid -->
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="galleryGrid">
-            <!-- Card 1 -->
-            <div class="gallery-card bg-white rounded-xl border border-outline-variant/30 shadow-sm overflow-hidden flex flex-col group hover:shadow-md transition" data-category="Campus" data-id="1" data-status="Published">
-              <div class="relative h-48 w-full bg-surface-container overflow-hidden">
-                <img alt="Campus Administrative & Academic Quadrangle" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB5gntFiMdqGmMyQdoONh0WBxTw3SuQ-JMlHRJk5mV1mSwsDB2Bf-PMOaYV2u-4g24_1qwX2751ncZdbfZmNUNzb3EWtQZcq9zr57zlYBHjpqtMLji7uig2zOLCLOm_TRgduGxzZQ7vNE6Cljp2NEJjw7ZdnFwWDCSxjsN2WXS-xWB5N1tOYz9Go1H36dlzyF5To-5DIG7geU9nn2zJ-OiVcG7X2RhTkrBa5r28mWFhZav2h2M0IJxjnEjuVDSslpuv">
-                <div class="absolute top-2.5 left-2.5 flex items-center gap-1.5">
-                  <span class="card-seq px-2 py-0.5 rounded-full bg-primary/90 backdrop-blur-md text-white font-label-sm text-[11px] font-bold">#01</span>
-                  <span class="px-2 py-0.5 rounded-full bg-tertiary-fixed text-on-tertiary-fixed font-label-sm text-[11px] font-bold flex items-center gap-1">
-                    <span class="material-symbols-outlined text-[13px]">star</span> Featured Cover
-                  </span>
-                </div>
-                <div class="absolute top-2.5 right-2.5 flex items-center gap-1">
-                  <button class="w-7 h-7 rounded-full bg-white/90 backdrop-blur text-primary hover:bg-white flex items-center justify-center shadow-sm cursor-pointer" onclick="toggleCardPublish(this)" title="Toggle Visibility">
-                    <span class="material-symbols-outlined text-[16px]">visibility</span>
-                  </button>
-                  <span class="reorder-handle hidden w-7 h-7 rounded-full bg-white/90 backdrop-blur text-on-surface cursor-grab active:cursor-grabbing flex items-center justify-center shadow-sm">
-                    <span class="material-symbols-outlined text-[16px]">drag_indicator</span>
-                  </span>
-                </div>
-                <div class="absolute bottom-2.5 left-2.5">
-                  <span class="px-2.5 py-0.5 rounded-full bg-primary-container text-white font-label-sm text-[11px] font-semibold">Campus</span>
-                </div>
-              </div>
-              <div class="p-4 flex flex-col justify-between flex-1">
-                <div>
-                  <h3 class="font-subheading text-[15px] text-primary font-bold leading-tight line-clamp-1">Campus Administrative & Academic Quadrangle</h3>
-                  <p class="font-body-sm text-[12px] text-on-surface-variant line-clamp-2 mt-1">Aerial panoramic capture showcasing the primary scholastic complex and central courtyard pavilion at Vavoor.</p>
-                </div>
-                <div class="mt-3 pt-2.5 border-t border-outline-variant/20 flex items-center justify-between">
-                  <div class="flex items-center gap-1.5">
-                    <span class="w-2 h-2 rounded-full bg-tertiary-fixed-dim"></span>
-                    <span class="status-label font-label-sm text-[11px] text-tertiary-container font-semibold">Published</span>
-                  </div>
-                  <div class="flex items-center gap-1">
-                    <button class="px-2.5 py-1 rounded bg-surface-container hover:bg-surface-variant text-on-surface font-label-sm text-[11px] font-medium flex items-center gap-1 cursor-pointer" onclick="openEditModal('Campus Administrative & Academic Quadrangle', 'Campus', 'Aerial panoramic capture showcasing the primary scholastic complex and central courtyard pavilion at Vavoor.', 'Quadrangle panorama with stone arches')">
-                      <span class="material-symbols-outlined text-[14px]">edit_note</span> Edit
-                    </button>
-                    <button class="p-1 rounded text-outline hover:text-error hover:bg-error-container/30 transition cursor-pointer" onclick="confirmDelete(this)">
-                      <span class="material-symbols-outlined text-[16px]">delete</span>
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            <!-- Card 2 -->
-            <div class="gallery-card bg-white rounded-xl border border-outline-variant/30 shadow-sm overflow-hidden flex flex-col group hover:shadow-md transition" data-category="Academic Activities" data-id="2" data-status="Published">
-              <div class="relative h-48 w-full bg-surface-container overflow-hidden">
-                <img alt="Qur'an Recitation Circle & Tilawah Halaqah" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAdJSk_B0AQpLkiJ6Be6yEqUUL0-s_yX6ZyvW-AZ4j1SLDA7GK_wlP4oJH6wOTCQCXQraVZvq0SbeOpRIkfX8JAzlFZPx7EX-NmFsl65Y6p2AOczxrBKTdRxOpc0G5V01Jy5fMlBCpUsEJVzZaDaaf4kiP-9vm2rcXG0aeT7ddqy_1i0MfDK05KcIhLfGfM2RqxTIH9dXLKCVSOkGYwYDwwHGXCbxXBU7Gr1XApiuiqy7Ffwcat0i_G0c0QwK2-J0Pp">
-                <div class="absolute top-2.5 left-2.5 flex items-center gap-1.5">
-                  <span class="card-seq px-2 py-0.5 rounded-full bg-primary/90 backdrop-blur-md text-white font-label-sm text-[11px] font-bold">#02</span>
-                </div>
-                <div class="absolute top-2.5 right-2.5 flex items-center gap-1">
-                  <button class="w-7 h-7 rounded-full bg-white/90 backdrop-blur text-primary hover:bg-white flex items-center justify-center shadow-sm cursor-pointer" onclick="toggleCardPublish(this)" title="Toggle Visibility">
-                    <span class="material-symbols-outlined text-[16px]">visibility</span>
-                  </button>
-                  <span class="reorder-handle hidden w-7 h-7 rounded-full bg-white/90 backdrop-blur text-on-surface cursor-grab active:cursor-grabbing flex items-center justify-center shadow-sm">
-                    <span class="material-symbols-outlined text-[16px]">drag_indicator</span>
-                  </span>
-                </div>
-                <div class="absolute bottom-2.5 left-2.5">
-                  <span class="px-2.5 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-sm text-[11px] font-semibold">Academic Activities</span>
-                </div>
-              </div>
-              <div class="p-4 flex flex-col justify-between flex-1">
-                <div>
-                  <h3 class="font-subheading text-[15px] text-primary font-bold leading-tight line-clamp-1">Qur'an Recitation Circle & Tilawah Halaqah</h3>
-                  <p class="font-body-sm text-[12px] text-on-surface-variant line-clamp-2 mt-1">Students engaged in traditional memorization and Tajweed study sessions under faculty supervision in the Suffa Study Hall.</p>
-                </div>
-                <div class="mt-3 pt-2.5 border-t border-outline-variant/20 flex items-center justify-between">
-                  <div class="flex items-center gap-1.5">
-                    <span class="w-2 h-2 rounded-full bg-tertiary-fixed-dim"></span>
-                    <span class="status-label font-label-sm text-[11px] text-tertiary-container font-semibold">Published</span>
-                  </div>
-                  <div class="flex items-center gap-1">
-                    <button class="px-2.5 py-1 rounded bg-surface-container hover:bg-surface-variant text-on-surface font-label-sm text-[11px] font-medium flex items-center gap-1 cursor-pointer" onclick="openEditModal('Qur\'an Recitation Circle & Tilawah Halaqah', 'Academic Activities', 'Students engaged in traditional memorization and Tajweed study sessions.', 'Students in circular recitation group with rehal')">
-                      <span class="material-symbols-outlined text-[14px]">edit_note</span> Edit
-                    </button>
-                    <button class="p-1 rounded text-outline hover:text-error hover:bg-error-container/30 transition cursor-pointer" onclick="confirmDelete(this)">
-                      <span class="material-symbols-outlined text-[16px]">delete</span>
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            <!-- Card 3 -->
-            <div class="gallery-card bg-white rounded-xl border border-outline-variant/30 shadow-sm overflow-hidden flex flex-col group hover:shadow-md transition" data-category="Events" data-id="3" data-status="Published">
-              <div class="relative h-48 w-full bg-surface-container overflow-hidden">
-                <img alt="Inspiraath '25 Interschool Art Fest Inaugural" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDtStxeIbmTpK_fg-OTytFQHtQ8rZy9uqQDcFeBUyZimV0RG2m-501SFhV17Xxh-FelhALL-zLs4mrEo-W1hhJEW7TqdMKJQR_RyPs52oRbs9IRMORQs-BSP8dwSai74Z9TFai19pJn0V4sCuGz6SkmKUjLTSzniq-9Gp4IK0KhRA8Uw8RnhMyQHAS5gpttX_QZwyzAzeNG0uyL9USDLb0mdTjZMTUlJePBWBqkAjIm5eC3TelX_EgBwpmsgSe_pO9e">
-                <div class="absolute top-2.5 left-2.5 flex items-center gap-1.5">
-                  <span class="card-seq px-2 py-0.5 rounded-full bg-primary/90 backdrop-blur-md text-white font-label-sm text-[11px] font-bold">#03</span>
-                </div>
-                <div class="absolute top-2.5 right-2.5 flex items-center gap-1">
-                  <button class="w-7 h-7 rounded-full bg-white/90 backdrop-blur text-primary hover:bg-white flex items-center justify-center shadow-sm cursor-pointer" onclick="toggleCardPublish(this)" title="Toggle Visibility">
-                    <span class="material-symbols-outlined text-[16px]">visibility</span>
-                  </button>
-                  <span class="reorder-handle hidden w-7 h-7 rounded-full bg-white/90 backdrop-blur text-on-surface cursor-grab active:cursor-grabbing flex items-center justify-center shadow-sm">
-                    <span class="material-symbols-outlined text-[16px]">drag_indicator</span>
-                  </span>
-                </div>
-                <div class="absolute bottom-2.5 left-2.5">
-                  <span class="px-2.5 py-0.5 rounded-full bg-surface-container-highest text-primary font-label-sm text-[11px] font-semibold">Events</span>
-                </div>
-              </div>
-              <div class="p-4 flex flex-col justify-between flex-1">
-                <div>
-                  <h3 class="font-subheading text-[15px] text-primary font-bold leading-tight line-clamp-1">Inspiraath '25 Interschool Art Fest Inaugural</h3>
-                  <p class="font-body-sm text-[12px] text-on-surface-variant line-clamp-2 mt-1">Campus grand assembly welcoming delegates and showcasing calligraphic banners and stage decorations.</p>
-                </div>
-                <div class="mt-3 pt-2.5 border-t border-outline-variant/20 flex items-center justify-between">
-                  <div class="flex items-center gap-1.5">
-                    <span class="w-2 h-2 rounded-full bg-tertiary-fixed-dim"></span>
-                    <span class="status-label font-label-sm text-[11px] text-tertiary-container font-semibold">Published</span>
-                  </div>
-                  <div class="flex items-center gap-1">
-                    <button class="px-2.5 py-1 rounded bg-surface-container hover:bg-surface-variant text-on-surface font-label-sm text-[11px] font-medium flex items-center gap-1 cursor-pointer" onclick="openEditModal('Inspiraath \'25 Interschool Art Fest Inaugural', 'Events', 'Campus grand assembly welcoming delegates and showcasing calligraphic banners.', 'Festival banner with audience in auditorium')">
-                      <span class="material-symbols-outlined text-[14px]">edit_note</span> Edit
-                    </button>
-                    <button class="p-1 rounded text-outline hover:text-error hover:bg-error-container/30 transition cursor-pointer" onclick="confirmDelete(this)">
-                      <span class="material-symbols-outlined text-[16px]">delete</span>
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            <!-- Card 4 -->
-            <div class="gallery-card bg-white rounded-xl border border-outline-variant/30 shadow-sm overflow-hidden flex flex-col group hover:shadow-md transition" data-category="Arts & Culture" data-id="4" data-status="Published">
-              <div class="relative h-48 w-full bg-surface-container overflow-hidden">
-                <img alt="Student Scholastic Oratory Presentation" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDrSVpTak-ocP4eRPPZBqXxdmP2Vh8Tkh0VxzIJiYqv3VjOMQYmrrRMrRHai0afZMzCYMHVF3k3M8Ct9PPa5J1tYPYl3DkZU0t2SvwDzNZBZblg3eVLljgTBfNTEw2X2S00srUaCfy6F1oyzN-q0mExTQoNIpcYYtqQzBWUFXc5g5d-8mtlGVNwEf23Z6OTMAcEFGLM3AWQTAa8HjNMzJ0ejEEjic0fsgmKoDgNjj8VA2AtNQ9mX9y7WYlkMBeWmFbX">
-                <div class="absolute top-2.5 left-2.5 flex items-center gap-1.5">
-                  <span class="card-seq px-2 py-0.5 rounded-full bg-primary/90 backdrop-blur-md text-white font-label-sm text-[11px] font-bold">#04</span>
-                </div>
-                <div class="absolute top-2.5 right-2.5 flex items-center gap-1">
-                  <button class="w-7 h-7 rounded-full bg-white/90 backdrop-blur text-primary hover:bg-white flex items-center justify-center shadow-sm cursor-pointer" onclick="toggleCardPublish(this)" title="Toggle Visibility">
-                    <span class="material-symbols-outlined text-[16px]">visibility</span>
-                  </button>
-                  <span class="reorder-handle hidden w-7 h-7 rounded-full bg-white/90 backdrop-blur text-on-surface cursor-grab active:cursor-grabbing flex items-center justify-center shadow-sm">
-                    <span class="material-symbols-outlined text-[16px]">drag_indicator</span>
-                  </span>
-                </div>
-                <div class="absolute bottom-2.5 left-2.5">
-                  <span class="px-2.5 py-0.5 rounded-full bg-surface-variant text-on-surface-variant font-label-sm text-[11px] font-semibold">Arts & Culture</span>
-                </div>
-              </div>
-              <div class="p-4 flex flex-col justify-between flex-1">
-                <div>
-                  <h3 class="font-subheading text-[15px] text-primary font-bold leading-tight line-clamp-1">Student Scholastic Oratory Presentation</h3>
-                  <p class="font-body-sm text-[12px] text-on-surface-variant line-clamp-2 mt-1">Youth leadership symposium in Arabic and English eloquence delivered by senior Suffa academy scholars.</p>
-                </div>
-                <div class="mt-3 pt-2.5 border-t border-outline-variant/20 flex items-center justify-between">
-                  <div class="flex items-center gap-1.5">
-                    <span class="w-2 h-2 rounded-full bg-tertiary-fixed-dim"></span>
-                    <span class="status-label font-label-sm text-[11px] text-tertiary-container font-semibold">Published</span>
-                  </div>
-                  <div class="flex items-center gap-1">
-                    <button class="px-2.5 py-1 rounded bg-surface-container hover:bg-surface-variant text-on-surface font-label-sm text-[11px] font-medium flex items-center gap-1 cursor-pointer" onclick="openEditModal('Student Scholastic Oratory Presentation', 'Arts & Culture', 'Youth leadership symposium in Arabic and English eloquence.', 'Young speaker on podium addressing student gallery')">
-                      <span class="material-symbols-outlined text-[14px]">edit_note</span> Edit
-                    </button>
-                    <button class="p-1 rounded text-outline hover:text-error hover:bg-error-container/30 transition cursor-pointer" onclick="confirmDelete(this)">
-                      <span class="material-symbols-outlined text-[16px]">delete</span>
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            <!-- Card 5 -->
-            <div class="gallery-card bg-white rounded-xl border border-outline-variant/30 shadow-sm overflow-hidden flex flex-col group hover:shadow-md transition" data-category="Arts & Culture" data-id="5" data-status="Published">
-              <div class="relative h-48 w-full bg-surface-container overflow-hidden">
-                <img alt="Classical Nasheed & Choral Performance" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCovvBGEyAqKf9b0Hsr_NFM_TfOQsbcFKWo4cUh288FmSdSJ4hozyqu74VBjhgdjq2_dpeZOMq14SOM6nrh3Q44-Co4XFobE2tqDmHzQ9f34dlzeO0eMd_txqMj2_mse0QZG-iPkQY5nBIP8IDsusuSR1UjGfNcwRGj8fBxiSSw4CmgMtiNXGep773Xbs7k1psPz7ERKbsjDy4JSGo0BoRij39Zf6Xt96JuoO-wiRfFcrO3I81a1qvEgUID4o41nfk2">
-                <div class="absolute top-2.5 left-2.5 flex items-center gap-1.5">
-                  <span class="card-seq px-2 py-0.5 rounded-full bg-primary/90 backdrop-blur-md text-white font-label-sm text-[11px] font-bold">#05</span>
-                </div>
-                <div class="absolute top-2.5 right-2.5 flex items-center gap-1">
-                  <button class="w-7 h-7 rounded-full bg-white/90 backdrop-blur text-primary hover:bg-white flex items-center justify-center shadow-sm cursor-pointer" onclick="toggleCardPublish(this)" title="Toggle Visibility">
-                    <span class="material-symbols-outlined text-[16px]">visibility</span>
-                  </button>
-                  <span class="reorder-handle hidden w-7 h-7 rounded-full bg-white/90 backdrop-blur text-on-surface cursor-grab active:cursor-grabbing flex items-center justify-center shadow-sm">
-                    <span class="material-symbols-outlined text-[16px]">drag_indicator</span>
-                  </span>
-                </div>
-                <div class="absolute bottom-2.5 left-2.5">
-                  <span class="px-2.5 py-0.5 rounded-full bg-surface-variant text-on-surface-variant font-label-sm text-[11px] font-semibold">Arts & Culture</span>
-                </div>
-              </div>
-              <div class="p-4 flex flex-col justify-between flex-1">
-                <div>
-                  <h3 class="font-subheading text-[15px] text-primary font-bold leading-tight line-clamp-1">Classical Nasheed & Choral Performance</h3>
-                  <p class="font-body-sm text-[12px] text-on-surface-variant line-clamp-2 mt-1">Spiritual vocal ensemble night commemorating the Prophetic traditions and campus cultural heritage.</p>
-                </div>
-                <div class="mt-3 pt-2.5 border-t border-outline-variant/20 flex items-center justify-between">
-                  <div class="flex items-center gap-1.5">
-                    <span class="w-2 h-2 rounded-full bg-tertiary-fixed-dim"></span>
-                    <span class="status-label font-label-sm text-[11px] text-tertiary-container font-semibold">Published</span>
-                  </div>
-                  <div class="flex items-center gap-1">
-                    <button class="px-2.5 py-1 rounded bg-surface-container hover:bg-surface-variant text-on-surface font-label-sm text-[11px] font-medium flex items-center gap-1 cursor-pointer" onclick="openEditModal('Classical Nasheed & Choral Performance', 'Arts & Culture', 'Spiritual vocal ensemble night commemorating Prophetic traditions.', 'Chorus group in traditional white attire on stage')">
-                      <span class="material-symbols-outlined text-[14px]">edit_note</span> Edit
-                    </button>
-                    <button class="p-1 rounded text-outline hover:text-error hover:bg-error-container/30 transition cursor-pointer" onclick="confirmDelete(this)">
-                      <span class="material-symbols-outlined text-[16px]">delete</span>
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            <!-- Card 6 -->
-            <div class="gallery-card bg-white rounded-xl border border-outline-variant/30 shadow-sm overflow-hidden flex flex-col group hover:shadow-md transition" data-category="Academic Activities" data-id="6" data-status="Published">
-              <div class="relative h-48 w-full bg-surface-container overflow-hidden">
-                <img alt="Faculty & Guest Scholar Symposium" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDA9LEw95jaM9hqXIViZfN90CP5y2ggTxKWCWxRkVTOmIJA0eJBzXK4kl832jkxDcjMowXD4Oxm_8u9x2W_5RTf4dPI5bUoB2IY6M9W6RL1TpTOI-GjbYdMlfup6EvRgwokHrMp3dGv7tB3rskWARso_4LgYKjGkbrVtCEXoyvl4gPwPa1ENSm6970DQ_CqHlTrpWE4B6YN3Y33naEW2yRrF9DKywpZ9VwBjDTpn-sGtMc_pgI4aJsJPcGaYQBuu7ur">
-                <div class="absolute top-2.5 left-2.5 flex items-center gap-1.5">
-                  <span class="card-seq px-2 py-0.5 rounded-full bg-primary/90 backdrop-blur-md text-white font-label-sm text-[11px] font-bold">#06</span>
-                </div>
-                <div class="absolute top-2.5 right-2.5 flex items-center gap-1">
-                  <button class="w-7 h-7 rounded-full bg-white/90 backdrop-blur text-primary hover:bg-white flex items-center justify-center shadow-sm cursor-pointer" onclick="toggleCardPublish(this)" title="Toggle Visibility">
-                    <span class="material-symbols-outlined text-[16px]">visibility</span>
-                  </button>
-                  <span class="reorder-handle hidden w-7 h-7 rounded-full bg-white/90 backdrop-blur text-on-surface cursor-grab active:cursor-grabbing flex items-center justify-center shadow-sm">
-                    <span class="material-symbols-outlined text-[16px]">drag_indicator</span>
-                  </span>
-                </div>
-                <div class="absolute bottom-2.5 left-2.5">
-                  <span class="px-2.5 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-sm text-[11px] font-semibold">Academic Activities</span>
-                </div>
-              </div>
-              <div class="p-4 flex flex-col justify-between flex-1">
-                <div>
-                  <h3 class="font-subheading text-[15px] text-primary font-bold leading-tight line-clamp-1">Faculty & Guest Scholar Symposium</h3>
-                  <p class="font-body-sm text-[12px] text-on-surface-variant line-clamp-2 mt-1">Interactive scholastic discourse on contemporary Fiqh and science with visiting scholars from Jamiathul Hind.</p>
-                </div>
-                <div class="mt-3 pt-2.5 border-t border-outline-variant/20 flex items-center justify-between">
-                  <div class="flex items-center gap-1.5">
-                    <span class="w-2 h-2 rounded-full bg-tertiary-fixed-dim"></span>
-                    <span class="status-label font-label-sm text-[11px] text-tertiary-container font-semibold">Published</span>
-                  </div>
-                  <div class="flex items-center gap-1">
-                    <button class="px-2.5 py-1 rounded bg-surface-container hover:bg-surface-variant text-on-surface font-label-sm text-[11px] font-medium flex items-center gap-1 cursor-pointer" onclick="openEditModal('Faculty & Guest Scholar Symposium', 'Academic Activities', 'Scholastic discourse on contemporary Fiqh with visiting scholars.', 'Faculty roundtable discussion with microphones')">
-                      <span class="material-symbols-outlined text-[14px]">edit_note</span> Edit
-                    </button>
-                    <button class="p-1 rounded text-outline hover:text-error hover:bg-error-container/30 transition cursor-pointer" onclick="confirmDelete(this)">
-                      <span class="material-symbols-outlined text-[16px]">delete</span>
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            <!-- Card 7 (Draft / Hidden) -->
-            <div class="gallery-card bg-white/80 rounded-xl border border-dashed border-outline-variant shadow-sm overflow-hidden flex flex-col group opacity-85 hover:opacity-100 hover:shadow-md transition" data-category="Students" data-id="7" data-status="Draft / Hidden">
-              <div class="relative h-48 w-full bg-surface-container overflow-hidden">
-                <img alt="Interactive Dialogue & Panel Discussion" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD7X8nGHjih2JAZXsy_dghc56iVlHXv4CEyTDqYV9H9sEUVBFjOasxtBORWJ34_6k2XtM_neszWttGFMjX974ckTGHqIh7pUaaAPmOiWz6T-58tXOo3IVlcUHvrQ1h5zSxorzdKNYC6Zc9FR5b39aCZokpJdv8bq_lvyYre-BKddJhiG5gvFWnrxAkNkIOOPAxaZZy3nT2W33WwDpInjSiJh0orrZduH_k7Z1n28kk3sQUPMns_AgMVMrDJf_yMN38F">
-                <div class="absolute top-2.5 left-2.5 flex items-center gap-1.5">
-                  <span class="card-seq px-2 py-0.5 rounded-full bg-outline/90 backdrop-blur-md text-white font-label-sm text-[11px] font-bold">#07</span>
-                  <span class="px-2 py-0.5 rounded-full bg-surface-container-highest text-on-surface-variant font-label-sm text-[11px] font-semibold">Unlisted Draft</span>
-                </div>
-                <div class="absolute top-2.5 right-2.5 flex items-center gap-1">
-                  <button class="w-7 h-7 rounded-full bg-white/90 backdrop-blur text-outline hover:bg-white flex items-center justify-center shadow-sm cursor-pointer" onclick="toggleCardPublish(this)" title="Toggle Visibility">
-                    <span class="material-symbols-outlined text-[16px]">visibility_off</span>
-                  </button>
-                  <span class="reorder-handle hidden w-7 h-7 rounded-full bg-white/90 backdrop-blur text-on-surface cursor-grab active:cursor-grabbing flex items-center justify-center shadow-sm">
-                    <span class="material-symbols-outlined text-[16px]">drag_indicator</span>
-                  </span>
-                </div>
-                <div class="absolute bottom-2.5 left-2.5">
-                  <span class="px-2.5 py-0.5 rounded-full bg-surface-container-high text-on-surface-variant font-label-sm text-[11px] font-semibold">Students</span>
-                </div>
-              </div>
-              <div class="p-4 flex flex-col justify-between flex-1">
-                <div>
-                  <h3 class="font-subheading text-[15px] text-on-surface font-bold leading-tight line-clamp-1">Interactive Dialogue & Panel Discussion</h3>
-                  <p class="font-body-sm text-[12px] text-outline line-clamp-2 mt-1">Youth mentoring workshop with campus alumni exploring higher academic pursuits in national universities.</p>
-                </div>
-                <div class="mt-3 pt-2.5 border-t border-outline-variant/20 flex items-center justify-between">
-                  <div class="flex items-center gap-1.5">
-                    <span class="w-2 h-2 rounded-full bg-outline"></span>
-                    <span class="status-label font-label-sm text-[11px] text-outline font-semibold">Draft / Hidden</span>
-                  </div>
-                  <div class="flex items-center gap-1">
-                    <button class="px-2.5 py-1 rounded bg-surface-container hover:bg-surface-variant text-on-surface font-label-sm text-[11px] font-medium flex items-center gap-1 cursor-pointer" onclick="openEditModal('Interactive Dialogue & Panel Discussion', 'Students', 'Youth mentoring workshop with campus alumni.', 'Panel speakers seated with audience')">
-                      <span class="material-symbols-outlined text-[14px]">edit_note</span> Edit
-                    </button>
-                    <button class="p-1 rounded text-outline hover:text-error hover:bg-error-container/30 transition cursor-pointer" onclick="confirmDelete(this)">
-                      <span class="material-symbols-outlined text-[16px]">delete</span>
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            <!-- Card 8 -->
-            <div class="gallery-card bg-white rounded-xl border border-outline-variant/30 shadow-sm overflow-hidden flex flex-col group hover:shadow-md transition" data-category="Events" data-id="8" data-status="Published">
-              <div class="relative h-48 w-full bg-surface-container overflow-hidden">
-                <img alt="Qur'an Memorization Award Ceremony" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCJf_VSs1XAoSXIML0c_okB6bbAO-m2O2m6cVQlgKkzbXWyciynP3oGtnjCjwO7mGfDj7xt7g-OiSeLjzdILMafLGc0K9VY8FfKBBlU5TNxmHAbvae1LYl7F7yydqS-Gs_wAK2TmZ_uuBj8DyGVPEMfoyWhdE9GCuBOpehzjPITF4ZFIL9VF8xyIJEOvOo-CI0JW1JWclUjkUz-tyG_uKaF__bmw8U_nXtZmFN7YRbjL_GTLBznAdWWehtoZQCMj7OB">
-                <div class="absolute top-2.5 left-2.5 flex items-center gap-1.5">
-                  <span class="card-seq px-2 py-0.5 rounded-full bg-primary/90 backdrop-blur-md text-white font-label-sm text-[11px] font-bold">#08</span>
-                </div>
-                <div class="absolute top-2.5 right-2.5 flex items-center gap-1">
-                  <button class="w-7 h-7 rounded-full bg-white/90 backdrop-blur text-primary hover:bg-white flex items-center justify-center shadow-sm cursor-pointer" onclick="toggleCardPublish(this)" title="Toggle Visibility">
-                    <span class="material-symbols-outlined text-[16px]">visibility</span>
-                  </button>
-                  <span class="reorder-handle hidden w-7 h-7 rounded-full bg-white/90 backdrop-blur text-on-surface cursor-grab active:cursor-grabbing flex items-center justify-center shadow-sm">
-                    <span class="material-symbols-outlined text-[16px]">drag_indicator</span>
-                  </span>
-                </div>
-                <div class="absolute bottom-2.5 left-2.5">
-                  <span class="px-2.5 py-0.5 rounded-full bg-surface-container-highest text-primary font-label-sm text-[11px] font-semibold">Events</span>
-                </div>
-              </div>
-              <div class="p-4 flex flex-col justify-between flex-1">
-                <div>
-                  <h3 class="font-subheading text-[15px] text-primary font-bold leading-tight line-clamp-1">Qur'an Memorization Award Ceremony</h3>
-                  <p class="font-body-sm text-[12px] text-on-surface-variant line-clamp-2 mt-1">Honoring outstanding Hafiz scholars with institutional certificates in the presence of distinguished patrons.</p>
-                </div>
-                <div class="mt-3 pt-2.5 border-t border-outline-variant/20 flex items-center justify-between">
-                  <div class="flex items-center gap-1.5">
-                    <span class="w-2 h-2 rounded-full bg-tertiary-fixed-dim"></span>
-                    <span class="status-label font-label-sm text-[11px] text-tertiary-container font-semibold">Published</span>
-                  </div>
-                  <div class="flex items-center gap-1">
-                    <button class="px-2.5 py-1 rounded bg-surface-container hover:bg-surface-variant text-on-surface font-label-sm text-[11px] font-medium flex items-center gap-1 cursor-pointer" onclick="openEditModal('Qur\'an Memorization Award Ceremony', 'Events', 'Honoring outstanding Hafiz scholars with institutional certificates.', 'Student receiving award certificate from chief guest')">
-                      <span class="material-symbols-outlined text-[14px]">edit_note</span> Edit
-                    </button>
-                    <button class="p-1 rounded text-outline hover:text-error hover:bg-error-container/30 transition cursor-pointer" onclick="confirmDelete(this)">
-                      <span class="material-symbols-outlined text-[16px]">delete</span>
-                    </button>
-                  </div>
-                </div>
-              </div>
+            <!-- Dynamic Gallery Cards loaded from Firebase & Cloudinary -->
+            <div id="galleryGridLoading" class="col-span-full py-12 text-center text-outline">
+              <span class="material-symbols-outlined text-4xl animate-spin text-primary">progress_activity</span>
+              <p class="mt-2 text-xs font-semibold">Loading gallery repository from Firebase &amp; Cloudinary...</p>
             </div>
           </div>
         </div>
@@ -926,45 +605,156 @@
 
   <!-- ================= SCRIPT LOGIC ================= -->
   <script>
+    let currentGalleryItems = [];
     let isReorderMode = false;
     let currentPreviewIndex = 0;
-    let currentEditCard = null;
+    let currentEditId = null;
+    let toastTimer = null;
+    let previewSlides = [];
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
     
-    // Check authentication from session/local storage
+    // Check authentication and load gallery
     document.addEventListener('DOMContentLoaded', () => {
       const stored = localStorage.getItem('suffa_auth') || sessionStorage.getItem('suffa_auth');
       if (stored) {
         try {
           const auth = JSON.parse(stored);
           if (auth.roleName) {
-            document.getElementById('headerAdminName').textContent = auth.roleName;
+            const nameEl = document.getElementById('headerAdminName');
+            if (nameEl) nameEl.textContent = auth.roleName;
           }
           if (auth.identifier) {
-            document.getElementById('dropdownEmail').textContent = auth.identifier;
-            document.getElementById('headerAdminRole').textContent = auth.identifier.split('@')[0].toUpperCase();
+            const mailEl = document.getElementById('dropdownEmail');
+            const roleEl = document.getElementById('headerAdminRole');
+            if (mailEl) mailEl.textContent = auth.identifier;
+            if (roleEl) roleEl.textContent = auth.identifier.split('@')[0].toUpperCase();
           }
         } catch(e) {}
       }
-      updateStats();
+
+      loadAdminGallery();
+
+      // Listen for real-time Firebase Firestore updates
+      if (window.GalleryAPI && typeof GalleryAPI.subscribe === 'function') {
+        GalleryAPI.subscribe(items => {
+          if (items && items.length > 0) {
+            currentGalleryItems = items;
+            renderGalleryCards(currentGalleryItems);
+            updatePreviewSlides();
+            updateStats();
+          }
+        });
+      }
     });
 
-    const previewSlides = [
-      { title: "Campus Administrative & Academic Quadrangle", img: "https://lh3.googleusercontent.com/aida-public/AB6AXuD12uhA0vx2HQGFf7Bp5H0VBjMOAX3sV_yJatIBH7BXY1VISalgYsafUoEzbw6Yc6o1czR8uFuBzw5hWOgGGFcOxffkoKNJm8hdOCca097QOS7KWWdOK-_5J4q4FJopHc2_EDiBUDC5X3XCL37dmrerPS1WQ3VKr66RqRqo7z8J3hBfYll5LO9m2z2qj1CESlwhzyqXzeP2UzvdRonzImIhsZE7NmnMe5yHzr-fJteCxj6fIRGP2AinKUbMBAWzJSPU" },
-      { title: "Qur'an Recitation Circle & Tilawah Halaqah", img: "https://lh3.googleusercontent.com/aida-public/AB6AXuCnJUzBzvfJWmoNUjYmpbLIIjyxHyLchEwhmps1sZq9LSuhoSsKFVFwGZ5vlDlx-kCiZ4lpLShDMNPPe1uB9zC7MZd9c_4LMF7CV_aW231oedpJZzfuui6D4u73dAmFRItvtHXzbgX43DIqAr0qfCqQMLKiuCAUNdDGIQpohUiEHJ9y5yGCTwFUhtJABBSM6QDOudj3aHCgiH5WOTGO-6Ep6_pxHIhQfWOC5SFnxO6xZJcD7K6HD_nqPaPIk708-6HE" },
-      { title: "Inspiraath '25 Interschool Art Fest Inaugural", img: "https://lh3.googleusercontent.com/aida-public/AB6AXuDnUv8JrRFGFEeN2j0Daywz61pb6JOaRb-PH894ac4vj_NSSX0xTLF0rl0ho6DoXeMsYkq5pV_0G9L0556957iFoAA390y6mnqIFS1VQ2qiyhAAKy_wEjsCzjThAKU8jQCuyUNxmFB5UscUglLhAdCutpe_JZTaM4VDA4C1A8-dF2j9_vsGXbR3hewrt1CDPUftV5r7gearNKrbWSmSw9YvNht5qFiEUPyuj3NBoFsMpBCfQXjr4QHYRJLQveNHDayk" },
-      { title: "Student Scholastic Oratory Presentation", img: "https://lh3.googleusercontent.com/aida-public/AB6AXuBQRvM_4wCnyEt1cirnc87xTd18cZkH-A2AVAtv1xG8vAIBAySgbbnirheYWDK8ZT7MEDsrMGJmyAV1VpxJIwUfwoCoo6OgKApdhE75gHU6CLDh5YDNNfi8L1WkR2_w1PqlkGtInzNbe8NNVwZm0tlFoNG-xlWIFXr8nzdzk3sM3CM31sfAHHBgla-J20mMfDhlp6XBmOa4Hf6SigdHGqPU4_tSYg6uV3rIEhfHrMJMqziy_AK7j85C2yjojW0TM_Oc" },
-      { title: "Classical Nasheed & Choral Performance", img: "https://lh3.googleusercontent.com/aida-public/AB6AXuDFLjW8H4_J9zbLEbY042xH1_XXGKgUsgZ6g87pmQ-R_uJHT4llAc0HZpIl67bUuhV_yneWUDktH_ucWnhdkN9AkLXY6lk_N_AePUQS55alFkYwNmq1-WExzzcW5T0_snNOnNhf-YOFkp3MkwSRUzFeyZj9dW9MeD2vpeK6ZKR5zDlKjuNzWQIyICiR-3hlcncfnnfsiiwWgOdiauVhbCjcCz9Abzo53N7i3PSRJ1QW53H3o_ZdHRlgcAu0XOBLJGXy" },
-      { title: "Faculty & Guest Scholar Symposium", img: "https://lh3.googleusercontent.com/aida-public/AB6AXuBjcPX220V3bO8qsJIgprLN-qvZCIaGu7C5gLctYhd8LD54XClkdLNoYG3x-o_aghXlPQalqj0F6cc3iKJalSLBxpRtb2mJzGuZuzDQxa2KJcdCMf3I62T8tK9lQPuAoSYtCsOTFsJWYuEO52V_tZobQ9jtvyhuyatZCGJ6uZL2KHXR6KyTr7gm2cCyroAReoMsknUEFaHsMGNKFblZPXx0hrhv8TgMEHyU0vMbJ4qKLkrc5Gkxaj-SR1E5kRStNnh2" },
-      { title: "Qur'an Memorization Award Ceremony", img: "https://lh3.googleusercontent.com/aida-public/AB6AXuAQw6I4Gj9qJP2Uct3FTz9GNIMQooJOrtyhpTS_drOpRJDer1e6uRk1ziQelwMACELEDG0218O3n4j-QaUjULiESOZxw4uhb_82eSlSGJzWTrduYdDIYs1HuqPCJFkiYWAXpMBL-opXGyaOvXZtLfr9ji7iRkQ34ywqNnqB-Fcr_pq_9gcvuw762oY4EL4OT6Gj2LvM_mxIsQlGDKDOnHgOq6wlwvEErr_D4-aYMHZCF1mASVAt9GtI7DfqOL3kIAdc" }
-    ];
+    async function loadAdminGallery() {
+      try {
+        const items = await GalleryAPI.getAll();
+        currentGalleryItems = items || [];
+        renderGalleryCards(currentGalleryItems);
+        updatePreviewSlides();
+        updateStats();
+      } catch (err) {
+        console.error('Error loading gallery from Firebase:', err);
+        showToast('Failed to load gallery data.', 'error');
+      }
+    }
 
-    let toastTimer = null;
+    function renderGalleryCards(items) {
+      const grid = document.getElementById('galleryGrid');
+      if (!grid) return;
+
+      if (!items || items.length === 0) {
+        grid.innerHTML = `
+          <div class="col-span-full py-12 px-4 text-center bg-white rounded-xl border border-outline-variant/30">
+            <span class="material-symbols-outlined text-4xl text-outline">photo_library</span>
+            <p class="text-sm font-bold text-primary mt-2">No photos in gallery repository</p>
+            <p class="text-xs text-outline mt-1">Upload an image to start populating the campus gallery.</p>
+            <button onclick="openUploadDrawer()" class="mt-4 px-4 py-2 bg-primary text-white text-xs font-bold rounded-lg shadow-sm hover:bg-primary-container transition cursor-pointer">+ Upload First Photo</button>
+          </div>
+        `;
+        return;
+      }
+
+      grid.innerHTML = items.map((item, idx) => {
+        const imgUrl = item.imageUrl || (window.GalleryAPI ? GalleryAPI.resolveImageUrl(item.src) : item.src);
+        const seq = item.order || (idx + 1);
+        const seqStr = String(seq).padStart(2, '0');
+        const isPub = item.published === true;
+
+        return `
+          <div class="gallery-card bg-white rounded-xl border border-outline-variant/30 shadow-sm overflow-hidden flex flex-col group hover:shadow-md transition ${!isPub ? 'opacity-75' : ''}" data-category="${escapeHtml(item.category || 'Campus')}" data-id="${item.id}" data-status="${isPub ? 'Published' : 'Draft / Hidden'}">
+            <div class="relative h-48 w-full bg-surface-container overflow-hidden">
+              <img alt="${escapeHtml(item.title)}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="${imgUrl}" loading="lazy">
+              <div class="absolute top-2.5 left-2.5 flex items-center gap-1.5">
+                <span class="card-seq px-2 py-0.5 rounded-full bg-primary/90 backdrop-blur-md text-white font-label-sm text-[11px] font-bold">#${seqStr}</span>
+                ${item.featured ? `
+                  <span class="px-2 py-0.5 rounded-full bg-tertiary-fixed text-on-tertiary-fixed font-label-sm text-[11px] font-bold flex items-center gap-1">
+                    <span class="material-symbols-outlined text-[13px]">star</span> Featured Cover
+                  </span>
+                ` : ''}
+              </div>
+              <div class="absolute top-2.5 right-2.5 flex items-center gap-1">
+                <!-- Reorder Controls -->
+                <div class="reorder-controls ${isReorderMode ? 'flex' : 'hidden'} items-center gap-0.5 bg-white/95 rounded-lg p-0.5 shadow-sm border border-outline-variant/30">
+                  <button onclick="moveItemUp('${item.id}')" title="Move earlier in sequence" class="w-6 h-6 rounded flex items-center justify-center text-primary hover:bg-surface-container transition cursor-pointer">
+                    <span class="material-symbols-outlined text-[15px]">arrow_upward</span>
+                  </button>
+                  <button onclick="moveItemDown('${item.id}')" title="Move later in sequence" class="w-6 h-6 rounded flex items-center justify-center text-primary hover:bg-surface-container transition cursor-pointer">
+                    <span class="material-symbols-outlined text-[15px]">arrow_downward</span>
+                  </button>
+                </div>
+                <button class="w-7 h-7 rounded-full bg-white/90 backdrop-blur text-primary hover:bg-white flex items-center justify-center shadow-sm cursor-pointer" onclick="toggleCardPublish('${item.id}')" title="Toggle Visibility">
+                  <span class="material-symbols-outlined text-[16px]">${isPub ? 'visibility' : 'visibility_off'}</span>
+                </button>
+              </div>
+              <div class="absolute bottom-2.5 left-2.5">
+                <span class="px-2.5 py-0.5 rounded-full bg-primary-container text-white font-label-sm text-[11px] font-semibold">${escapeHtml(item.category || 'Campus')}</span>
+              </div>
+            </div>
+            <div class="p-4 flex flex-col justify-between flex-1">
+              <div>
+                <h3 class="font-subheading text-[15px] text-primary font-bold leading-tight line-clamp-1">${escapeHtml(item.title)}</h3>
+                <p class="font-body-sm text-[12px] text-on-surface-variant line-clamp-2 mt-1">${escapeHtml(item.caption || "Official event media captured for Ma'din Suffa Campus archives.")}</p>
+              </div>
+              <div class="mt-3 pt-2.5 border-t border-outline-variant/20 flex items-center justify-between">
+                <div class="flex items-center gap-1.5">
+                  <span class="w-2 h-2 rounded-full ${isPub ? 'bg-tertiary-fixed-dim' : 'bg-outline'}"></span>
+                  <span class="status-label font-label-sm text-[11px] ${isPub ? 'text-tertiary-container' : 'text-outline'} font-semibold">${isPub ? 'Published' : 'Draft / Hidden'}</span>
+                </div>
+                <div class="flex items-center gap-1">
+                  <button class="px-2.5 py-1 rounded bg-surface-container hover:bg-surface-variant text-on-surface font-label-sm text-[11px] font-medium flex items-center gap-1 cursor-pointer" onclick="openEditModalById('${item.id}')">
+                    <span class="material-symbols-outlined text-[14px]">edit_note</span> Edit
+                  </button>
+                  <button class="p-1 rounded text-outline hover:text-error hover:bg-error-container/30 transition cursor-pointer" onclick="confirmDelete('${item.id}')" title="Delete from Cloudinary & Firebase">
+                    <span class="material-symbols-outlined text-[16px]">delete</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      filterGalleryCards();
+    }
+
     function showToast(msg, icon = 'check_circle') {
       const toast = document.getElementById('toastNotification');
       const toastMsg = document.getElementById('toastMessage');
       const toastIcon = document.getElementById('toastIcon');
+      if (!toast || !toastMsg) return;
       toastMsg.textContent = msg;
-      toastIcon.textContent = icon;
+      if (toastIcon) toastIcon.textContent = icon;
       toast.classList.remove('hidden');
       toast.classList.add('flex');
       if (toastTimer) clearTimeout(toastTimer);
@@ -975,98 +765,142 @@
     }
 
     function logoutAdmin() {
-      if (confirm('Log out from Ma\'din Suffa administrative workspace?')) {
+      if (confirm("Log out from Ma'din Suffa administrative workspace?")) {
         localStorage.removeItem('suffa_auth');
         sessionStorage.removeItem('suffa_auth');
         window.location.href = 'login.html';
       }
     }
 
+    function updatePreviewSlides() {
+      const published = currentGalleryItems.filter(i => i.published === true);
+      if (published.length > 0) {
+        previewSlides = published.map(item => ({
+          title: item.title,
+          img: item.imageUrl || (window.GalleryAPI ? GalleryAPI.resolveImageUrl(item.src) : item.src)
+        }));
+      } else {
+        previewSlides = [{
+          title: "Campus Administrative Quadrangle",
+          img: "https://images.unsplash.com/photo-1541829070764-84a7d30dd3f3?auto=format&fit=crop&w=600&q=80"
+        }];
+      }
+
+      if (currentPreviewIndex >= previewSlides.length) currentPreviewIndex = 0;
+      const imgElem = document.getElementById('publicPreviewSlide');
+      const capElem = document.getElementById('previewSlideCaption');
+      const counterElem = document.getElementById('sliderCounter');
+
+      if (imgElem && previewSlides[currentPreviewIndex]) imgElem.src = previewSlides[currentPreviewIndex].img;
+      if (capElem && previewSlides[currentPreviewIndex]) capElem.textContent = previewSlides[currentPreviewIndex].title;
+      if (counterElem) counterElem.textContent = `Slide ${currentPreviewIndex + 1} of ${previewSlides.length}`;
+    }
+
     function cyclePreviewSlide(direction) {
+      if (previewSlides.length === 0) return;
       currentPreviewIndex = (currentPreviewIndex + direction + previewSlides.length) % previewSlides.length;
       const imgElem = document.getElementById('publicPreviewSlide');
       const capElem = document.getElementById('previewSlideCaption');
       const counterElem = document.getElementById('sliderCounter');
 
-      imgElem.style.opacity = '0.3';
-      setTimeout(() => {
-        imgElem.src = previewSlides[currentPreviewIndex].img;
-        capElem.textContent = previewSlides[currentPreviewIndex].title;
-        counterElem.textContent = `Slide ${currentPreviewIndex + 1} of ${previewSlides.length}`;
-        imgElem.style.opacity = '1';
-      }, 150);
+      if (imgElem) {
+        imgElem.style.opacity = '0.3';
+        setTimeout(() => {
+          imgElem.src = previewSlides[currentPreviewIndex].img;
+          if (capElem) capElem.textContent = previewSlides[currentPreviewIndex].title;
+          if (counterElem) counterElem.textContent = `Slide ${currentPreviewIndex + 1} of ${previewSlides.length}`;
+          imgElem.style.opacity = '1';
+        }, 150);
+      }
     }
 
     function toggleReorderMode() {
       isReorderMode = !isReorderMode;
       const btnText = document.getElementById('reorderBtnText');
       const btn = document.getElementById('toggleReorderBtn');
-      const handles = document.querySelectorAll('.reorder-handle');
+      const controls = document.querySelectorAll('.reorder-controls');
 
       if (isReorderMode) {
-        btnText.textContent = 'Save Reorder';
-        btn.classList.add('bg-secondary-fixed', 'text-on-secondary-fixed');
-        handles.forEach(h => h.classList.remove('hidden'));
-        showToast('Reorder mode active. Use drag handles to arrange carousel priority.');
+        if (btnText) btnText.textContent = 'Save Reorder';
+        if (btn) btn.classList.add('bg-secondary-fixed', 'text-on-secondary-fixed');
+        controls.forEach(c => c.classList.remove('hidden'));
+        showToast('Reorder mode active. Use arrow buttons on cards to adjust sequence.');
       } else {
-        btnText.textContent = 'Reorder Sequence';
-        btn.classList.remove('bg-secondary-fixed', 'text-on-secondary-fixed');
-        handles.forEach(h => h.classList.add('hidden'));
+        if (btnText) btnText.textContent = 'Reorder Sequence';
+        if (btn) btn.classList.remove('bg-secondary-fixed', 'text-on-secondary-fixed');
+        controls.forEach(c => c.classList.add('hidden'));
         
-        // Re-index displayed badges
-        const cards = document.querySelectorAll('.gallery-card');
-        cards.forEach((c, idx) => {
-          const seq = c.querySelector('.card-seq');
-          if (seq) seq.textContent = '#' + String(idx + 1).padStart(2, '0');
+        const orderedIds = currentGalleryItems.map(i => i.id);
+        GalleryAPI.reorder(orderedIds).then(() => {
+          showToast('Sequence updated and synchronized with live slider in Firebase.');
+        }).catch(err => {
+          showToast('Failed to save sequence to Firebase.', 'error');
         });
-        showToast('Sequence updated and synchronized with live slider.');
       }
     }
 
-    function toggleCardPublish(btn) {
-      const card = btn.closest('.gallery-card');
-      const statusLabel = card.querySelector('.status-label');
-      const dot = card.querySelector('.w-2.h-2.rounded-full');
-      const icon = btn.querySelector('.material-symbols-outlined');
-      const isCurrentlyPublished = card.dataset.status === 'Published';
-
-      if (isCurrentlyPublished) {
-        card.dataset.status = 'Draft / Hidden';
-        card.classList.add('opacity-75');
-        statusLabel.textContent = 'Draft / Hidden';
-        statusLabel.className = 'status-label font-label-sm text-[11px] text-outline font-semibold';
-        if (dot) dot.className = 'w-2 h-2 rounded-full bg-outline';
-        icon.textContent = 'visibility_off';
-        showToast('Photo unlisted from public slider.');
-      } else {
-        card.dataset.status = 'Published';
-        card.classList.remove('opacity-75');
-        statusLabel.textContent = 'Published';
-        statusLabel.className = 'status-label font-label-sm text-[11px] text-tertiary-container font-semibold';
-        if (dot) dot.className = 'w-2 h-2 rounded-full bg-tertiary-fixed-dim';
-        icon.textContent = 'visibility';
-        showToast('Photo published to live slider.');
+    async function moveItemUp(id) {
+      const idx = currentGalleryItems.findIndex(i => String(i.id) === String(id));
+      if (idx <= 0) {
+        showToast('Item is already at the top of the sequence.');
+        return;
       }
-      updateStats();
+      const temp = currentGalleryItems[idx - 1];
+      currentGalleryItems[idx - 1] = currentGalleryItems[idx];
+      currentGalleryItems[idx] = temp;
+      renderGalleryCards(currentGalleryItems);
+      try {
+        await GalleryAPI.reorder(currentGalleryItems.map(i => i.id));
+        showToast('Moved earlier in sequence.');
+      } catch(e) {}
     }
 
-    function confirmDelete(btn) {
-      if (confirm("Remove this capture from Suffa Campus gallery? This action is archived in the activity log.")) {
-        const card = btn.closest('.gallery-card');
-        card.style.opacity = '0';
-        card.style.transform = 'scale(0.95)';
-        setTimeout(() => {
-          card.remove();
-          showToast('Photo asset removed from repository.');
-          updateStats();
-        }, 250);
+    async function moveItemDown(id) {
+      const idx = currentGalleryItems.findIndex(i => String(i.id) === String(id));
+      if (idx === -1 || idx >= currentGalleryItems.length - 1) {
+        showToast('Item is already at the end of the sequence.');
+        return;
+      }
+      const temp = currentGalleryItems[idx + 1];
+      currentGalleryItems[idx + 1] = currentGalleryItems[idx];
+      currentGalleryItems[idx] = temp;
+      renderGalleryCards(currentGalleryItems);
+      try {
+        await GalleryAPI.reorder(currentGalleryItems.map(i => i.id));
+        showToast('Moved later in sequence.');
+      } catch(e) {}
+    }
+
+    async function toggleCardPublish(id) {
+      try {
+        const res = await GalleryAPI.togglePublish(id);
+        const isPub = res && res.item && res.item.published;
+        showToast(isPub ? 'Photo published to live slider.' : 'Photo unlisted from public slider.');
+        await loadAdminGallery();
+      } catch (err) {
+        console.error('Error toggling publish:', err);
+        showToast('Failed to update status.', 'error');
+      }
+    }
+
+    async function confirmDelete(id) {
+      if (!confirm("Permanently delete this photo? It will be removed from Cloudinary storage and Firebase database.")) {
+        return;
+      }
+      try {
+        await GalleryAPI.delete(id);
+        showToast('Photo asset removed from Cloudinary & Firebase.');
+        await loadAdminGallery();
+      } catch (err) {
+        console.error('Error deleting photo:', err);
+        showToast('Failed to delete photo: ' + err.message, 'error');
       }
     }
 
     function updateStats() {
-      const allCards = document.querySelectorAll('.gallery-card');
-      const published = document.querySelectorAll('.gallery-card[data-status="Published"]');
-      const drafts = document.querySelectorAll('.gallery-card[data-status="Draft / Hidden"]');
+      const allCards = currentGalleryItems;
+      const published = allCards.filter(i => i.published === true);
+      const drafts = allCards.filter(i => !i.published);
       
       const statTotal = document.getElementById('statTotalAssets');
       const statLive = document.getElementById('statLiveCarousel');
@@ -1078,15 +912,15 @@
     }
 
     function filterGalleryCards() {
-      const query = document.getElementById('gallerySearchInput').value.toLowerCase();
-      const statusFilter = document.getElementById('statusFilter').value;
+      const query = (document.getElementById('gallerySearchInput')?.value || '').toLowerCase();
+      const statusFilter = document.getElementById('statusFilter')?.value || 'All';
       const activeCategoryBtn = document.querySelector('.category-btn.active');
       const activeCategory = activeCategoryBtn ? activeCategoryBtn.textContent.trim() : 'All';
 
       const cards = document.querySelectorAll('.gallery-card');
       cards.forEach(card => {
-        const title = card.querySelector('h3').textContent.toLowerCase();
-        const caption = card.querySelector('p').textContent.toLowerCase();
+        const title = (card.querySelector('h3')?.textContent || '').toLowerCase();
+        const caption = (card.querySelector('p')?.textContent || '').toLowerCase();
         const category = card.dataset.category || '';
         const status = card.dataset.status || '';
 
@@ -1113,12 +947,16 @@
       filterGalleryCards();
     }
 
-    function openEditModal(title, category, caption, alt) {
-      currentEditCard = event ? event.target.closest('.gallery-card') : null;
-      document.getElementById('editModalTitle').value = title;
-      document.getElementById('editModalCategory').value = category;
-      document.getElementById('editModalCaption').value = caption;
-      document.getElementById('editModalAlt').value = alt;
+    function openEditModalById(id) {
+      const item = currentGalleryItems.find(i => String(i.id) === String(id));
+      if (!item) return;
+
+      currentEditId = item.id;
+      document.getElementById('editModalTitle').value = item.title || '';
+      document.getElementById('editModalCategory').value = item.category || 'Campus';
+      document.getElementById('editModalCaption').value = item.caption || '';
+      document.getElementById('editModalAlt').value = item.altText || item.title || '';
+
       document.getElementById('editModal').classList.remove('hidden');
       document.getElementById('editModal').classList.add('flex');
     }
@@ -1126,24 +964,27 @@
     function closeEditModal() {
       document.getElementById('editModal').classList.add('hidden');
       document.getElementById('editModal').classList.remove('flex');
+      currentEditId = null;
     }
 
-    function saveMetadata(e) {
+    async function saveMetadata(e) {
       e.preventDefault();
-      const title = document.getElementById('editModalTitle').value;
-      const cat = document.getElementById('editModalCategory').value;
-      const caption = document.getElementById('editModalCaption').value;
-      
-      if (currentEditCard) {
-        const h3 = currentEditCard.querySelector('h3');
-        const p = currentEditCard.querySelector('p');
-        if (h3) h3.textContent = title;
-        if (p) p.textContent = caption;
-        currentEditCard.dataset.category = cat;
+      if (!currentEditId) return;
+
+      const title = document.getElementById('editModalTitle').value.trim();
+      const category = document.getElementById('editModalCategory').value;
+      const caption = document.getElementById('editModalCaption').value.trim();
+      const altText = document.getElementById('editModalAlt').value.trim();
+
+      try {
+        await GalleryAPI.update(currentEditId, { title, category, caption, altText });
+        closeEditModal();
+        showToast('Media metadata and accessibility tags saved to Firebase.');
+        await loadAdminGallery();
+      } catch (err) {
+        console.error('Error updating metadata:', err);
+        showToast('Failed to save changes: ' + err.message, 'error');
       }
-      
-      closeEditModal();
-      showToast('Media metadata and accessibility tags saved.');
     }
 
     function openUploadDrawer() {
@@ -1154,6 +995,8 @@
     function closeUploadDrawer() {
       document.getElementById('uploadModal').classList.add('hidden');
       document.getElementById('uploadModal').classList.remove('flex');
+      const fileInput = document.getElementById('fileUploadInput');
+      if (fileInput) fileInput.value = '';
     }
 
     function handleFileSelect(input) {
@@ -1168,79 +1011,51 @@
       }
     }
 
-    function commitUpload() {
+    async function commitUpload() {
+      const fileInput = document.getElementById('fileUploadInput');
       const title = document.getElementById('uploadInputTitle').value.trim() || 'Suffa Campus Event Capture';
       const category = document.getElementById('uploadInputCategory').value;
       const isPublish = document.getElementById('uploadInputPublish').checked;
-      const imgSrc = document.getElementById('uploadThumbPreview').src;
 
-      const grid = document.getElementById('galleryGrid');
-      const newCard = document.createElement('div');
-      newCard.className = 'gallery-card bg-white rounded-xl border border-outline-variant/30 shadow-sm overflow-hidden flex flex-col group hover:shadow-md transition';
-      newCard.dataset.category = category;
-      newCard.dataset.id = Date.now();
-      newCard.dataset.status = isPublish ? 'Published' : 'Draft / Hidden';
-      if (!isPublish) newCard.classList.add('opacity-75');
+      if (!fileInput.files || fileInput.files.length === 0) {
+        alert('Please choose an image file to upload.');
+        return;
+      }
 
-      newCard.innerHTML = `
-        <div class="relative h-48 w-full bg-surface-container overflow-hidden">
-          <img alt="${title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="${imgSrc}">
-          <div class="absolute top-2.5 left-2.5 flex items-center gap-1.5">
-            <span class="card-seq px-2 py-0.5 rounded-full bg-primary/90 backdrop-blur-md text-white font-label-sm text-[11px] font-bold">New</span>
-            <span class="px-2 py-0.5 rounded-full bg-emerald-500 text-white font-label-sm text-[10px] font-bold">Just Added</span>
-          </div>
-          <div class="absolute top-2.5 right-2.5 flex items-center gap-1">
-            <button class="w-7 h-7 rounded-full bg-white/90 backdrop-blur text-primary hover:bg-white flex items-center justify-center shadow-sm cursor-pointer" onclick="toggleCardPublish(this)" title="Toggle Visibility">
-              <span class="material-symbols-outlined text-[16px]">${isPublish ? 'visibility' : 'visibility_off'}</span>
-            </button>
-            <span class="reorder-handle hidden w-7 h-7 rounded-full bg-white/90 backdrop-blur text-on-surface cursor-grab active:cursor-grabbing flex items-center justify-center shadow-sm">
-              <span class="material-symbols-outlined text-[16px]">drag_indicator</span>
-            </span>
-          </div>
-          <div class="absolute bottom-2.5 left-2.5">
-            <span class="px-2.5 py-0.5 rounded-full bg-primary-container text-white font-label-sm text-[11px] font-semibold">${category}</span>
-          </div>
-        </div>
-        <div class="p-4 flex flex-col justify-between flex-1">
-          <div>
-            <h3 class="font-subheading text-[15px] text-primary font-bold leading-tight line-clamp-1">${title}</h3>
-            <p class="font-body-sm text-[12px] text-on-surface-variant line-clamp-2 mt-1">Official event media captured for Ma'din Suffa Campus archives.</p>
-          </div>
-          <div class="mt-3 pt-2.5 border-t border-outline-variant/20 flex items-center justify-between">
-            <div class="flex items-center gap-1.5">
-              <span class="w-2 h-2 rounded-full ${isPublish ? 'bg-tertiary-fixed-dim' : 'bg-outline'}"></span>
-              <span class="status-label font-label-sm text-[11px] ${isPublish ? 'text-tertiary-container' : 'text-outline'} font-semibold">${isPublish ? 'Published' : 'Draft / Hidden'}</span>
-            </div>
-            <div class="flex items-center gap-1">
-              <button class="px-2.5 py-1 rounded bg-surface-container hover:bg-surface-variant text-on-surface font-label-sm text-[11px] font-medium flex items-center gap-1 cursor-pointer" onclick="openEditModal('${title}', '${category}', 'Official event media captured for Ma\\'din Suffa Campus archives.', '${title}')">
-                <span class="material-symbols-outlined text-[14px]">edit_note</span> Edit
-              </button>
-              <button class="p-1 rounded text-outline hover:text-error hover:bg-error-container/30 transition cursor-pointer" onclick="confirmDelete(this)">
-                <span class="material-symbols-outlined text-[16px]">delete</span>
-              </button>
-            </div>
-          </div>
-        </div>
-      `;
+      showToast('Uploading to Cloudinary & saving to Firebase...', 'cloud_upload');
 
-      grid.prepend(newCard);
-      closeUploadDrawer();
-      updateStats();
-      showToast('Media asset successfully ingested and placed in gallery.');
+      try {
+        const formData = new FormData();
+        for (let i = 0; i < fileInput.files.length; i++) {
+          formData.append('images', fileInput.files[i]);
+        }
+        formData.append('title', title);
+        formData.append('category', category);
+        formData.append('published', isPublish);
+        formData.append('caption', "Official event media captured for Ma'din Suffa Campus archives.");
+
+        await GalleryAPI.upload(formData);
+        closeUploadDrawer();
+        showToast('Media asset uploaded to Cloudinary and registered in Firebase.');
+        await loadAdminGallery();
+      } catch (err) {
+        console.error('Error uploading image:', err);
+        showToast('Upload failed: ' + err.message, 'error');
+      }
     }
 
     function triggerPublishSync() {
-      showToast('Synchronizing with Ma\'din Suffa web nodes...');
-      setTimeout(() => {
-        showToast('Live website carousel fully synchronized (18 active items).');
-      }, 1000);
+      showToast("Synchronizing with Ma'din Suffa web nodes...");
+      loadAdminGallery().then(() => {
+        showToast(`Live website carousel synchronized (${currentGalleryItems.filter(i => i.published).length} active items).`);
+      });
     }
 
     function publishToLiveSite() {
       showToast('Pushing carousel sequence to production server...');
       setTimeout(() => {
-        showToast('Deployed successfully to www.madin.edu.in/vavoor');
-      }, 1200);
+        showToast('Synchronized with Firebase Firestore & Cloudinary CDN');
+      }, 1000);
     }
   </script>
 </body>

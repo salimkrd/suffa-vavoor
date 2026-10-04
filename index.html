@@ -11,17 +11,45 @@
   <!-- Google Fonts & Material Symbols -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
 
   <style>
     @layer base {
-      html, body { width: 100vw; margin: 0; padding: 0; background-color: #f8fafc; }
-      body { overscroll-behavior: none; }
+      html, body {
+        width: 100%;
+        max-width: 100%;
+        margin: 0;
+        padding: 0;
+        background-color: #f8fafc;
+        overflow-x: hidden;
+      }
+      body {
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        text-rendering: optimizeLegibility;
+      }
       .pb-safe { padding-bottom: env(safe-area-inset-bottom, 0px); }
       .pt-safe { padding-top: env(safe-area-inset-top, 0px); }
     }
     ::-webkit-scrollbar { display: none; }
+    * { -ms-overflow-style: none; scrollbar-width: none; }
+
+    /* Touch & Typography Ergonomics */
+    .font-headline {
+      letter-spacing: -0.015em;
+    }
+    .font-label {
+      letter-spacing: 0.01em;
+    }
+    button, a, input, select, textarea {
+      touch-action: manipulation;
+    }
+
+    #mobile-drawer, #mobile-drawer > div {
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior-y: contain;
+    }
     
     .gallery-item {
       transition: opacity 0.3s ease, transform 0.3s ease;
@@ -51,6 +79,7 @@
   <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-analytics-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore-compat.js"></script>
   <script src="firebase-config.js"></script>
+  <script src="gallery-api.js"></script>
 
   <!-- Tailwind CDN & Custom Brand Configuration -->
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
@@ -77,11 +106,11 @@
             "border-subtle": "#e2e8f0"
           },
           fontFamily: {
-            "cinzel": ["Cinzel", "serif"],
-            "headline": ["Playfair Display", "serif"],
-            "body": ["Inter", "sans-serif"],
-            "subheading": ["Outfit", "sans-serif"],
-            "label": ["Outfit", "sans-serif"]
+            "cinzel": ["Cinzel", "Georgia", "serif"],
+            "headline": ["Playfair Display", "Georgia", "serif"],
+            "body": ["Inter", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "sans-serif"],
+            "subheading": ["Outfit", "Inter", "sans-serif"],
+            "label": ["Outfit", "Inter", "sans-serif"]
           }
         }
       }
@@ -92,23 +121,23 @@
 <body class="bg-surface-light font-body text-on-surface antialiased selection:bg-primary/20 selection:text-primary pb-16">
 
   <!-- TOP NOTIFICATION STRIP (JAMIATHUL HIND STYLE) -->
-  <div class="bg-primary-deep text-white text-[11px] font-label border-b border-white/10 px-4 py-1.5 flex items-center justify-between sticky top-0 z-50">
-    <div class="flex items-center gap-1.5 truncate">
-      <span class="w-1.5 h-1.5 rounded-full bg-tertiary-accent animate-ping shrink-0"></span>
-      <span class="text-tertiary-accent font-semibold tracking-wide shrink-0">AFFILIATED:</span>
-      <span class="text-slate-200 truncate">Jamiathul Hind Al Islamiyya — Centre Code: INS7572</span>
+  <div class="bg-primary-deep text-white text-xs font-label border-b border-white/10 px-4 sm:px-6 lg:px-8 py-2 flex items-center justify-between sticky top-0 z-50">
+    <div class="flex items-center gap-2 truncate">
+      <span class="w-2 h-2 rounded-full bg-tertiary-accent animate-ping shrink-0"></span>
+      <span class="text-tertiary-accent font-semibold tracking-wide shrink-0 text-xs">AFFILIATED:</span>
+      <span class="text-slate-200 truncate text-xs">Jamiathul Hind Al Islamiyya — Centre Code: INS7572</span>
     </div>
-    <div class="flex items-center gap-3 shrink-0 pl-2">
-      <a href="admin.html" class="hidden sm:inline-flex items-center gap-1 text-slate-300 hover:text-white transition-colors font-medium" title="Administrative Access">
-        <span class="material-symbols-outlined text-[13px] text-tertiary-accent">lock</span>
+    <div class="flex items-center gap-3.5 shrink-0 pl-3">
+      <a href="admin.html" class="hidden sm:inline-flex items-center gap-1.5 text-slate-300 hover:text-white transition-colors text-xs font-medium" title="Administrative Access">
+        <span class="material-symbols-outlined text-[15px] text-tertiary-accent">lock</span>
         <span>Staff Portal</span>
       </a>
-      <button onclick="openProspectusModal()" class="hidden sm:inline-flex items-center gap-1 text-tertiary-accent hover:text-white transition-colors font-medium">
-        <span class="material-symbols-outlined text-[13px]">description</span>
+      <button onclick="openProspectusModal()" class="hidden sm:inline-flex items-center gap-1.5 text-tertiary-accent hover:text-white transition-colors text-xs font-medium">
+        <span class="material-symbols-outlined text-[15px]">description</span>
         <span>Prospectus</span>
       </button>
-      <a class="flex items-center gap-1 text-slate-300 hover:text-white font-medium" href="tel:+919562620731">
-        <span class="material-symbols-outlined text-[13px] text-tertiary-accent">phone_in_talk</span>
+      <a class="flex items-center gap-1.5 text-slate-300 hover:text-white text-xs font-medium" href="tel:+919562620731">
+        <span class="material-symbols-outlined text-[15px] text-tertiary-accent">phone_in_talk</span>
         <span class="hidden xs:inline">Helpline:</span>
         <span>+91 95626 20731</span>
       </a>
@@ -116,14 +145,14 @@
   </div>
 
   <!-- INSTITUTIONAL UNIVERSITY HEADER -->
-  <header class="sticky top-[29px] w-full z-40 bg-surface/98 backdrop-blur-md border-b border-border-subtle shadow-sm transition-all">
-    <div class="h-20 px-4 flex items-center justify-between gap-3 max-w-5xl mx-auto">
+  <header class="sticky top-[33px] w-full z-40 bg-surface/98 backdrop-blur-md border-b border-border-subtle shadow-xs transition-all">
+    <div class="h-20 px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-3 max-w-5xl mx-auto">
       <a class="flex items-center gap-2 flex-1 min-w-0" href="#home">
         <img alt="Madin Academy & Madin Suffa Campus Official Dual Logo" class="h-11 sm:h-12 w-auto max-w-[230px] object-contain flex-shrink-0" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAVjnU7SabWuxc9MHlCDgcnGZRFAczu-9rBuJNQzGrxJC5j4nZQFpcRWZIBQYdaB5wXEJ3Y-0YkgOABHtPoOtjxqF_86_pmc0gKce1ZdMf4IFFUWwgbr5uUbjYOP7DPb4nvUfDySCvFnbh0OVOgJTjpxXyjoeMigP9gveSjnYx3f9yaZadg1WhobtlrPEtff0qSOPnSoBMvBbTMEFAmqM0zXUxnUV23WrQkFfZKfVncE1xFhUDjyLKobOwb4eItjp33">
       </a>
       
       <!-- Quick Desktop/Tablet Navigation Links -->
-      <nav class="hidden md:flex items-center gap-5 text-xs font-label font-semibold text-slate-700">
+      <nav class="hidden md:flex items-center gap-6 text-sm font-label font-medium text-slate-700">
         <a href="#about" class="hover:text-primary transition-colors">About</a>
         <a href="#programs" class="hover:text-primary transition-colors">Programs</a>
         <a href="#gallery" class="hover:text-primary transition-colors">Campus Gallery</a>
@@ -131,17 +160,17 @@
         <a href="#contact" class="hover:text-primary transition-colors">Contact</a>
       </nav>
 
-      <div class="flex items-center gap-2 flex-shrink-0">
-        <button onclick="openProspectusModal()" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-2 rounded-full border border-primary text-primary hover:bg-primary/5 font-label text-xs font-semibold shadow-xs transition-all">
-          <span class="material-symbols-outlined text-[16px]">file_download</span>
+      <div class="flex items-center gap-2.5 flex-shrink-0">
+        <button onclick="openProspectusModal()" class="hidden sm:inline-flex items-center gap-1.5 h-10 px-4 rounded-full border border-primary text-primary hover:bg-primary/5 font-label text-xs sm:text-sm font-semibold shadow-2xs transition-all">
+          <span class="material-symbols-outlined text-[17px]">file_download</span>
           <span>Brochure</span>
         </button>
-        <a class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-primary hover:bg-primary-dark text-white font-label text-xs font-semibold shadow-sm transition-all" href="#admissions">
-          <span class="material-symbols-outlined text-[16px] text-tertiary-accent">school</span>
+        <a class="inline-flex items-center gap-1.5 h-10 px-4 sm:px-5 rounded-full bg-primary hover:bg-primary-dark text-white font-label text-xs sm:text-sm font-semibold shadow-sm transition-all" href="#admissions">
+          <span class="material-symbols-outlined text-[17px] text-tertiary-accent">school</span>
           <span>Apply Now</span>
         </a>
         <button aria-label="Open Navigation Menu" class="w-10 h-10 flex items-center justify-center rounded-xl text-primary-dark hover:bg-surface-light border border-slate-200 transition-colors" onclick="toggleDrawer(true)">
-          <span class="material-symbols-outlined text-[26px]">menu</span>
+          <span class="material-symbols-outlined text-[24px]">menu</span>
         </button>
       </div>
     </div>
@@ -149,138 +178,138 @@
 
   <!-- DRAWER BACKDROP & NAVIGATION DRAWER -->
   <div class="fixed inset-0 z-50 bg-primary-deep/70 backdrop-blur-xs transition-opacity hidden" id="drawer-backdrop" onclick="toggleDrawer(false)"></div>
-  <div class="fixed top-0 right-0 h-full w-[85vw] max-w-[340px] z-50 bg-surface shadow-2xl transition-transform duration-300 flex flex-col justify-between pt-safe pb-safe translate-x-full" id="mobile-drawer">
-    <div class="p-5 flex flex-col flex-1 overflow-y-auto">
+  <div class="fixed top-0 right-0 h-full max-h-[100dvh] w-[85vw] max-w-[340px] z-50 bg-surface shadow-2xl transition-transform duration-300 flex flex-col justify-between pt-safe pb-safe translate-x-full" id="mobile-drawer">
+    <div class="p-5 flex flex-col flex-1 overflow-y-auto overscroll-y-contain">
       <div class="flex items-center justify-between pb-4 border-b border-slate-100">
         <img alt="Official Logo" class="h-9 w-auto object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBzDmGOUyjsO0bmcTUzoDKk3ViJ1e5PREHuIlRsEb4M2jVj_hdZ8RLUxdrWSIbzUofd2Eml1Ga3n_HQUm762kNZz-Ku57ycnOkYEcAryIPvaeOcEwJ4iGg0fFjKqSlQNG-hUqNC0rqrRrzsOG3AX8Tc4QS2BZBSwTZwWUD9VycX6pD58bge6p78um4FvC3tf2-X6n1_esvU_d0ujJjRmjpfMLslr6mNuJmXKcq6VQWVJfHSLKoDyjWQhvMHKP2hd2fm">
-        <button aria-label="Close Navigation" class="w-9 h-9 flex items-center justify-center rounded-lg text-slate-500 hover:bg-slate-100" onclick="toggleDrawer(false)">
+        <button aria-label="Close Navigation" class="w-10 h-10 flex items-center justify-center rounded-xl text-slate-500 hover:bg-slate-100 transition-colors" onclick="toggleDrawer(false)">
           <span class="material-symbols-outlined text-[22px]">close</span>
         </button>
       </div>
 
       <!-- Quick Action in Drawer -->
-      <div class="py-4 flex flex-col gap-2">
-        <a class="w-full flex items-center justify-center gap-2 py-2.5 px-4 bg-primary text-white rounded-xl font-label text-xs font-bold tracking-wide shadow-md active:scale-95 transition-all" href="#admissions" onclick="toggleDrawer(false)">
+      <div class="py-4 flex flex-col gap-2.5">
+        <a class="w-full min-h-[44px] flex items-center justify-center gap-2 py-2.5 px-4 bg-primary hover:bg-primary-dark text-white rounded-xl font-label text-xs sm:text-sm font-semibold tracking-wide shadow-md active:scale-95 transition-all" href="#admissions" onclick="toggleDrawer(false)">
           <span class="material-symbols-outlined text-[18px] text-tertiary-accent">how_to_reg</span>
           <span>Single Window Admissions</span>
         </a>
-        <button onclick="toggleDrawer(false); openProspectusModal();" class="w-full flex items-center justify-center gap-2 py-2 px-4 bg-surface-light border border-slate-200 text-primary-dark rounded-xl font-label text-xs font-semibold hover:bg-slate-100 transition-all">
-          <span class="material-symbols-outlined text-[17px] text-tertiary">menu_book</span>
+        <button onclick="toggleDrawer(false); openProspectusModal();" class="w-full min-h-[44px] flex items-center justify-center gap-2 py-2.5 px-4 bg-surface-light border border-slate-200 text-primary-dark rounded-xl font-label text-xs sm:text-sm font-semibold hover:bg-slate-100 transition-all">
+          <span class="material-symbols-outlined text-[18px] text-tertiary">menu_book</span>
           <span>Download Campus Prospectus</span>
         </button>
       </div>
 
-      <div class="text-[11px] font-bold text-slate-400 uppercase tracking-widest px-3 py-1">Institutional Portal</div>
-      <nav class="flex flex-col gap-1">
-        <a class="flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium text-primary bg-primary/5 hover:bg-primary/10 transition-colors" href="#home" onclick="toggleDrawer(false)">
+      <div class="text-xs font-bold text-slate-400 uppercase tracking-widest px-3 py-1">Institutional Portal</div>
+      <nav class="flex flex-col gap-1 pt-1">
+        <a class="min-h-[44px] flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-primary bg-primary/5 hover:bg-primary/10 transition-colors" href="#home" onclick="toggleDrawer(false)">
           <span class="material-symbols-outlined text-[20px]">home</span>
-          <span class="text-xs">University Home</span>
+          <span class="text-sm">University Home</span>
         </a>
-        <a class="flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-slate-50 transition-colors" href="#about" onclick="toggleDrawer(false)">
+        <a class="min-h-[44px] flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-slate-50 transition-colors" href="#about" onclick="toggleDrawer(false)">
           <span class="material-symbols-outlined text-[20px] text-primary">account_balance</span>
-          <span class="text-xs">About Ma'din Suffa</span>
+          <span class="text-sm">About Ma'din Suffa</span>
         </a>
-        <a class="flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-slate-50 transition-colors" href="#legacy-stats" onclick="toggleDrawer(false)">
+        <a class="min-h-[44px] flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-slate-50 transition-colors" href="#legacy-stats" onclick="toggleDrawer(false)">
           <span class="material-symbols-outlined text-[20px] text-tertiary">analytics</span>
-          <span class="text-xs">Academic Highlights</span>
+          <span class="text-sm">Academic Highlights</span>
         </a>
-        <a class="flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-slate-50 transition-colors" href="#programs" onclick="toggleDrawer(false)">
+        <a class="min-h-[44px] flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-slate-50 transition-colors" href="#programs" onclick="toggleDrawer(false)">
           <span class="material-symbols-outlined text-[20px] text-primary">menu_book</span>
-          <span class="text-xs">Academic Programs & Coaching</span>
+          <span class="text-sm">Academic Programs &amp; Coaching</span>
         </a>
-        <a class="flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-slate-50 transition-colors" href="#life-at-campus" onclick="toggleDrawer(false)">
+        <a class="min-h-[44px] flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-slate-50 transition-colors" href="#life-at-campus" onclick="toggleDrawer(false)">
           <span class="material-symbols-outlined text-[20px] text-tertiary">groups</span>
-          <span class="text-xs">Life at Our Campus</span>
+          <span class="text-sm">Life at Our Campus</span>
         </a>
-        <a class="flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-slate-50 transition-colors" href="#gallery" onclick="toggleDrawer(false)">
+        <a class="min-h-[44px] flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-slate-50 transition-colors" href="#gallery" onclick="toggleDrawer(false)">
           <span class="material-symbols-outlined text-[20px] text-primary">photo_library</span>
-          <span class="text-xs">Campus Archives (20 Captures)</span>
+          <span class="text-sm">Campus Archives (20 Captures)</span>
         </a>
-        <a class="flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-slate-50 transition-colors" href="#competencies" onclick="toggleDrawer(false)">
+        <a class="min-h-[44px] flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-slate-50 transition-colors" href="#competencies" onclick="toggleDrawer(false)">
           <span class="material-symbols-outlined text-[20px] text-tertiary">psychology</span>
-          <span class="text-xs">Scholarly Values & Skills</span>
+          <span class="text-sm">Scholarly Values &amp; Skills</span>
         </a>
-        <a class="flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-slate-50 transition-colors" href="#admissions" onclick="toggleDrawer(false)">
+        <a class="min-h-[44px] flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-slate-50 transition-colors" href="#admissions" onclick="toggleDrawer(false)">
           <span class="material-symbols-outlined text-[20px] text-primary">app_registration</span>
-          <span class="text-xs">Admissions Protocol</span>
+          <span class="text-sm">Admissions Protocol</span>
         </a>
-        <a class="flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-slate-50 transition-colors" href="#contact" onclick="toggleDrawer(false)">
+        <a class="min-h-[44px] flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-slate-50 transition-colors" href="#contact" onclick="toggleDrawer(false)">
           <span class="material-symbols-outlined text-[20px] text-tertiary">contact_support</span>
-          <span class="text-xs">Contact Directory</span>
+          <span class="text-sm">Contact Directory</span>
         </a>
       </nav>
     </div>
 
-    <div class="p-4 bg-slate-50 border-t border-slate-100 flex flex-col gap-1">
-      <span class="text-[11px] font-bold text-tertiary uppercase tracking-wider">Admission Office Helpline</span>
-      <a class="text-xs font-bold text-primary hover:underline" href="tel:+919562620731">+91 95626 20731</a>
-      <span class="text-[10px] text-slate-500">Vavoor, Malappuram District, Kerala</span>
+    <div class="p-4 bg-slate-50 border-t border-slate-100 flex flex-col gap-1 shrink-0">
+      <span class="text-xs font-bold text-tertiary uppercase tracking-wider">Admission Office Helpline</span>
+      <a class="text-sm font-bold text-primary hover:underline" href="tel:+919562620731">+91 95626 20731</a>
+      <span class="text-xs text-slate-500">Vavoor, Malappuram District, Kerala</span>
     </div>
   </div>
 
   <main class="flex flex-col w-full">
 
     <!-- 1. JAMIATHUL HIND INSPIRED HERO SECTION -->
-    <section class="relative bg-primary-deep text-white overflow-hidden pt-4 pb-8" id="home">
+    <section class="relative bg-primary-deep text-white overflow-hidden pt-6 sm:pt-10 pb-10 sm:pb-14" id="home">
       <div class="absolute inset-0 opacity-15 pointer-events-none bg-[radial-gradient(#65a30d_1px,transparent_1px)] [background-size:16px_16px]"></div>
-      <div class="px-4 max-w-5xl mx-auto flex flex-col gap-5 relative z-10">
+      <div class="px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto flex flex-col gap-6 relative z-10">
         
         <!-- Top Institution Tag -->
-        <div class="flex items-center gap-2 self-start bg-white/10 backdrop-blur-md border border-white/20 px-3 py-1.5 rounded-full">
+        <div class="flex items-center gap-2 self-start bg-white/10 backdrop-blur-md border border-white/20 px-3.5 py-1.5 rounded-full">
           <span class="w-2 h-2 rounded-full bg-tertiary-accent animate-pulse"></span>
-          <span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-tertiary-accent">AN EXCLUSIVE HIGHER EDUCATION CAMPUS FOR HUFFAZ</span>
+          <span class="text-xs font-bold uppercase tracking-wider text-tertiary-accent">AN EXCLUSIVE HIGHER EDUCATION CAMPUS FOR HUFFAZ</span>
         </div>
 
         <!-- Headline & Intro Copy -->
         <div class="flex flex-col gap-3">
-          <h1 class="font-headline text-2xl sm:text-4xl text-white font-bold tracking-tight leading-tight">
+          <h1 class="font-headline text-2xl sm:text-3xl md:text-4xl lg:text-[42px] text-white font-bold tracking-tight leading-[1.2] sm:leading-[1.22]">
             Empowering Huffaz for a Future of Knowledge and Leadership
           </h1>
-          <p class="text-xs sm:text-sm text-slate-200 leading-relaxed max-w-2xl font-light">
+          <p class="text-sm sm:text-base text-slate-200 leading-relaxed max-w-2xl font-normal">
             Ma'din Suffa Campus, Vavoor offers an integrated academic environment under Ma'din Academy and Jamiathul Hind Al Islamiyya. Here, memorizers of the Holy Qur'an achieve university collegiate degrees, classical Da'wa scholarship, and global leadership skills.
           </p>
         </div>
 
         <!-- Campus Architecture Visual Banner (Click to view full image in Lightbox) -->
         <div class="relative w-full rounded-2xl overflow-hidden border border-white/15 shadow-2xl group cursor-pointer" onclick="openSingleLightbox('https://lh3.googleusercontent.com/aida-public/AB6AXuCONASlV6KSD_37zK3m54K6i-FujN-zLShc2yJ4fXA0VScUHl1LprllTnrTrpFnLoCO7kPr2iZw94vTmCdx3w9eUF7WHC9l7tJobVaz4XmT2EuAEDK3PAvnk4H7kdE5SL0SS-Fo5b-g8pa2qZHrVTS0JzG9-9u8Ey_oMTBWWBwaYHIACEkRaP-Vd3c4BqAcpHwrelDgxeAfmetkGFAQYZvoDOv_jjzeANeqHzrupuxfSaH4kahEt7LygW9IfGrtukza', 'Ma\'din Suffa Campus Architecture', 'Vavoor, Malappuram — Authentic campus dome and institutional entrance')">
-          <img alt="Picturesque authentic campus building of Madin Suffa Campus Vavoor with traditional golden dome minaret and grand red entrance steps" class="w-full h-64 sm:h-80 object-cover object-center group-hover:scale-102 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCONASlV6KSD_37zK3m54K6i-FujN-zLShc2yJ4fXA0VScUHl1LprllTnrTrpFnLoCO7kPr2iZw94vTmCdx3w9eUF7WHC9l7tJobVaz4XmT2EuAEDK3PAvnk4H7kdE5SL0SS-Fo5b-g8pa2qZHrVTS0JzG9-9u8Ey_oMTBWWBwaYHIACEkRaP-Vd3c4BqAcpHwrelDgxeAfmetkGFAQYZvoDOv_jjzeANeqHzrupuxfSaH4kahEt7LygW9IfGrtukza">
+          <img alt="Picturesque authentic campus building of Madin Suffa Campus Vavoor with traditional golden dome minaret and grand red entrance steps" class="w-full h-64 sm:h-80 md:h-96 object-cover object-center group-hover:scale-102 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCONASlV6KSD_37zK3m54K6i-FujN-zLShc2yJ4fXA0VScUHl1LprllTnrTrpFnLoCO7kPr2iZw94vTmCdx3w9eUF7WHC9l7tJobVaz4XmT2EuAEDK3PAvnk4H7kdE5SL0SS-Fo5b-g8pa2qZHrVTS0JzG9-9u8Ey_oMTBWWBwaYHIACEkRaP-Vd3c4BqAcpHwrelDgxeAfmetkGFAQYZvoDOv_jjzeANeqHzrupuxfSaH4kahEt7LygW9IfGrtukza">
           <div class="absolute inset-0 bg-gradient-to-t from-primary-deep via-primary-deep/40 to-transparent"></div>
           
           <!-- Floating Badge -->
-          <div class="absolute top-3 left-3 bg-primary-deep/85 backdrop-blur-md px-3 py-1 rounded-full border border-white/20 text-white flex items-center gap-1.5">
-            <span class="material-symbols-outlined text-[14px] text-tertiary-accent">verified</span>
-            <span class="text-[10px] font-label font-bold tracking-wide">Jamiathul Hind Centre INS7572</span>
+          <div class="absolute top-3 left-3 bg-primary-deep/85 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-white/20 text-white flex items-center gap-1.5 shadow-sm">
+            <span class="material-symbols-outlined text-[15px] text-tertiary-accent">verified</span>
+            <span class="text-xs font-label font-semibold tracking-wide">Jamiathul Hind Centre INS7572</span>
           </div>
 
-          <div class="absolute top-3 right-3 bg-black/50 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/20 text-white text-[10px] font-label flex items-center gap-1 group-hover:bg-tertiary transition-colors">
-            <span class="material-symbols-outlined text-[13px]">zoom_in</span>
+          <div class="absolute top-3 right-3 bg-black/50 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/20 text-white text-xs font-label flex items-center gap-1 group-hover:bg-tertiary transition-colors shadow-sm">
+            <span class="material-symbols-outlined text-[15px]">zoom_in</span>
             <span>View Photo</span>
           </div>
 
-          <div class="absolute bottom-3 left-3 right-3 flex items-end justify-between">
+          <div class="absolute bottom-3 left-3 right-3 sm:bottom-4 sm:left-4 sm:right-4 flex items-end justify-between gap-3">
             <div class="flex flex-col">
-              <span class="text-tertiary-accent text-[11px] font-label font-bold tracking-wide uppercase">Vavoor, Malappuram</span>
-              <h2 class="text-white text-sm sm:text-base font-headline font-bold">Ma'din Suffa Campus</h2>
+              <span class="text-tertiary-accent text-xs font-label font-bold tracking-wider uppercase">Vavoor, Malappuram</span>
+              <h2 class="text-white text-base sm:text-lg font-headline font-bold">Ma'din Suffa Campus</h2>
             </div>
-            <a class="px-3 py-1.5 rounded-lg bg-tertiary hover:bg-tertiary-accent text-white text-[11px] font-label font-bold tracking-wide shadow transition-colors flex items-center gap-1" href="#about" onclick="event.stopPropagation();">
+            <a class="min-h-[38px] px-3.5 py-1.5 rounded-lg bg-tertiary hover:bg-tertiary-dark text-white text-xs font-label font-semibold tracking-wide shadow transition-colors flex items-center gap-1 shrink-0" href="#about" onclick="event.stopPropagation();">
               <span>Explore Campus</span>
-              <span class="material-symbols-outlined text-[14px]">arrow_downward</span>
+              <span class="material-symbols-outlined text-[15px]">arrow_downward</span>
             </a>
           </div>
         </div>
 
         <!-- Primary Action CTAs -->
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-1">
-          <a class="flex items-center justify-center gap-1.5 py-3 px-3 bg-secondary hover:bg-secondary/90 text-white text-xs font-label font-bold rounded-xl shadow-md transition-all text-center" href="#admissions">
-            <span class="material-symbols-outlined text-[16px] text-white">how_to_reg</span>
+        <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-2">
+          <a class="min-h-[48px] px-6 py-3 bg-secondary hover:bg-secondary/90 text-white text-xs sm:text-sm font-label font-semibold rounded-xl shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 active:scale-[0.99] border border-white/10 text-center" href="#admissions">
+            <span class="material-symbols-outlined text-[18px] text-white">how_to_reg</span>
             <span>Apply for Admission</span>
           </a>
-          <button onclick="openProspectusModal()" class="flex items-center justify-center gap-1.5 py-3 px-3 bg-tertiary hover:bg-tertiary-accent text-white text-xs font-label font-bold rounded-xl shadow-md transition-all text-center">
-            <span class="material-symbols-outlined text-[16px]">menu_book</span>
+          <button onclick="openProspectusModal()" class="min-h-[48px] px-6 py-3 bg-tertiary hover:bg-tertiary-dark text-white text-xs sm:text-sm font-label font-semibold rounded-xl shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 active:scale-[0.99] border border-white/10 text-center">
+            <span class="material-symbols-outlined text-[18px]">menu_book</span>
             <span>Campus Prospectus</span>
           </button>
-          <a class="flex items-center justify-center gap-1.5 py-3 px-3 bg-white/10 hover:bg-white/20 border border-white/25 text-white text-xs font-label font-semibold rounded-xl backdrop-blur-sm transition-all text-center" href="#programs">
-            <span class="material-symbols-outlined text-[16px] text-tertiary-accent">school</span>
+          <a class="min-h-[48px] px-6 py-3 bg-white/10 hover:bg-white/20 text-white text-xs sm:text-sm font-label font-semibold rounded-xl backdrop-blur-md transition-all flex items-center justify-center gap-2 border border-white/20 hover:border-white/30 text-center" href="#programs">
+            <span class="material-symbols-outlined text-[18px] text-tertiary-accent">school</span>
             <span>View Programs</span>
           </a>
         </div>
@@ -288,75 +317,75 @@
     </section>
 
     <!-- 2. JAMIATHUL HIND STAT HIGHLIGHT STRIP -->
-    <section class="bg-primary text-white border-y border-white/10 py-5" id="legacy-stats">
-      <div class="px-4 max-w-5xl mx-auto">
-        <div class="text-center pb-3">
-          <span class="text-[10px] uppercase font-label tracking-widest text-tertiary-accent font-bold">Academic Legacy & Distinctive Benchmarks</span>
+    <section class="bg-primary text-white border-y border-white/10 py-7 sm:py-9" id="legacy-stats">
+      <div class="px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
+        <div class="text-center pb-4">
+          <span class="text-xs uppercase font-label tracking-widest text-tertiary-accent font-bold">Academic Legacy & Distinctive Benchmarks</span>
         </div>
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
-          <div class="p-3 rounded-xl bg-white/5 border border-white/10 text-center flex flex-col justify-center items-center hover:bg-white/10 transition-colors">
-            <div class="font-cinzel text-xl sm:text-2xl font-bold text-white tracking-wide">100%</div>
-            <div class="text-[11px] font-label text-slate-200 font-semibold mt-0.5">Huffaz Cohort</div>
-            <div class="text-[9px] text-slate-300">Exclusive Campus</div>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
+          <div class="p-4 sm:p-5 rounded-2xl bg-white/5 border border-white/10 text-center flex flex-col justify-center items-center hover:bg-white/10 transition-colors">
+            <div class="font-cinzel text-2xl sm:text-3xl font-bold text-white tracking-wide">100%</div>
+            <div class="text-xs sm:text-sm font-label text-slate-100 font-semibold mt-1">Huffaz Cohort</div>
+            <div class="text-[11px] sm:text-xs text-slate-300 mt-0.5">Exclusive Campus</div>
           </div>
-          <div class="p-3 rounded-xl bg-white/5 border border-white/10 text-center flex flex-col justify-center items-center hover:bg-white/10 transition-colors">
-            <div class="font-cinzel text-lg sm:text-xl font-bold text-tertiary-accent tracking-wide">INS7572</div>
-            <div class="text-[11px] font-label text-slate-200 font-semibold mt-0.5">Jamiathul Hind</div>
-            <div class="text-[9px] text-slate-300">Affiliated Centre</div>
+          <div class="p-4 sm:p-5 rounded-2xl bg-white/5 border border-white/10 text-center flex flex-col justify-center items-center hover:bg-white/10 transition-colors">
+            <div class="font-cinzel text-xl sm:text-2xl font-bold text-tertiary-accent tracking-wide">INS7572</div>
+            <div class="text-xs sm:text-sm font-label text-slate-100 font-semibold mt-1">Jamiathul Hind</div>
+            <div class="text-[11px] sm:text-xs text-slate-300 mt-0.5">Affiliated Centre</div>
           </div>
-          <div class="p-3 rounded-xl bg-white/5 border border-white/10 text-center flex flex-col justify-center items-center hover:bg-white/10 transition-colors">
-            <div class="font-cinzel text-xl sm:text-2xl font-bold text-white tracking-wide">Dual</div>
-            <div class="text-[11px] font-label text-slate-200 font-semibold mt-0.5">Degree Stream</div>
-            <div class="text-[9px] text-slate-300">Arts & Commerce</div>
+          <div class="p-4 sm:p-5 rounded-2xl bg-white/5 border border-white/10 text-center flex flex-col justify-center items-center hover:bg-white/10 transition-colors">
+            <div class="font-cinzel text-2xl sm:text-3xl font-bold text-white tracking-wide">Dual</div>
+            <div class="text-xs sm:text-sm font-label text-slate-100 font-semibold mt-1">Degree Stream</div>
+            <div class="text-[11px] sm:text-xs text-slate-300 mt-0.5">Arts & Commerce</div>
           </div>
-          <div class="p-3 rounded-xl bg-white/5 border border-white/10 text-center flex flex-col justify-center items-center hover:bg-white/10 transition-colors">
-            <div class="font-cinzel text-xl sm:text-2xl font-bold text-tertiary-accent tracking-wide">UGC NET</div>
-            <div class="text-[11px] font-label text-slate-200 font-semibold mt-0.5">JRF Coaching</div>
-            <div class="text-[9px] text-slate-300">Higher Research</div>
+          <div class="p-4 sm:p-5 rounded-2xl bg-white/5 border border-white/10 text-center flex flex-col justify-center items-center hover:bg-white/10 transition-colors">
+            <div class="font-cinzel text-2xl sm:text-3xl font-bold text-tertiary-accent tracking-wide">UGC NET</div>
+            <div class="text-xs sm:text-sm font-label text-slate-100 font-semibold mt-1">JRF Coaching</div>
+            <div class="text-[11px] sm:text-xs text-slate-300 mt-0.5">Higher Research</div>
           </div>
         </div>
       </div>
     </section>
 
     <!-- 3. INSTITUTIONAL OVERVIEW (ABOUT SECTION) -->
-    <section class="px-4 py-8 bg-surface-card" id="about">
-      <div class="max-w-5xl mx-auto flex flex-col gap-4">
-        <div class="flex flex-col gap-1 border-l-4 border-primary pl-3">
-          <span class="text-[11px] font-label font-bold text-tertiary uppercase tracking-widest">ABOUT MA'DIN SUFFA CAMPUS</span>
-          <h2 class="font-headline text-2xl sm:text-3xl text-primary-dark font-bold leading-tight">
+    <section class="px-4 sm:px-6 lg:px-8 py-10 sm:py-14 bg-surface-card" id="about">
+      <div class="max-w-5xl mx-auto flex flex-col gap-5">
+        <div class="flex flex-col gap-1.5 border-l-4 border-primary pl-4">
+          <span class="text-xs font-label font-bold text-tertiary uppercase tracking-widest">ABOUT MA'DIN SUFFA CAMPUS</span>
+          <h2 class="font-headline text-2xl sm:text-3xl lg:text-[32px] text-primary-dark font-bold leading-tight">
             Where Qur’anic Excellence Meets Modern Education
           </h2>
         </div>
 
-        <div class="inline-flex items-center gap-1.5 self-start bg-secondary-light/60 px-3 py-1 rounded-full text-primary font-label text-xs font-semibold border border-secondary/20">
-          <span class="material-symbols-outlined text-[15px] text-secondary">domain_verification</span>
+        <div class="inline-flex items-center gap-2 self-start bg-secondary-light/60 px-3.5 py-1.5 rounded-full text-primary font-label text-xs sm:text-sm font-semibold border border-secondary/20">
+          <span class="material-symbols-outlined text-[16px] text-secondary">domain_verification</span>
           <span>Affiliated with Jamiathul Hind Al Islamiyya — Centre ID: INS7572</span>
         </div>
 
-        <p class="text-xs sm:text-sm text-on-surface-variant leading-relaxed">
+        <p class="text-sm sm:text-base text-slate-600 leading-relaxed max-w-4xl">
           Ma'din Suffa Campus, Vavoor is an exclusive educational institution for Huffazul Qur'an, functioning under Ma'din Academy and affiliated with Jamiathul Hind Al Islamiyya. Located in Vavoor, Malappuram District, Kerala, the campus combines intensive Qur'anic memorization revision with advanced Islamic education, Da'wa studies, contemporary knowledge, and university collegiate streams such as Commerce and Humanities. The objective is to develop knowledgeable scholars and future leaders who combine traditional Islamic values with modern education and contemporary awareness.
         </p>
 
         <!-- Featured Recitation Classroom Visual (Click to view full in lightbox) -->
         <div class="relative w-full rounded-2xl overflow-hidden border border-border-subtle shadow-md bg-surface-light group cursor-pointer" onclick="openSingleLightbox('https://lh3.googleusercontent.com/aida-public/AB6AXuCj1ZalS5cyPzZfc_jMxWwzQqaNx7LMwLEGra4ZnYW-EA-kBJyJNHuABVIfy6-znRnpgeroGv9AEi4yigcsDJddL_FAOwynVFIKl924Z2FaMbjN_5lPO5bZB1xBqc-BMMy_7xR_P_X6pzILVFvwkBLb_-6cHtOVY8t7fHH6UC_jErx3iX02MZkCdNb4_2sKQ_VMRDSXpvoSQRPc05EXYYCAt0mZuzTVyBDk2au2leWEVzzWWbzryJUIPNgGxSqSrsMC', 'Qur\'anic Scholastic Halaqa Hall', 'Ma\'din Suffa Campus recitation classroom with Hafiz scholars')">
-          <img alt="Authentic Qur'an recitation classroom at Madin Suffa Campus with Hafiz students seated in traditional scholarly circle" class="w-full h-56 sm:h-72 object-cover object-center group-hover:scale-101 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCj1ZalS5cyPzZfc_jMxWwzQqaNx7LMwLEGra4ZnYW-EA-kBJyJNHuABVIfy6-znRnpgeroGv9AEi4yigcsDJddL_FAOwynVFIKl924Z2FaMbjN_5lPO5bZB1xBqc-BMMy_7xR_P_X6pzILVFvwkBLb_-6cHtOVY8t7fHH6UC_jErx3iX02MZkCdNb4_2sKQ_VMRDSXpvoSQRPc05EXYYCAt0mZuzTVyBDk2au2leWEVzzWWbzryJUIPNgGxSqSrsMC">
-          <div class="p-3 bg-primary-dark text-white flex items-center justify-between">
+          <img alt="Authentic Qur'an recitation classroom at Madin Suffa Campus with Hafiz students seated in traditional scholarly circle" class="w-full h-60 sm:h-76 md:h-84 object-cover object-center group-hover:scale-101 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCj1ZalS5cyPzZfc_jMxWwzQqaNx7LMwLEGra4ZnYW-EA-kBJyJNHuABVIfy6-znRnpgeroGv9AEi4yigcsDJddL_FAOwynVFIKl924Z2FaMbjN_5lPO5bZB1xBqc-BMMy_7xR_P_X6pzILVFvwkBLb_-6cHtOVY8t7fHH6UC_jErx3iX02MZkCdNb4_2sKQ_VMRDSXpvoSQRPc05EXYYCAt0mZuzTVyBDk2au2leWEVzzWWbzryJUIPNgGxSqSrsMC">
+          <div class="p-3.5 sm:p-4 bg-primary-dark text-white flex items-center justify-between">
             <div class="flex items-center gap-2">
               <span class="material-symbols-outlined text-tertiary-accent text-[20px]">auto_stories</span>
-              <span class="font-label text-xs font-semibold">Qur'anic Scholastic Halaqa & Lecture Hall</span>
+              <span class="font-label text-xs sm:text-sm font-semibold">Qur'anic Scholastic Halaqa & Lecture Hall</span>
             </div>
-            <span class="text-[10px] font-label bg-tertiary px-2 py-0.5 rounded text-white font-medium flex items-center gap-1">
-              <span class="material-symbols-outlined text-[12px]">zoom_in</span> View Photo
+            <span class="text-xs font-label bg-tertiary px-2.5 py-1 rounded text-white font-medium flex items-center gap-1 shadow-2xs">
+              <span class="material-symbols-outlined text-[14px]">zoom_in</span> View Photo
             </span>
           </div>
         </div>
 
-        <div class="pt-1 flex items-center gap-4">
-          <a class="inline-flex items-center gap-1.5 text-primary hover:text-secondary font-label text-xs sm:text-sm font-bold group transition-colors" href="#programs">
+        <div class="pt-2 flex flex-wrap items-center gap-4">
+          <a class="min-h-[44px] px-5 py-2.5 rounded-xl bg-primary hover:bg-primary-dark text-white font-label text-xs sm:text-sm font-semibold inline-flex items-center gap-2 shadow-xs transition-all group" href="#programs">
             <span>Explore Programs & Special Coaching</span>
             <span class="material-symbols-outlined text-[16px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
           </a>
-          <button onclick="openProspectusModal()" class="inline-flex items-center gap-1 text-tertiary hover:text-tertiary-dark font-label text-xs sm:text-sm font-bold transition-colors">
+          <button onclick="openProspectusModal()" class="min-h-[44px] px-5 py-2.5 rounded-xl border border-tertiary text-tertiary hover:bg-tertiary/5 font-label text-xs sm:text-sm font-semibold inline-flex items-center gap-2 transition-all">
             <span class="material-symbols-outlined text-[16px]">description</span>
             <span>View Prospectus</span>
           </button>
@@ -365,41 +394,41 @@
     </section>
 
     <!-- 4. VISION & MISSION CARDS -->
-    <section class="px-4 py-8 bg-surface-light border-y border-border-subtle" id="vision-mission">
-      <div class="max-w-5xl mx-auto flex flex-col gap-4">
-        <div class="text-center flex flex-col items-center gap-1">
-          <span class="text-[11px] font-label font-bold text-tertiary uppercase tracking-widest">Foundational Ethos</span>
+    <section class="px-4 sm:px-6 lg:px-8 py-10 sm:py-14 bg-surface-light border-y border-border-subtle" id="vision-mission">
+      <div class="max-w-5xl mx-auto flex flex-col gap-6">
+        <div class="text-center flex flex-col items-center gap-1.5">
+          <span class="text-xs font-label font-bold text-tertiary uppercase tracking-widest">Foundational Ethos</span>
           <h2 class="font-headline text-2xl sm:text-3xl text-primary-dark font-bold">Vision & Mission</h2>
-          <div class="w-12 h-1 bg-tertiary rounded-full"></div>
+          <div class="w-12 h-1 bg-tertiary rounded-full mt-1"></div>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 pt-2">
           <!-- Vision Card -->
-          <div class="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm flex flex-col gap-2.5 relative overflow-hidden">
-            <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
-              <span class="material-symbols-outlined text-[22px]">visibility</span>
+          <div class="p-6 sm:p-7 rounded-2xl bg-white border border-slate-200/90 shadow-sm flex flex-col gap-3 relative overflow-hidden">
+            <div class="w-11 h-11 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+              <span class="material-symbols-outlined text-[24px]">visibility</span>
             </div>
-            <h3 class="font-headline text-lg text-primary-dark font-bold">Our Vision</h3>
-            <p class="text-xs sm:text-sm text-on-surface-variant leading-relaxed">
+            <h3 class="font-headline text-lg sm:text-xl text-primary-dark font-bold">Our Vision</h3>
+            <p class="text-sm text-slate-600 leading-relaxed">
               To create an ideal generation guided by the Holy Qur’an, enriched with moral values, intellectual excellence, modern knowledge, leadership abilities, and a strong commitment to society.
             </p>
-            <div class="mt-auto pt-2 flex items-center gap-1.5 text-tertiary font-label text-[11px] font-semibold">
-              <span class="material-symbols-outlined text-[14px]">flare</span>
+            <div class="mt-auto pt-3 flex items-center gap-2 text-tertiary font-label text-xs font-semibold">
+              <span class="material-symbols-outlined text-[16px]">flare</span>
               <span>Spiritual Grounding & Contemporary Relevance</span>
             </div>
           </div>
 
           <!-- Mission Card -->
-          <div class="p-5 rounded-2xl bg-primary-dark text-white border border-primary/20 shadow-md flex flex-col gap-2.5 relative overflow-hidden">
-            <div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center text-tertiary-accent">
-              <span class="material-symbols-outlined text-[22px]">flag</span>
+          <div class="p-6 sm:p-7 rounded-2xl bg-primary-dark text-white border border-primary/20 shadow-md flex flex-col gap-3 relative overflow-hidden">
+            <div class="w-11 h-11 rounded-xl bg-white/10 flex items-center justify-center text-tertiary-accent">
+              <span class="material-symbols-outlined text-[24px]">flag</span>
             </div>
-            <h3 class="font-headline text-lg text-white font-bold">Our Mission</h3>
-            <p class="text-xs sm:text-sm text-slate-200 leading-relaxed">
+            <h3 class="font-headline text-lg sm:text-xl text-white font-bold">Our Mission</h3>
+            <p class="text-sm text-slate-200 leading-relaxed">
               To provide holistic education that nurtures Hafiz students through Qur’anic learning, academic excellence, creativity, communication, leadership, and personal development.
             </p>
-            <div class="mt-auto pt-2 flex items-center gap-1.5 text-tertiary-accent font-label text-[11px] font-semibold">
-              <span class="material-symbols-outlined text-[14px]">diamond</span>
+            <div class="mt-auto pt-3 flex items-center gap-2 text-tertiary-accent font-label text-xs font-semibold">
+              <span class="material-symbols-outlined text-[16px]">diamond</span>
               <span>Rigorous Pedagogy & Character Building</span>
             </div>
           </div>
@@ -408,97 +437,97 @@
     </section>
 
     <!-- 5. KEY PROGRAMS & ACADEMIC STREAMS -->
-    <section class="px-4 py-8 bg-surface-card" id="programs">
-      <div class="max-w-5xl mx-auto flex flex-col gap-4">
-        <div class="flex flex-col gap-1 border-l-4 border-tertiary pl-3">
-          <span class="text-[11px] font-label font-bold text-tertiary uppercase tracking-widest">CURRICULUM & COURSES</span>
+    <section class="px-4 sm:px-6 lg:px-8 py-10 sm:py-14 bg-surface-card" id="programs">
+      <div class="max-w-5xl mx-auto flex flex-col gap-5">
+        <div class="flex flex-col gap-1.5 border-l-4 border-tertiary pl-4">
+          <span class="text-xs font-label font-bold text-tertiary uppercase tracking-widest">CURRICULUM & COURSES</span>
           <h2 class="font-headline text-2xl sm:text-3xl text-primary-dark font-bold leading-tight">
             Academic Programs & Special Coaching
           </h2>
-          <p class="text-xs text-on-surface-variant">Conducted under the Islamic academic syllabus of Jamiathul Hind Al Islamiyya and collegiate university streams.</p>
+          <p class="text-sm text-slate-600">Conducted under the Islamic academic syllabus of Jamiathul Hind Al Islamiyya and collegiate university streams.</p>
         </div>
 
         <!-- Featured Stage Photo from Inspiraath Festival -->
         <div class="relative rounded-2xl overflow-hidden shadow-md border border-border-subtle group my-1 cursor-pointer" onclick="openSingleLightbox('https://lh3.googleusercontent.com/aida-public/AB6AXuBn3cgo_KVnJZn9clwCt693_QmbPsz66YJekJtxAWLYj6jpIoupq_3WrdTem6o5eHre0hljhDW6epSIOmrCR_tpdbyRt3ckFZR16Mc-3mYwyPjyTXQM-DkgRq6Snw9Ru2c0xIVl1DEsTwPh57J62Omi41BPm3Opzf7f8lySjEiL7DG3rp0XFZLlE5afJ0JGYpgwQeKs-Zax5Ux_5XE-fIRiGokBvoEn56mBtf8If1soOtmcuQrHyOadMFQzQ3qLOGWL', 'Inspiraath \'25 Student Address', 'Student Oratory & Leadership Showcase at Ma\'din Suffa Campus')">
-          <img alt="Student address during Inspiraath Art Festival at Madin Suffa Campus Vavoor" class="w-full h-56 sm:h-72 object-cover object-top group-hover:scale-101 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBn3cgo_KVnJZn9clwCt693_QmbPsz66YJekJtxAWLYj6jpIoupq_3WrdTem6o5eHre0hljhDW6epSIOmrCR_tpdbyRt3ckFZR16Mc-3mYwyPjyTXQM-DkgRq6Snw9Ru2c0xIVl1DEsTwPh57J62Omi41BPm3Opzf7f8lySjEiL7DG3rp0XFZLlE5afJ0JGYpgwQeKs-Zax5Ux_5XE-fIRiGokBvoEn56mBtf8If1soOtmcuQrHyOadMFQzQ3qLOGWL">
-          <div class="absolute bottom-0 inset-x-0 p-3 bg-gradient-to-t from-primary-deep via-primary-deep/80 to-transparent text-white flex items-center justify-between">
+          <img alt="Student address during Inspiraath Art Festival at Madin Suffa Campus Vavoor" class="w-full h-60 sm:h-76 md:h-84 object-cover object-top group-hover:scale-101 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBn3cgo_KVnJZn9clwCt693_QmbPsz66YJekJtxAWLYj6jpIoupq_3WrdTem6o5eHre0hljhDW6epSIOmrCR_tpdbyRt3ckFZR16Mc-3mYwyPjyTXQM-DkgRq6Snw9Ru2c0xIVl1DEsTwPh57J62Omi41BPm3Opzf7f8lySjEiL7DG3rp0XFZLlE5afJ0JGYpgwQeKs-Zax5Ux_5XE-fIRiGokBvoEn56mBtf8If1soOtmcuQrHyOadMFQzQ3qLOGWL">
+          <div class="absolute bottom-0 inset-x-0 p-3.5 sm:p-4 bg-gradient-to-t from-primary-deep via-primary-deep/80 to-transparent text-white flex items-center justify-between">
             <div class="flex flex-col">
-              <span class="text-[10px] font-label text-tertiary-accent font-bold uppercase tracking-wider">Inspiraath '25 Campus Art Fest</span>
-              <span class="font-label text-xs sm:text-sm font-semibold text-white">Student Oratory & Leadership Showcase</span>
+              <span class="text-xs font-label text-tertiary-accent font-bold uppercase tracking-wider">Inspiraath '25 Campus Art Fest</span>
+              <span class="font-label text-sm sm:text-base font-semibold text-white">Student Oratory & Leadership Showcase</span>
             </div>
-            <span class="text-[10px] font-label bg-tertiary px-2 py-0.5 rounded text-white font-bold flex items-center gap-1">
-              <span class="material-symbols-outlined text-[12px]">zoom_in</span> Active Stage
+            <span class="text-xs font-label bg-tertiary px-2.5 py-1 rounded text-white font-bold flex items-center gap-1 shadow-2xs">
+              <span class="material-symbols-outlined text-[14px]">zoom_in</span> Active Stage
             </span>
           </div>
         </div>
 
         <!-- Program Grid -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
           <!-- Program 1 -->
-          <div class="p-4 rounded-xl border border-slate-200 bg-surface-light flex flex-col gap-2 hover:border-primary/40 transition-colors">
+          <div class="p-5 sm:p-6 rounded-2xl border border-slate-200 bg-surface-light flex flex-col gap-2.5 hover:border-primary/40 hover:shadow-sm transition-all">
             <div class="flex items-center justify-between">
-              <span class="text-[10px] uppercase font-label font-bold px-2 py-0.5 rounded bg-primary text-white">Core Islamic Science</span>
-              <span class="material-symbols-outlined text-tertiary text-[18px]">verified</span>
+              <span class="text-xs uppercase font-label font-bold px-2.5 py-1 rounded bg-primary text-white">Core Islamic Science</span>
+              <span class="material-symbols-outlined text-tertiary text-[20px]">verified</span>
             </div>
-            <h3 class="font-headline text-base text-primary-dark font-bold">Uloomul Qur’an Coaching</h3>
-            <p class="text-xs text-on-surface-variant leading-relaxed">
+            <h3 class="font-headline text-base sm:text-lg text-primary-dark font-bold">Uloomul Qur’an Coaching</h3>
+            <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
               Advanced instruction in Qur'anic hermeneutics, Tafseer traditions, classical Qira'at variants, Tajweed disciplines, and Da'wa scholarship.
             </p>
-            <div class="flex flex-wrap gap-1 mt-auto pt-2">
-              <span class="text-[10px] font-label bg-white px-2 py-0.5 rounded border border-slate-200 text-slate-700">Tafseer</span>
-              <span class="text-[10px] font-label bg-white px-2 py-0.5 rounded border border-slate-200 text-slate-700">Qira'at Modes</span>
-              <span class="text-[10px] font-label bg-white px-2 py-0.5 rounded border border-slate-200 text-slate-700">Da'wa Studies</span>
+            <div class="flex flex-wrap gap-1.5 mt-auto pt-3">
+              <span class="text-xs font-label bg-white px-2.5 py-1 rounded-md border border-slate-200 text-slate-700 shadow-2xs">Tafseer</span>
+              <span class="text-xs font-label bg-white px-2.5 py-1 rounded-md border border-slate-200 text-slate-700 shadow-2xs">Qira'at Modes</span>
+              <span class="text-xs font-label bg-white px-2.5 py-1 rounded-md border border-slate-200 text-slate-700 shadow-2xs">Da'wa Studies</span>
             </div>
           </div>
 
           <!-- Program 2 -->
-          <div class="p-4 rounded-xl border border-slate-200 bg-surface-light flex flex-col gap-2 hover:border-tertiary/40 transition-colors">
+          <div class="p-5 sm:p-6 rounded-2xl border border-slate-200 bg-surface-light flex flex-col gap-2.5 hover:border-tertiary/40 hover:shadow-sm transition-all">
             <div class="flex items-center justify-between">
-              <span class="text-[10px] uppercase font-label font-bold px-2 py-0.5 rounded bg-tertiary-dark text-white">Collegiate Research</span>
-              <span class="material-symbols-outlined text-primary text-[18px]">military_tech</span>
+              <span class="text-xs uppercase font-label font-bold px-2.5 py-1 rounded bg-tertiary-dark text-white">Collegiate Research</span>
+              <span class="material-symbols-outlined text-primary text-[20px]">military_tech</span>
             </div>
-            <h3 class="font-headline text-base text-primary-dark font-bold">UGC NET / JRF Coaching</h3>
-            <p class="text-xs text-on-surface-variant leading-relaxed">
+            <h3 class="font-headline text-base sm:text-lg text-primary-dark font-bold">UGC NET / JRF Coaching</h3>
+            <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
               Targeted mentoring for collegiate lecturer eligibility tests (UGC-NET) and national Junior Research Fellowships for university research careers.
             </p>
-            <div class="flex flex-wrap gap-1 mt-auto pt-2">
-              <span class="text-[10px] font-label bg-white px-2 py-0.5 rounded border border-slate-200 text-slate-700">Paper 1 Aptitude</span>
-              <span class="text-[10px] font-label bg-white px-2 py-0.5 rounded border border-slate-200 text-slate-700">Arabic / Islamic Studies</span>
-              <span class="text-[10px] font-label bg-white px-2 py-0.5 rounded border border-slate-200 text-slate-700">Mock Tests</span>
+            <div class="flex flex-wrap gap-1.5 mt-auto pt-3">
+              <span class="text-xs font-label bg-white px-2.5 py-1 rounded-md border border-slate-200 text-slate-700 shadow-2xs">Paper 1 Aptitude</span>
+              <span class="text-xs font-label bg-white px-2.5 py-1 rounded-md border border-slate-200 text-slate-700 shadow-2xs">Arabic / Islamic Studies</span>
+              <span class="text-xs font-label bg-white px-2.5 py-1 rounded-md border border-slate-200 text-slate-700 shadow-2xs">Mock Tests</span>
             </div>
           </div>
 
           <!-- Program 3 -->
-          <div class="p-4 rounded-xl border border-slate-200 bg-surface-light flex flex-col gap-2 hover:border-secondary/40 transition-colors">
+          <div class="p-5 sm:p-6 rounded-2xl border border-slate-200 bg-surface-light flex flex-col gap-2.5 hover:border-secondary/40 hover:shadow-sm transition-all">
             <div class="flex items-center justify-between">
-              <span class="text-[10px] uppercase font-label font-bold px-2 py-0.5 rounded bg-secondary text-white">General Degrees</span>
-              <span class="material-symbols-outlined text-secondary text-[18px]">school</span>
+              <span class="text-xs uppercase font-label font-bold px-2.5 py-1 rounded bg-secondary text-white">General Degrees</span>
+              <span class="material-symbols-outlined text-secondary text-[20px]">school</span>
             </div>
-            <h3 class="font-headline text-base text-primary-dark font-bold">Commerce & Humanities Streams</h3>
-            <p class="text-xs text-on-surface-variant leading-relaxed">
+            <h3 class="font-headline text-base sm:text-lg text-primary-dark font-bold">Commerce & Humanities Streams</h3>
+            <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
               Integrated collegiate university curriculum providing degree qualifications in Commerce and Humanities concurrently with Islamic studies.
             </p>
-            <div class="flex flex-wrap gap-1 mt-auto pt-2">
-              <span class="text-[10px] font-label bg-white px-2 py-0.5 rounded border border-slate-200 text-slate-700">Bachelor Degrees</span>
-              <span class="text-[10px] font-label bg-white px-2 py-0.5 rounded border border-slate-200 text-slate-700">Commerce</span>
-              <span class="text-[10px] font-label bg-white px-2 py-0.5 rounded border border-slate-200 text-slate-700">Humanities</span>
+            <div class="flex flex-wrap gap-1.5 mt-auto pt-3">
+              <span class="text-xs font-label bg-white px-2.5 py-1 rounded-md border border-slate-200 text-slate-700 shadow-2xs">Bachelor Degrees</span>
+              <span class="text-xs font-label bg-white px-2.5 py-1 rounded-md border border-slate-200 text-slate-700 shadow-2xs">Commerce</span>
+              <span class="text-xs font-label bg-white px-2.5 py-1 rounded-md border border-slate-200 text-slate-700 shadow-2xs">Humanities</span>
             </div>
           </div>
 
           <!-- Program 4 -->
-          <div class="p-4 rounded-xl border border-slate-200 bg-surface-light flex flex-col gap-2 hover:border-primary/40 transition-colors">
+          <div class="p-5 sm:p-6 rounded-2xl border border-slate-200 bg-surface-light flex flex-col gap-2.5 hover:border-primary/40 hover:shadow-sm transition-all">
             <div class="flex items-center justify-between">
-              <span class="text-[10px] uppercase font-label font-bold px-2 py-0.5 rounded bg-primary-dark text-white">Professional Skills</span>
-              <span class="material-symbols-outlined text-tertiary text-[18px]">forum</span>
+              <span class="text-xs uppercase font-label font-bold px-2.5 py-1 rounded bg-primary-dark text-white">Professional Skills</span>
+              <span class="material-symbols-outlined text-tertiary text-[20px]">forum</span>
             </div>
-            <h3 class="font-headline text-base text-primary-dark font-bold">Skill & Communication Mastery</h3>
-            <p class="text-xs text-on-surface-variant leading-relaxed">
+            <h3 class="font-headline text-base sm:text-lg text-primary-dark font-bold">Skill & Communication Mastery</h3>
+            <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
               Comprehensive training in multilingual public speaking (English, Arabic, Malayalam), creative writing, digital media tools, and leadership seminars.
             </p>
-            <div class="flex flex-wrap gap-1 mt-auto pt-2">
-              <span class="text-[10px] font-label bg-white px-2 py-0.5 rounded border border-slate-200 text-slate-700">Public Speaking</span>
-              <span class="text-[10px] font-label bg-white px-2 py-0.5 rounded border border-slate-200 text-slate-700">English Eloquence</span>
-              <span class="text-[10px] font-label bg-white px-2 py-0.5 rounded border border-slate-200 text-slate-700">Digital Tools</span>
+            <div class="flex flex-wrap gap-1.5 mt-auto pt-3">
+              <span class="text-xs font-label bg-white px-2.5 py-1 rounded-md border border-slate-200 text-slate-700 shadow-2xs">Public Speaking</span>
+              <span class="text-xs font-label bg-white px-2.5 py-1 rounded-md border border-slate-200 text-slate-700 shadow-2xs">English Eloquence</span>
+              <span class="text-xs font-label bg-white px-2.5 py-1 rounded-md border border-slate-200 text-slate-700 shadow-2xs">Digital Tools</span>
             </div>
           </div>
         </div>
@@ -506,59 +535,59 @@
     </section>
 
     <!-- 6. LIFE AT OUR CAMPUS -->
-    <section class="px-4 py-8 bg-primary-deep text-white" id="life-at-campus">
-      <div class="max-w-5xl mx-auto flex flex-col gap-4">
-        <div class="flex items-center justify-between border-b border-white/10 pb-3">
-          <div class="flex flex-col">
-            <span class="text-[10px] font-label text-tertiary-accent font-bold tracking-widest uppercase">Student Atmosphere</span>
+    <section class="px-4 sm:px-6 lg:px-8 py-10 sm:py-14 bg-primary-deep text-white" id="life-at-campus">
+      <div class="max-w-5xl mx-auto flex flex-col gap-5">
+        <div class="flex items-center justify-between border-b border-white/10 pb-4">
+          <div class="flex flex-col gap-1">
+            <span class="text-xs font-label text-tertiary-accent font-bold tracking-widest uppercase">Student Atmosphere</span>
             <h2 class="font-headline text-2xl sm:text-3xl text-white font-bold">Life at Our Campus</h2>
           </div>
-          <a class="text-xs font-label text-slate-300 hover:text-white flex items-center gap-1" href="#gallery">
-            <span>View All</span>
-            <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+          <a class="min-h-[40px] px-4 py-2 rounded-xl bg-white/10 hover:bg-white/15 text-xs sm:text-sm font-label font-medium text-slate-200 hover:text-white flex items-center gap-1.5 transition-colors border border-white/10" href="#gallery">
+            <span>View All Captures</span>
+            <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
           </a>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5 pt-1">
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-1">
           <!-- Card 1: Sacred Halaqa -->
-          <div class="rounded-xl overflow-hidden bg-white/5 border border-white/10 flex flex-col group cursor-pointer" onclick="openSingleLightbox('https://lh3.googleusercontent.com/aida-public/AB6AXuD0S-EssgEpmK3yb5PThU8bH36Xv91q5AHDopFMtSh1FaiDc6PAZ-jE5GaUKb7UHazqglvCUAZ93PwkHHnODN8RHeG34gi49U8eeoV2_VkDjTRe3ZdH7kf7z_xED63zv632ENUejghnbP-tIvccvmEp3V2zApzrE5p6bO9Appiz1qc0JvvxZunHeBSWTuoIlhdv97u--K1cewofXLiBZgq1kqxww3mbd-SZ7Mp9OzksR4LkztFdHunwX3e9rxqYHf12', 'Qur\'anic Reflection Circles', 'Daily revision, tajweed polishing, and reflective scholarly halaqa sessions.')">
-            <div class="h-44 overflow-hidden relative">
+          <div class="rounded-2xl overflow-hidden bg-white/5 border border-white/10 flex flex-col group cursor-pointer hover:border-white/20 transition-all shadow-sm" onclick="openSingleLightbox('https://lh3.googleusercontent.com/aida-public/AB6AXuD0S-EssgEpmK3yb5PThU8bH36Xv91q5AHDopFMtSh1FaiDc6PAZ-jE5GaUKb7UHazqglvCUAZ93PwkHHnODN8RHeG34gi49U8eeoV2_VkDjTRe3ZdH7kf7z_xED63zv632ENUejghnbP-tIvccvmEp3V2zApzrE5p6bO9Appiz1qc0JvvxZunHeBSWTuoIlhdv97u--K1cewofXLiBZgq1kqxww3mbd-SZ7Mp9OzksR4LkztFdHunwX3e9rxqYHf12', 'Qur\'anic Reflection Circles', 'Daily revision, tajweed polishing, and reflective scholarly halaqa sessions.')">
+            <div class="h-48 sm:h-52 overflow-hidden relative">
               <img alt="Student recitation circle at Madin Suffa Campus" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD0S-EssgEpmK3yb5PThU8bH36Xv91q5AHDopFMtSh1FaiDc6PAZ-jE5GaUKb7UHazqglvCUAZ93PwkHHnODN8RHeG34gi49U8eeoV2_VkDjTRe3ZdH7kf7z_xED63zv632ENUejghnbP-tIvccvmEp3V2zApzrE5p6bO9Appiz1qc0JvvxZunHeBSWTuoIlhdv97u--K1cewofXLiBZgq1kqxww3mbd-SZ7Mp9OzksR4LkztFdHunwX3e9rxqYHf12">
-              <div class="absolute inset-0 bg-gradient-to-t from-primary-deep/90 to-transparent"></div>
-              <span class="absolute bottom-2 left-2 text-[10px] font-label font-bold text-tertiary-accent uppercase">Hifz Circles</span>
-              <span class="absolute top-2 right-2 text-white/70 group-hover:text-white material-symbols-outlined text-[18px]">zoom_in</span>
+              <div class="absolute inset-0 bg-gradient-to-t from-primary-deep/90 via-primary-deep/20 to-transparent"></div>
+              <span class="absolute bottom-2.5 left-3 text-[11px] font-label font-bold text-tertiary-accent uppercase">Hifz Circles</span>
+              <span class="absolute top-2.5 right-2.5 text-white/70 group-hover:text-white material-symbols-outlined text-[18px] bg-black/40 p-1 rounded-full backdrop-blur-xs">zoom_in</span>
             </div>
-            <div class="p-3 flex flex-col gap-1">
-              <h3 class="font-headline text-sm font-bold text-white">Qur'anic Reflection Circles</h3>
-              <p class="text-[11px] text-slate-300 leading-snug">Daily revision, tajweed polishing, and reflective scholarly halaqa sessions.</p>
+            <div class="p-4 flex flex-col gap-1.5">
+              <h3 class="font-headline text-base font-bold text-white">Qur'anic Reflection Circles</h3>
+              <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">Daily revision, tajweed polishing, and reflective scholarly halaqa sessions.</p>
             </div>
           </div>
 
           <!-- Card 2: Oratory Stage -->
-          <div class="rounded-xl overflow-hidden bg-white/5 border border-white/10 flex flex-col group cursor-pointer" onclick="openSingleLightbox('https://lh3.googleusercontent.com/aida-public/AB6AXuAPDDv9USDueaOowTMrd430g2-Y9lNlBiaGjvYID9FVA9EbfZ_EqrvNveRCrcZv5ejfuiygMmZjBaEiDWqR9Ej-sWQmSu645NIMVLTv_v-wCMyXpocw-kQ11lg0bkr_O5ygbaPnn9puBap47RTevpvs4OU_H2V9LCTGT5Dpk8nWKKKUG0fYl3u-KW1U2OC02458LNe4bDrz7zqmHtRnuKbOldmadByvqvFmW6RhWZIHBvjhP8g01xEbUncW-I7036Ol', 'Inspiraath Art Festival', 'Annual student oratory, literary debate, calligraphy, and cultural showcases.')">
-            <div class="h-44 overflow-hidden relative">
+          <div class="rounded-2xl overflow-hidden bg-white/5 border border-white/10 flex flex-col group cursor-pointer hover:border-white/20 transition-all shadow-sm" onclick="openSingleLightbox('https://lh3.googleusercontent.com/aida-public/AB6AXuAPDDv9USDueaOowTMrd430g2-Y9lNlBiaGjvYID9FVA9EbfZ_EqrvNveRCrcZv5ejfuiygMmZjBaEiDWqR9Ej-sWQmSu645NIMVLTv_v-wCMyXpocw-kQ11lg0bkr_O5ygbaPnn9puBap47RTevpvs4OU_H2V9LCTGT5Dpk8nWKKKUG0fYl3u-KW1U2OC02458LNe4bDrz7zqmHtRnuKbOldmadByvqvFmW6RhWZIHBvjhP8g01xEbUncW-I7036Ol', 'Inspiraath Art Festival', 'Annual student oratory, literary debate, calligraphy, and cultural showcases.')">
+            <div class="h-48 sm:h-52 overflow-hidden relative">
               <img alt="Student delivering speech at Inspiraath Art Fest" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAPDDv9USDueaOowTMrd430g2-Y9lNlBiaGjvYID9FVA9EbfZ_EqrvNveRCrcZv5ejfuiygMmZjBaEiDWqR9Ej-sWQmSu645NIMVLTv_v-wCMyXpocw-kQ11lg0bkr_O5ygbaPnn9puBap47RTevpvs4OU_H2V9LCTGT5Dpk8nWKKKUG0fYl3u-KW1U2OC02458LNe4bDrz7zqmHtRnuKbOldmadByvqvFmW6RhWZIHBvjhP8g01xEbUncW-I7036Ol">
-              <div class="absolute inset-0 bg-gradient-to-t from-primary-deep/90 to-transparent"></div>
-              <span class="absolute bottom-2 left-2 text-[10px] font-label font-bold text-tertiary-accent uppercase">Arts & Culture</span>
-              <span class="absolute top-2 right-2 text-white/70 group-hover:text-white material-symbols-outlined text-[18px]">zoom_in</span>
+              <div class="absolute inset-0 bg-gradient-to-t from-primary-deep/90 via-primary-deep/20 to-transparent"></div>
+              <span class="absolute bottom-2.5 left-3 text-[11px] font-label font-bold text-tertiary-accent uppercase">Arts & Culture</span>
+              <span class="absolute top-2.5 right-2.5 text-white/70 group-hover:text-white material-symbols-outlined text-[18px] bg-black/40 p-1 rounded-full backdrop-blur-xs">zoom_in</span>
             </div>
-            <div class="p-3 flex flex-col gap-1">
-              <h3 class="font-headline text-sm font-bold text-white">Inspiraath Art Festival</h3>
-              <p class="text-[11px] text-slate-300 leading-snug">Annual student oratory, literary debate, calligraphy, and cultural showcases.</p>
+            <div class="p-4 flex flex-col gap-1.5">
+              <h3 class="font-headline text-base font-bold text-white">Inspiraath Art Festival</h3>
+              <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">Annual student oratory, literary debate, calligraphy, and cultural showcases.</p>
             </div>
           </div>
 
           <!-- Card 3: Inspiraath Podium -->
-          <div class="rounded-xl overflow-hidden bg-white/5 border border-white/10 flex flex-col group cursor-pointer" onclick="openSingleLightbox('https://lh3.googleusercontent.com/aida-public/AB6AXuALlHjP4fpFSmm67bzI0kFariP4Iktuw2F-dMRTgcKDuCQQ1gW9kUktNb3Og0v606sJNwPVIu796A6cRmM6Hv4WaxWeTFQFmpJk8gEhb4aeUl3YL-KzYmdSHkUHC3pZP6xAS6ADwwqtR7av6E-NVVSps46R7eP64DmxtCs-wsrBl-fKpnja2HpqeZ93nhZGgWGxx9kTVtUyzW_LEPtOYIpvCqlpYX312TY6lCmwYeYqSa37U5k4lM0JHS08hAV-hFCB', 'Elocution & Stage Presence', 'Building confident, articulate scholars capable of addressing global audiences.')">
-            <div class="h-44 overflow-hidden relative">
+          <div class="rounded-2xl overflow-hidden bg-white/5 border border-white/10 flex flex-col group cursor-pointer hover:border-white/20 transition-all shadow-sm" onclick="openSingleLightbox('https://lh3.googleusercontent.com/aida-public/AB6AXuALlHjP4fpFSmm67bzI0kFariP4Iktuw2F-dMRTgcKDuCQQ1gW9kUktNb3Og0v606sJNwPVIu796A6cRmM6Hv4WaxWeTFQFmpJk8gEhb4aeUl3YL-KzYmdSHkUHC3pZP6xAS6ADwwqtR7av6E-NVVSps46R7eP64DmxtCs-wsrBl-fKpnja2HpqeZ93nhZGgWGxx9kTVtUyzW_LEPtOYIpvCqlpYX312TY6lCmwYeYqSa37U5k4lM0JHS08hAV-hFCB', 'Elocution & Stage Presence', 'Building confident, articulate scholars capable of addressing global audiences.')">
+            <div class="h-48 sm:h-52 overflow-hidden relative">
               <img alt="Student scholar speaking at Inspiraath '25 podium" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuALlHjP4fpFSmm67bzI0kFariP4Iktuw2F-dMRTgcKDuCQQ1gW9kUktNb3Og0v606sJNwPVIu796A6cRmM6Hv4WaxWeTFQFmpJk8gEhb4aeUl3YL-KzYmdSHkUHC3pZP6xAS6ADwwqtR7av6E-NVVSps46R7eP64DmxtCs-wsrBl-fKpnja2HpqeZ93nhZGgWGxx9kTVtUyzW_LEPtOYIpvCqlpYX312TY6lCmwYeYqSa37U5k4lM0JHS08hAV-hFCB">
-              <div class="absolute inset-0 bg-gradient-to-t from-primary-deep/90 to-transparent"></div>
-              <span class="absolute bottom-2 left-2 text-[10px] font-label font-bold text-tertiary-accent uppercase">Leadership Development</span>
-              <span class="absolute top-2 right-2 text-white/70 group-hover:text-white material-symbols-outlined text-[18px]">zoom_in</span>
+              <div class="absolute inset-0 bg-gradient-to-t from-primary-deep/90 via-primary-deep/20 to-transparent"></div>
+              <span class="absolute bottom-2.5 left-3 text-[11px] font-label font-bold text-tertiary-accent uppercase">Leadership Development</span>
+              <span class="absolute top-2.5 right-2.5 text-white/70 group-hover:text-white material-symbols-outlined text-[18px] bg-black/40 p-1 rounded-full backdrop-blur-xs">zoom_in</span>
             </div>
-            <div class="p-3 flex flex-col gap-1">
-              <h3 class="font-headline text-sm font-bold text-white">Elocution & Stage Presence</h3>
-              <p class="text-[11px] text-slate-300 leading-snug">Building confident, articulate scholars capable of addressing global audiences.</p>
+            <div class="p-4 flex flex-col gap-1.5">
+              <h3 class="font-headline text-base font-bold text-white">Elocution & Stage Presence</h3>
+              <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">Building confident, articulate scholars capable of addressing global audiences.</p>
             </div>
           </div>
         </div>
@@ -566,31 +595,31 @@
     </section>
 
     <!-- 7. CAMPUS PHOTO ARCHIVE & GALLERY (WITH CATEGORY FILTERS & FULL LIGHTBOX) -->
-    <section class="px-4 py-8 bg-surface-card" id="gallery">
-      <div class="max-w-5xl mx-auto flex flex-col gap-4">
-        <div class="flex flex-col sm:flex-row sm:items-end justify-between border-l-4 border-primary pl-3 gap-2">
-          <div class="flex flex-col gap-0.5">
-            <span class="text-[11px] font-label font-bold text-tertiary uppercase tracking-widest">VISUAL REPOSITORY</span>
+    <section class="px-4 sm:px-6 lg:px-8 py-10 sm:py-14 bg-surface-card" id="gallery">
+      <div class="max-w-5xl mx-auto flex flex-col gap-5">
+        <div class="flex flex-col sm:flex-row sm:items-end justify-between border-l-4 border-primary pl-4 gap-3">
+          <div class="flex flex-col gap-1">
+            <span class="text-xs font-label font-bold text-tertiary uppercase tracking-widest">VISUAL REPOSITORY</span>
             <h2 class="font-headline text-2xl sm:text-3xl text-primary-dark font-bold leading-tight">Campus Moments & Gallery</h2>
-            <p class="text-xs text-on-surface-variant">Archived glimpses from Inspiraath '25, scholastic symposiums, and campus life. Click any photo to expand.</p>
+            <p class="text-sm text-slate-600">Archived glimpses from Inspiraath '25, scholastic symposiums, and campus life. Click any photo to expand.</p>
           </div>
-          <div class="flex items-center gap-1.5 shrink-0 self-end sm:self-auto">
-            <button aria-label="Previous slide" class="w-9 h-9 rounded-full border border-slate-300 hover:border-primary hover:bg-primary/10 text-primary-dark flex items-center justify-center transition-colors" onclick="const el=document.getElementById('gallery-carousel'); el.scrollBy({left: -el.offsetWidth * 0.75, behavior: 'smooth'});">
-              <span class="material-symbols-outlined text-[20px]">chevron_left</span>
+          <div class="flex items-center gap-2 shrink-0 self-end sm:self-auto">
+            <button aria-label="Previous slide" class="w-10 h-10 rounded-full border border-slate-300 hover:border-primary hover:bg-primary/5 text-primary-dark flex items-center justify-center transition-colors shadow-2xs" onclick="const el=document.getElementById('gallery-carousel'); el.scrollBy({left: -el.offsetWidth * 0.75, behavior: 'smooth'});">
+              <span class="material-symbols-outlined text-[22px]">chevron_left</span>
             </button>
-            <button aria-label="Next slide" class="w-9 h-9 rounded-full border border-slate-300 hover:border-primary hover:bg-primary/10 text-primary-dark flex items-center justify-center transition-colors" onclick="const el=document.getElementById('gallery-carousel'); el.scrollBy({left: el.offsetWidth * 0.75, behavior: 'smooth'});">
-              <span class="material-symbols-outlined text-[20px]">chevron_right</span>
+            <button aria-label="Next slide" class="w-10 h-10 rounded-full border border-slate-300 hover:border-primary hover:bg-primary/5 text-primary-dark flex items-center justify-center transition-colors shadow-2xs" onclick="const el=document.getElementById('gallery-carousel'); el.scrollBy({left: el.offsetWidth * 0.75, behavior: 'smooth'});">
+              <span class="material-symbols-outlined text-[22px]">chevron_right</span>
             </button>
           </div>
         </div>
 
         <!-- Filter Chips -->
         <div class="flex items-center gap-2 overflow-x-auto pb-1 text-xs font-label">
-          <button onclick="filterGallery('all', this)" class="gallery-filter-btn px-3 py-1 rounded-full bg-primary text-white font-semibold transition-all shadow-xs">All (20)</button>
-          <button onclick="filterGallery('quran', this)" class="gallery-filter-btn px-3 py-1 rounded-full bg-surface-light border border-slate-200 text-slate-700 hover:bg-slate-100 font-semibold transition-all">Qur'an & Tajweed</button>
-          <button onclick="filterGallery('fest', this)" class="gallery-filter-btn px-3 py-1 rounded-full bg-surface-light border border-slate-200 text-slate-700 hover:bg-slate-100 font-semibold transition-all">Inspiraath '25</button>
-          <button onclick="filterGallery('oratory', this)" class="gallery-filter-btn px-3 py-1 rounded-full bg-surface-light border border-slate-200 text-slate-700 hover:bg-slate-100 font-semibold transition-all">Oratory & Stage</button>
-          <button onclick="filterGallery('academic', this)" class="gallery-filter-btn px-3 py-1 rounded-full bg-surface-light border border-slate-200 text-slate-700 hover:bg-slate-100 font-semibold transition-all">Scholars & Colloquium</button>
+          <button onclick="filterGallery('all', this)" class="gallery-filter-btn min-h-[38px] px-4 py-1.5 rounded-full bg-primary text-white font-semibold transition-all shadow-xs shrink-0">All (20)</button>
+          <button onclick="filterGallery('quran', this)" class="gallery-filter-btn min-h-[38px] px-4 py-1.5 rounded-full bg-surface-light border border-slate-200 text-slate-700 hover:bg-slate-100 font-semibold transition-all shrink-0">Qur'an & Tajweed</button>
+          <button onclick="filterGallery('fest', this)" class="gallery-filter-btn min-h-[38px] px-4 py-1.5 rounded-full bg-surface-light border border-slate-200 text-slate-700 hover:bg-slate-100 font-semibold transition-all shrink-0">Inspiraath '25</button>
+          <button onclick="filterGallery('oratory', this)" class="gallery-filter-btn min-h-[38px] px-4 py-1.5 rounded-full bg-surface-light border border-slate-200 text-slate-700 hover:bg-slate-100 font-semibold transition-all shrink-0">Oratory & Stage</button>
+          <button onclick="filterGallery('academic', this)" class="gallery-filter-btn min-h-[38px] px-4 py-1.5 rounded-full bg-surface-light border border-slate-200 text-slate-700 hover:bg-slate-100 font-semibold transition-all shrink-0">Scholars & Colloquium</button>
         </div>
 
         <!-- Horizontal Scroll Carousel with 20 Authentic Captures -->
@@ -880,137 +909,137 @@
           </div>
         </div>
 
-        <div class="flex items-center justify-between text-xs text-on-surface-variant pt-1 px-1">
+        <div class="flex items-center justify-between text-xs sm:text-sm text-slate-600 pt-2 px-1">
           <div class="flex items-center gap-1.5">
-            <span class="material-symbols-outlined text-[16px] text-tertiary">swipe</span>
+            <span class="material-symbols-outlined text-[18px] text-tertiary">swipe</span>
             <span>Swipe horizontally or use arrows to browse all 20 authentic photos</span>
           </div>
-          <span class="font-label font-bold text-primary text-[11px]" id="gallery-count-badge">20 Event Captures</span>
+          <span class="font-label font-bold text-primary text-xs" id="gallery-count-badge">20 Event Captures</span>
         </div>
       </div>
     </section>
 
     <!-- 8. DEVELOPING SCHOLARS: 8 CORE VALUES -->
-    <section class="px-4 py-8 bg-surface-light border-y border-border-subtle" id="competencies">
-      <div class="max-w-5xl mx-auto flex flex-col gap-4">
-        <div class="text-center flex flex-col items-center gap-1">
-          <span class="text-[11px] font-label font-bold text-tertiary uppercase tracking-widest">HOLISTIC FORMATION</span>
+    <section class="px-4 sm:px-6 lg:px-8 py-10 sm:py-14 bg-surface-light border-y border-border-subtle" id="competencies">
+      <div class="max-w-5xl mx-auto flex flex-col gap-6">
+        <div class="text-center flex flex-col items-center gap-1.5">
+          <span class="text-xs font-label font-bold text-tertiary uppercase tracking-widest">HOLISTIC FORMATION</span>
           <h2 class="font-headline text-2xl sm:text-3xl text-primary-dark font-bold">Developing Scholars, Leaders & Changemakers</h2>
-          <p class="text-xs text-on-surface-variant max-w-xl">Eight core pillars instilled into every Huffaz scholar who joins our academic family.</p>
+          <p class="text-sm text-slate-600 max-w-xl">Eight core pillars instilled into every Huffaz scholar who joins our academic family.</p>
         </div>
 
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-2">
-          <div class="p-3 bg-white rounded-xl border border-slate-200 shadow-xs flex items-center gap-2.5 hover:border-primary/40 transition-colors">
-            <div class="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0">
-              <span class="material-symbols-outlined text-[18px]">mosque</span>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 pt-1">
+          <div class="p-3.5 sm:p-4 bg-white rounded-xl border border-slate-200/80 shadow-2xs flex items-center gap-3 hover:border-primary/40 hover:shadow-sm transition-all">
+            <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
+              <span class="material-symbols-outlined text-[20px]">mosque</span>
             </div>
-            <span class="text-xs font-label font-bold text-primary-dark">Islamic Values</span>
+            <span class="text-xs sm:text-sm font-label font-bold text-slate-800">Islamic Values</span>
           </div>
-          <div class="p-3 bg-white rounded-xl border border-slate-200 shadow-xs flex items-center gap-2.5 hover:border-tertiary/40 transition-colors">
-            <div class="w-8 h-8 rounded-lg bg-tertiary/10 text-tertiary flex items-center justify-center shrink-0">
-              <span class="material-symbols-outlined text-[18px]">translate</span>
+          <div class="p-3.5 sm:p-4 bg-white rounded-xl border border-slate-200/80 shadow-2xs flex items-center gap-3 hover:border-tertiary/40 hover:shadow-sm transition-all">
+            <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-tertiary/10 text-tertiary flex items-center justify-center shrink-0">
+              <span class="material-symbols-outlined text-[20px]">translate</span>
             </div>
-            <span class="text-xs font-label font-bold text-primary-dark">Communication</span>
+            <span class="text-xs sm:text-sm font-label font-bold text-slate-800">Communication</span>
           </div>
-          <div class="p-3 bg-white rounded-xl border border-slate-200 shadow-xs flex items-center gap-2.5 hover:border-primary/40 transition-colors">
-            <div class="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0">
-              <span class="material-symbols-outlined text-[18px]">military_tech</span>
+          <div class="p-3.5 sm:p-4 bg-white rounded-xl border border-slate-200/80 shadow-2xs flex items-center gap-3 hover:border-primary/40 hover:shadow-sm transition-all">
+            <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
+              <span class="material-symbols-outlined text-[20px]">military_tech</span>
             </div>
-            <span class="text-xs font-label font-bold text-primary-dark">Leadership</span>
+            <span class="text-xs sm:text-sm font-label font-bold text-slate-800">Leadership</span>
           </div>
-          <div class="p-3 bg-white rounded-xl border border-slate-200 shadow-xs flex items-center gap-2.5 hover:border-tertiary/40 transition-colors">
-            <div class="w-8 h-8 rounded-lg bg-tertiary/10 text-tertiary flex items-center justify-center shrink-0">
-              <span class="material-symbols-outlined text-[18px]">palette</span>
+          <div class="p-3.5 sm:p-4 bg-white rounded-xl border border-slate-200/80 shadow-2xs flex items-center gap-3 hover:border-tertiary/40 hover:shadow-sm transition-all">
+            <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-tertiary/10 text-tertiary flex items-center justify-center shrink-0">
+              <span class="material-symbols-outlined text-[20px]">palette</span>
             </div>
-            <span class="text-xs font-label font-bold text-primary-dark">Creativity</span>
+            <span class="text-xs sm:text-sm font-label font-bold text-slate-800">Creativity</span>
           </div>
-          <div class="p-3 bg-white rounded-xl border border-slate-200 shadow-xs flex items-center gap-2.5 hover:border-primary/40 transition-colors">
-            <div class="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0">
-              <span class="material-symbols-outlined text-[18px]">psychology</span>
+          <div class="p-3.5 sm:p-4 bg-white rounded-xl border border-slate-200/80 shadow-2xs flex items-center gap-3 hover:border-primary/40 hover:shadow-sm transition-all">
+            <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
+              <span class="material-symbols-outlined text-[20px]">psychology</span>
             </div>
-            <span class="text-xs font-label font-bold text-primary-dark">Confidence</span>
+            <span class="text-xs sm:text-sm font-label font-bold text-slate-800">Confidence</span>
           </div>
-          <div class="p-3 bg-white rounded-xl border border-slate-200 shadow-xs flex items-center gap-2.5 hover:border-tertiary/40 transition-colors">
-            <div class="w-8 h-8 rounded-lg bg-tertiary/10 text-tertiary flex items-center justify-center shrink-0">
-              <span class="material-symbols-outlined text-[18px]">diversity_3</span>
+          <div class="p-3.5 sm:p-4 bg-white rounded-xl border border-slate-200/80 shadow-2xs flex items-center gap-3 hover:border-tertiary/40 hover:shadow-sm transition-all">
+            <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-tertiary/10 text-tertiary flex items-center justify-center shrink-0">
+              <span class="material-symbols-outlined text-[20px]">diversity_3</span>
             </div>
-            <span class="text-xs font-label font-bold text-primary-dark">Social Action</span>
+            <span class="text-xs sm:text-sm font-label font-bold text-slate-800">Social Action</span>
           </div>
-          <div class="p-3 bg-white rounded-xl border border-slate-200 shadow-xs flex items-center gap-2.5 hover:border-primary/40 transition-colors">
-            <div class="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0">
-              <span class="material-symbols-outlined text-[18px]">lightbulb</span>
+          <div class="p-3.5 sm:p-4 bg-white rounded-xl border border-slate-200/80 shadow-2xs flex items-center gap-3 hover:border-primary/40 hover:shadow-sm transition-all">
+            <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
+              <span class="material-symbols-outlined text-[20px]">lightbulb</span>
             </div>
-            <span class="text-xs font-label font-bold text-primary-dark">Critical Thinking</span>
+            <span class="text-xs sm:text-sm font-label font-bold text-slate-800">Critical Thinking</span>
           </div>
-          <div class="p-3 bg-white rounded-xl border border-slate-200 shadow-xs flex items-center gap-2.5 hover:border-tertiary/40 transition-colors">
-            <div class="w-8 h-8 rounded-lg bg-tertiary/10 text-tertiary flex items-center justify-center shrink-0">
-              <span class="material-symbols-outlined text-[18px]">hourglass_top</span>
+          <div class="p-3.5 sm:p-4 bg-white rounded-xl border border-slate-200/80 shadow-2xs flex items-center gap-3 hover:border-tertiary/40 hover:shadow-sm transition-all">
+            <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-tertiary/10 text-tertiary flex items-center justify-center shrink-0">
+              <span class="material-symbols-outlined text-[20px]">hourglass_top</span>
             </div>
-            <span class="text-xs font-label font-bold text-primary-dark">Lifelong Study</span>
+            <span class="text-xs sm:text-sm font-label font-bold text-slate-800">Lifelong Study</span>
           </div>
         </div>
       </div>
     </section>
 
     <!-- 9. ADMISSIONS GATEWAY (WITH 4-STEP PROTOCOL & PROSPECTUS CTA) -->
-    <section class="px-4 py-8" id="admissions">
+    <section class="px-4 sm:px-6 lg:px-8 py-10 sm:py-14" id="admissions">
       <div class="max-w-5xl mx-auto">
-        <div class="bg-gradient-to-br from-primary-deep via-primary to-primary-dark text-white rounded-3xl p-5 sm:p-7 shadow-xl flex flex-col gap-5 relative overflow-hidden">
+        <div class="bg-gradient-to-br from-primary-deep via-primary to-primary-dark text-white rounded-3xl p-6 sm:p-8 lg:p-9 shadow-xl flex flex-col gap-6 relative overflow-hidden">
           
           <div class="absolute -top-16 -right-16 w-52 h-52 rounded-full bg-tertiary/20 blur-3xl pointer-events-none"></div>
 
-          <div class="flex flex-col gap-2 relative z-10">
-            <div class="inline-flex items-center gap-1.5 self-start bg-tertiary text-white px-3 py-1 rounded-full text-[10px] font-label font-bold uppercase tracking-wider shadow">
-              <span class="material-symbols-outlined text-[14px]">school</span>
+          <div class="flex flex-col gap-2.5 relative z-10">
+            <div class="inline-flex items-center gap-2 self-start bg-tertiary text-white px-3.5 py-1.5 rounded-full text-xs font-label font-bold uppercase tracking-wider shadow-sm">
+              <span class="material-symbols-outlined text-[15px]">school</span>
               <span>Single Window Admissions</span>
             </div>
-            <h2 class="font-headline text-2xl sm:text-3xl text-white font-bold leading-tight">
+            <h2 class="font-headline text-2xl sm:text-3xl lg:text-[34px] text-white font-bold leading-tight">
               Admissions Open for the New Academic Year
             </h2>
-            <p class="text-xs sm:text-sm text-slate-200 leading-relaxed font-light">
+            <p class="text-sm sm:text-base text-slate-200 leading-relaxed font-light max-w-3xl">
               The Islamic academic syllabus and admission programme of Ma'din Suffa Campus are conducted under the curriculum of <strong class="text-white font-semibold">Jamiathul Hind Al Islamiyya (Centre Code: INS7572)</strong>. Experience an integrated learning environment combining advanced Islamic studies, Da'wa, contemporary knowledge, and collegiate education for Huffaz.
             </p>
           </div>
 
           <!-- 4-Step Selection Protocol -->
-          <div class="flex flex-col gap-2.5 bg-black/25 backdrop-blur-sm p-4 rounded-2xl border border-white/10 text-white relative z-10">
-            <span class="text-[11px] font-label text-tertiary-accent uppercase tracking-wider font-bold">4-Step Admission Protocol</span>
-            <div class="flex items-center gap-3">
-              <span class="w-6 h-6 rounded-full bg-tertiary text-white flex items-center justify-center font-bold text-xs flex-shrink-0">1</span>
-              <span class="text-xs sm:text-sm font-medium">Online Application & Information Verification</span>
+          <div class="flex flex-col gap-3 sm:gap-3.5 bg-black/30 backdrop-blur-sm p-5 sm:p-6 rounded-2xl border border-white/10 text-white relative z-10">
+            <span class="text-xs font-label text-tertiary-accent uppercase tracking-wider font-bold">4-Step Admission Protocol</span>
+            <div class="flex items-center gap-3.5">
+              <span class="w-7 h-7 rounded-full bg-tertiary-accent text-primary-deep flex items-center justify-center font-bold text-xs shrink-0 shadow-sm">1</span>
+              <span class="text-xs sm:text-sm font-medium text-slate-100">Online Application & Information Verification</span>
             </div>
-            <div class="flex items-center gap-3">
-              <span class="w-6 h-6 rounded-full bg-tertiary text-white flex items-center justify-center font-bold text-xs flex-shrink-0">2</span>
-              <span class="text-xs sm:text-sm font-medium">Document & Hifz Certification Verification</span>
+            <div class="flex items-center gap-3.5">
+              <span class="w-7 h-7 rounded-full bg-tertiary-accent text-primary-deep flex items-center justify-center font-bold text-xs shrink-0 shadow-sm">2</span>
+              <span class="text-xs sm:text-sm font-medium text-slate-100">Document & Hifz Certification Verification</span>
             </div>
-            <div class="flex items-center gap-3">
-              <span class="w-6 h-6 rounded-full bg-tertiary text-white flex items-center justify-center font-bold text-xs flex-shrink-0">3</span>
-              <span class="text-xs sm:text-sm font-medium">Scholastic Tajweed & General Aptitude Interview</span>
+            <div class="flex items-center gap-3.5">
+              <span class="w-7 h-7 rounded-full bg-tertiary-accent text-primary-deep flex items-center justify-center font-bold text-xs shrink-0 shadow-sm">3</span>
+              <span class="text-xs sm:text-sm font-medium text-slate-100">Scholastic Tajweed & General Aptitude Interview</span>
             </div>
-            <div class="flex items-center gap-3">
-              <span class="w-6 h-6 rounded-full bg-tertiary text-white flex items-center justify-center font-bold text-xs flex-shrink-0">4</span>
-              <span class="text-xs sm:text-sm font-medium">Campus Enrollment & Formal Academic Induction</span>
+            <div class="flex items-center gap-3.5">
+              <span class="w-7 h-7 rounded-full bg-tertiary-accent text-primary-deep flex items-center justify-center font-bold text-xs shrink-0 shadow-sm">4</span>
+              <span class="text-xs sm:text-sm font-medium text-slate-100">Campus Enrollment & Formal Academic Induction</span>
             </div>
           </div>
 
           <!-- Eligibility Box -->
-          <div class="flex flex-col gap-1.5 bg-white/10 p-3.5 rounded-xl text-xs text-slate-200 relative z-10">
+          <div class="flex flex-col gap-2 bg-white/10 p-4 sm:p-5 rounded-xl text-xs sm:text-sm text-slate-200 border border-white/15 relative z-10">
             <p><strong class="text-tertiary-accent">Curriculum & Board:</strong> Jamiathul Hind Al Islamiyya (Affiliation ID: INS7572).</p>
             <p><strong class="text-tertiary-accent">Eligibility:</strong> Open exclusively to Huffaz (certified Holy Qur'an memorizers) with recognized secondary credentials.</p>
             <p><strong class="text-tertiary-accent">Intake:</strong> Limited merit-based cohort ensuring focused personalized mentoring.</p>
           </div>
 
           <!-- Action Buttons -->
-          <div class="flex flex-col sm:flex-row gap-2.5 pt-1 relative z-10">
-            <a class="w-full py-3 px-4 bg-tertiary hover:bg-tertiary-accent text-white rounded-xl font-label text-xs sm:text-sm font-bold flex items-center justify-center gap-1.5 shadow-md active:scale-95 transition-all text-center" href="#contact">
+          <div class="flex flex-col sm:flex-row gap-3 pt-1 relative z-10">
+            <a class="w-full min-h-[48px] py-3 px-5 bg-tertiary hover:bg-tertiary-dark text-white rounded-xl font-label text-xs sm:text-sm font-semibold flex items-center justify-center gap-2 shadow-md active:scale-[0.99] transition-all text-center" href="#contact">
               <span class="material-symbols-outlined text-[18px]">how_to_reg</span>
               <span>Submit Admission Enquiry</span>
             </a>
-            <button onclick="openProspectusModal()" class="w-full py-3 px-4 bg-white/15 hover:bg-white/20 text-white rounded-xl font-label text-xs sm:text-sm font-semibold flex items-center justify-center gap-1.5 transition-colors">
+            <button onclick="openProspectusModal()" class="w-full min-h-[48px] py-3 px-5 bg-white/15 hover:bg-white/20 text-white rounded-xl font-label text-xs sm:text-sm font-semibold flex items-center justify-center gap-2 border border-white/20 transition-all text-center">
               <span class="material-symbols-outlined text-[18px] text-tertiary-accent">description</span>
               <span>Download Full Prospectus</span>
             </button>
-            <a class="w-full py-3 px-4 bg-secondary hover:bg-secondary/90 text-white rounded-xl font-label text-xs sm:text-sm font-semibold flex items-center justify-center gap-1.5 transition-colors" href="tel:+919562620731">
+            <a class="w-full min-h-[48px] py-3 px-5 bg-secondary hover:bg-secondary/90 text-white rounded-xl font-label text-xs sm:text-sm font-semibold flex items-center justify-center gap-2 transition-all text-center" href="tel:+919562620731">
               <span class="material-symbols-outlined text-[18px]">phone_in_talk</span>
               <span>Helpline: +91 95626 20731</span>
             </a>
@@ -1020,80 +1049,80 @@
     </section>
 
     <!-- 10. HELP DESK & ADMISSIONS ENQUIRY FORM WITH INSTANT WHATSAPP DISPATCH -->
-    <section class="px-4 py-8 bg-surface-card border-t border-border-subtle" id="contact">
-      <div class="max-w-5xl mx-auto flex flex-col gap-5">
-        <div class="flex flex-col gap-1 border-l-4 border-primary pl-3">
-          <span class="text-[11px] font-label font-bold text-tertiary uppercase tracking-widest">CONNECT WITH US</span>
+    <section class="px-4 sm:px-6 lg:px-8 py-10 sm:py-14 bg-surface-card border-t border-border-subtle" id="contact">
+      <div class="max-w-5xl mx-auto flex flex-col gap-6">
+        <div class="flex flex-col gap-1.5 border-l-4 border-primary pl-4">
+          <span class="text-xs font-label font-bold text-tertiary uppercase tracking-widest">CONNECT WITH US</span>
           <h2 class="font-headline text-2xl sm:text-3xl text-primary-dark font-bold leading-tight">
             Campus Help Desk & Admissions
           </h2>
-          <p class="text-xs text-on-surface-variant">We welcome students, guardians, and academic patrons to get in touch with our admissions desk.</p>
+          <p class="text-sm text-slate-600">We welcome students, guardians, and academic patrons to get in touch with our admissions desk.</p>
         </div>
 
         <!-- Directory Cards -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-          <div class="p-3 bg-surface-light rounded-xl border border-slate-200 flex items-start gap-3">
-            <div class="w-9 h-9 rounded-lg bg-primary text-white flex items-center justify-center flex-shrink-0">
-              <span class="material-symbols-outlined text-[18px]">location_on</span>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+          <div class="p-4 bg-surface-light rounded-xl border border-slate-200/80 flex items-start gap-3.5 hover:border-primary/40 transition-colors">
+            <div class="w-10 h-10 rounded-xl bg-primary text-white flex items-center justify-center shrink-0">
+              <span class="material-symbols-outlined text-[20px]">location_on</span>
             </div>
             <div class="flex flex-col">
-              <span class="text-[10px] font-label font-bold text-tertiary uppercase">Campus Address</span>
-              <span class="text-xs font-semibold text-primary-dark">Ma'din Suffa Campus, Vavoor, Malappuram District, Kerala</span>
+              <span class="text-xs font-label font-bold text-tertiary uppercase tracking-wider">Campus Address</span>
+              <span class="text-xs sm:text-sm font-semibold text-primary-dark">Ma'din Suffa Campus, Vavoor, Malappuram District, Kerala</span>
             </div>
           </div>
 
-          <div class="p-3 bg-surface-light rounded-xl border border-slate-200 flex items-start gap-3">
-            <div class="w-9 h-9 rounded-lg bg-primary text-white flex items-center justify-center flex-shrink-0">
-              <span class="material-symbols-outlined text-[18px]">call</span>
+          <div class="p-4 bg-surface-light rounded-xl border border-slate-200/80 flex items-start gap-3.5 hover:border-primary/40 transition-colors">
+            <div class="w-10 h-10 rounded-xl bg-primary text-white flex items-center justify-center shrink-0">
+              <span class="material-symbols-outlined text-[20px]">call</span>
             </div>
             <div class="flex flex-col">
-              <span class="text-[10px] font-label font-bold text-tertiary uppercase">Direct Phone</span>
-              <a class="text-xs font-bold text-primary hover:underline" href="tel:+919562620731">+91 95626 20731</a>
+              <span class="text-xs font-label font-bold text-tertiary uppercase tracking-wider">Direct Phone</span>
+              <a class="text-xs sm:text-sm font-bold text-primary hover:underline" href="tel:+919562620731">+91 95626 20731</a>
             </div>
           </div>
 
-          <div class="p-3 bg-surface-light rounded-xl border border-slate-200 flex items-start gap-3">
-            <div class="w-9 h-9 rounded-lg bg-tertiary text-white flex items-center justify-center flex-shrink-0">
-              <span class="material-symbols-outlined text-[18px]">chat</span>
+          <div class="p-4 bg-surface-light rounded-xl border border-slate-200/80 flex items-start gap-3.5 hover:border-tertiary/40 transition-colors">
+            <div class="w-10 h-10 rounded-xl bg-tertiary text-white flex items-center justify-center shrink-0">
+              <span class="material-symbols-outlined text-[20px]">chat</span>
             </div>
             <div class="flex flex-col">
-              <span class="text-[10px] font-label font-bold text-tertiary uppercase">Official WhatsApp</span>
-              <a class="text-xs font-bold text-primary hover:underline" href="https://wa.me/919562620731?text=Assalamu%20Alaikum%2C%20I%20would%20like%20to%20enquire%20about%20admissions%20at%20Ma%27din%20Suffa%20Campus%20Vavoor." rel="noopener noreferrer" target="_blank">+91 95626 20731</a>
+              <span class="text-xs font-label font-bold text-tertiary uppercase tracking-wider">Official WhatsApp</span>
+              <a class="text-xs sm:text-sm font-bold text-primary hover:underline" href="https://wa.me/919562620731?text=Assalamu%20Alaikum%2C%20I%20would%20like%20to%20enquire%20about%20admissions%20at%20Ma%27din%20Suffa%20Campus%20Vavoor." rel="noopener noreferrer" target="_blank">+91 95626 20731</a>
             </div>
           </div>
 
-          <div class="p-3 bg-surface-light rounded-xl border border-slate-200 flex items-start gap-3">
-            <div class="w-9 h-9 rounded-lg bg-primary text-white flex items-center justify-center flex-shrink-0">
-              <span class="material-symbols-outlined text-[18px]">language</span>
+          <div class="p-4 bg-surface-light rounded-xl border border-slate-200/80 flex items-start gap-3.5 hover:border-primary/40 transition-colors">
+            <div class="w-10 h-10 rounded-xl bg-primary text-white flex items-center justify-center shrink-0">
+              <span class="material-symbols-outlined text-[20px]">language</span>
             </div>
             <div class="flex flex-col">
-              <span class="text-[10px] font-label font-bold text-tertiary uppercase">Web Portals</span>
-              <span class="text-xs text-primary-dark font-medium">www.suffavavoor.net</span>
+              <span class="text-xs font-label font-bold text-tertiary uppercase tracking-wider">Web Portals</span>
+              <span class="text-xs sm:text-sm text-primary-dark font-medium">www.suffavavoor.net</span>
             </div>
           </div>
         </div>
 
         <!-- Interactive Admission Enquiry Form -->
-        <div class="bg-surface-light p-5 rounded-2xl border border-slate-200 flex flex-col gap-3 shadow-xs">
-          <div class="flex flex-col gap-0.5">
-            <h3 class="font-headline text-lg text-primary-dark font-bold">Send an Admission Enquiry</h3>
-            <p class="text-xs text-on-surface-variant">Fill in the scholar's details below. You can send this enquiry directly to our WhatsApp admissions desk or submit it for a call back.</p>
+        <div class="bg-surface-light p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-xs flex flex-col gap-4">
+          <div class="flex flex-col gap-1">
+            <h3 class="font-headline text-lg sm:text-xl text-primary-dark font-bold">Send an Admission Enquiry</h3>
+            <p class="text-sm text-slate-600">Fill in the scholar's details below. You can send this enquiry directly to our WhatsApp admissions desk or submit it for a call back.</p>
           </div>
 
-          <form class="flex flex-col gap-3 pt-1" id="enquiry-form" onsubmit="handleEnquirySubmit(event)">
+          <form class="flex flex-col gap-3.5 pt-1" id="enquiry-form" onsubmit="handleEnquirySubmit(event)">
             <div>
-              <label class="text-[10px] font-label text-slate-600 block mb-1 uppercase font-bold">Applicant / Guardian Name *</label>
-              <input id="enquiry-name" class="w-full px-3 py-2 rounded-xl bg-white text-on-surface border border-slate-300 focus:outline-none focus:ring-2 focus:ring-primary text-xs" placeholder="Full name of Hafiz scholar or guardian" required type="text">
+              <label class="text-xs font-label text-slate-700 block mb-1.5 uppercase font-semibold tracking-wider">Applicant / Guardian Name *</label>
+              <input id="enquiry-name" class="w-full h-11 sm:h-12 px-4 rounded-xl bg-white text-on-surface border border-slate-300 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm transition-all shadow-2xs" placeholder="Full name of Hafiz scholar or guardian" required type="text">
             </div>
 
             <div>
-              <label class="text-[10px] font-label text-slate-600 block mb-1 uppercase font-bold">Contact Phone Number *</label>
-              <input id="enquiry-phone" class="w-full px-3 py-2 rounded-xl bg-white text-on-surface border border-slate-300 focus:outline-none focus:ring-2 focus:ring-primary text-xs" placeholder="+91 95626 20731" required type="tel">
+              <label class="text-xs font-label text-slate-700 block mb-1.5 uppercase font-semibold tracking-wider">Contact Phone Number *</label>
+              <input id="enquiry-phone" class="w-full h-11 sm:h-12 px-4 rounded-xl bg-white text-on-surface border border-slate-300 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm transition-all shadow-2xs" placeholder="+91 95626 20731" required type="tel">
             </div>
 
             <div>
-              <label class="text-[10px] font-label text-slate-600 block mb-1 uppercase font-bold">Program Track *</label>
-              <select id="enquiry-track" class="w-full px-3 py-2 rounded-xl bg-white text-on-surface border border-slate-300 focus:outline-none focus:ring-2 focus:ring-primary text-xs">
+              <label class="text-xs font-label text-slate-700 block mb-1.5 uppercase font-semibold tracking-wider">Program Track *</label>
+              <select id="enquiry-track" class="w-full h-11 sm:h-12 px-4 rounded-xl bg-white text-on-surface border border-slate-300 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm transition-all shadow-2xs">
                 <option value="Uloomul Qur’an & Da'wa Studies">Uloomul Qur’an & Da'wa Studies</option>
                 <option value="UGC-NET / JRF Mentorship Program">UGC-NET / JRF Mentorship Program</option>
                 <option value="Commerce Degree + Islamic Sciences">Commerce Degree + Islamic Sciences</option>
@@ -1103,22 +1132,22 @@
             </div>
 
             <div>
-              <label class="text-[10px] font-label text-slate-600 block mb-1 uppercase font-bold">Message or Notes</label>
-              <textarea id="enquiry-msg" class="w-full px-3 py-2 rounded-xl bg-white text-on-surface border border-slate-300 focus:outline-none focus:ring-2 focus:ring-primary text-xs resize-none" placeholder="Share educational background, Hifz completion institution, and any specific questions..." rows="3"></textarea>
+              <label class="text-xs font-label text-slate-700 block mb-1.5 uppercase font-semibold tracking-wider">Message or Notes</label>
+              <textarea id="enquiry-msg" class="w-full p-4 rounded-xl bg-white text-on-surface border border-slate-300 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm transition-all shadow-2xs resize-none" placeholder="Share educational background, Hifz completion institution, and any specific questions..." rows="3"></textarea>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
-              <button class="py-2.5 px-4 bg-tertiary-dark hover:bg-tertiary text-white rounded-xl font-label text-xs sm:text-sm font-bold flex items-center justify-center gap-1.5 shadow active:scale-95 transition-all" type="submit">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+              <button class="min-h-[48px] py-3 px-5 bg-tertiary-dark hover:bg-tertiary text-white rounded-xl font-label text-xs sm:text-sm font-bold flex items-center justify-center gap-2 shadow active:scale-[0.99] transition-all" type="submit">
                 <span class="material-symbols-outlined text-[18px]">chat</span>
                 <span>Send via WhatsApp (+91 95626 20731)</span>
               </button>
-              <button class="py-2.5 px-4 bg-primary hover:bg-primary-dark text-white rounded-xl font-label text-xs sm:text-sm font-bold flex items-center justify-center gap-1.5 shadow active:scale-95 transition-all" type="button" onclick="recordLocalEnquiry()">
+              <button class="min-h-[48px] py-3 px-5 bg-primary hover:bg-primary-dark text-white rounded-xl font-label text-xs sm:text-sm font-bold flex items-center justify-center gap-2 shadow active:scale-[0.99] transition-all" type="button" onclick="recordLocalEnquiry()">
                 <span class="material-symbols-outlined text-[18px] text-tertiary-accent">send</span>
                 <span>Submit to Admissions Desk</span>
               </button>
             </div>
 
-            <div class="hidden mt-2 p-3 bg-tertiary text-white rounded-xl text-xs font-medium shadow flex items-center gap-2" id="enquiry-toast">
+            <div class="hidden mt-2 p-3.5 bg-tertiary text-white rounded-xl text-xs sm:text-sm font-medium shadow flex items-center gap-2" id="enquiry-toast">
               <span class="material-symbols-outlined text-[20px] text-white">check_circle</span>
               <span id="toast-message">✓ Your admission inquiry has been recorded. Our admissions cell will reach out to you shortly.</span>
             </div>
@@ -1128,61 +1157,63 @@
     </section>
 
     <!-- 11. INSTITUTIONAL UNIVERSITY FOOTER -->
-    <footer class="w-full bg-primary-deep text-white px-4 pt-10 pb-8 border-t border-primary">
-      <div class="max-w-5xl mx-auto flex flex-col gap-6">
+    <footer class="w-full bg-primary-deep text-white px-4 sm:px-6 lg:px-8 pt-12 sm:pt-14 pb-24 md:pb-12 border-t border-primary/30">
+      <div class="max-w-5xl mx-auto flex flex-col gap-8">
         
         <!-- Top Institutional Identity -->
-        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-white/10">
-          <div class="bg-white p-2.5 rounded-xl">
-            <img alt="Madin Academy & Madin Suffa Campus Official Dual Logo" class="h-10 w-auto object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuARXndvHNr6I3w5pwDsZzoaMupw0wVpSZ68GsWXSfycBJ-TupoD7uyTd6d65SrNZ6y3z_1jVqwIgT1MpQEZTH8URvtCTY5Qq5qEVfUqAtg62C67rgCAerUmoRu52XvXeWI0M3ywlM9mLCQWNaDUF91k-6vYMGB3RFoDBdVYOwbvCwso_782kwXr-QWUEKzrQEvQlItyOOV5x2o4Xv8DwDAVj4kH5V0xo9NLOOpgcDb1LjqYJHt0TpIgqxAZ2ZESKFhj">
-          </div>
-          <div class="flex flex-col">
-            <span class="text-xs font-label text-tertiary-accent font-bold uppercase tracking-wider">Ma'din Suffa Campus, Vavoor</span>
-            <span class="text-[11px] text-slate-300">Under Ma'din Academy • Affiliated with Jamiathul Hind Al Islamiyya (INS7572)</span>
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-6 border-b border-white/10">
+          <div class="flex items-center gap-3.5">
+            <div class="bg-white p-2.5 rounded-xl shadow-sm shrink-0">
+              <img alt="Madin Academy & Madin Suffa Campus Official Dual Logo" class="h-10 w-auto object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuARXndvHNr6I3w5pwDsZzoaMupw0wVpSZ68GsWXSfycBJ-TupoD7uyTd6d65SrNZ6y3z_1jVqwIgT1MpQEZTH8URvtCTY5Qq5qEVfUqAtg62C67rgCAerUmoRu52XvXeWI0M3ywlM9mLCQWNaDUF91k-6vYMGB3RFoDBdVYOwbvCwso_782kwXr-QWUEKzrQEvQlItyOOV5x2o4Xv8DwDAVj4kH5V0xo9NLOOpgcDb1LjqYJHt0TpIgqxAZ2ZESKFhj">
+            </div>
+            <div class="flex flex-col">
+              <span class="text-sm sm:text-base font-headline font-bold text-white tracking-wide">Ma'din Suffa Campus, Vavoor</span>
+              <span class="text-xs sm:text-sm text-slate-300 font-label mt-0.5">Under Ma'din Academy • Affiliated with Jamiathul Hind Al Islamiyya (INS7572)</span>
+            </div>
           </div>
         </div>
 
         <!-- Multi-Column Layout -->
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-5 text-xs font-light text-slate-300">
-          <div class="flex flex-col gap-2">
-            <span class="font-label font-bold text-white uppercase text-[11px] tracking-wider">Navigation</span>
-            <a class="hover:text-tertiary-accent transition-colors" href="#home">Home</a>
-            <a class="hover:text-tertiary-accent transition-colors" href="#about">About Campus</a>
-            <a class="hover:text-tertiary-accent transition-colors" href="#legacy-stats">Academic Highlights</a>
-            <a class="hover:text-tertiary-accent transition-colors" href="#programs">Courses & Syllabus</a>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-6 sm:gap-8 text-xs sm:text-sm text-slate-300">
+          <div class="flex flex-col gap-2.5">
+            <span class="font-label font-bold text-tertiary-accent uppercase text-xs tracking-wider">Navigation</span>
+            <a class="hover:text-white transition-colors py-0.5" href="#home">Home</a>
+            <a class="hover:text-white transition-colors py-0.5" href="#about">About Campus</a>
+            <a class="hover:text-white transition-colors py-0.5" href="#legacy-stats">Academic Highlights</a>
+            <a class="hover:text-white transition-colors py-0.5" href="#programs">Courses &amp; Syllabus</a>
           </div>
           
-          <div class="flex flex-col gap-2">
-            <span class="font-label font-bold text-white uppercase text-[11px] tracking-wider">Our Campus</span>
-            <a class="hover:text-tertiary-accent transition-colors" href="#life-at-campus">Life at Campus</a>
-            <a class="hover:text-tertiary-accent transition-colors" href="#gallery">Photo Archives</a>
-            <a class="hover:text-tertiary-accent transition-colors" href="#competencies">Scholarly Values</a>
-            <button onclick="openProspectusModal()" class="text-left hover:text-tertiary-accent transition-colors">Prospectus 2025</button>
+          <div class="flex flex-col gap-2.5">
+            <span class="font-label font-bold text-tertiary-accent uppercase text-xs tracking-wider">Our Campus</span>
+            <a class="hover:text-white transition-colors py-0.5" href="#life-at-campus">Life at Campus</a>
+            <a class="hover:text-white transition-colors py-0.5" href="#gallery">Photo Archives</a>
+            <a class="hover:text-white transition-colors py-0.5" href="#competencies">Scholarly Values</a>
+            <button onclick="openProspectusModal()" class="text-left hover:text-white transition-colors py-0.5">Prospectus 2025</button>
           </div>
 
-          <div class="flex flex-col gap-2">
-            <span class="font-label font-bold text-white uppercase text-[11px] tracking-wider">Affiliations</span>
-            <a class="hover:text-tertiary-accent transition-colors" href="https://www.madin.edu.in" target="_blank" rel="noopener noreferrer">Ma'din Academy</a>
-            <a class="hover:text-tertiary-accent transition-colors" href="https://jamiathulhind.com" target="_blank" rel="noopener noreferrer">Jamiathul Hind</a>
-            <a class="hover:text-tertiary-accent transition-colors" href="#admissions">Centre: INS7572</a>
-            <a class="hover:text-tertiary-accent transition-colors" href="#contact">Malappuram, Kerala</a>
+          <div class="flex flex-col gap-2.5">
+            <span class="font-label font-bold text-tertiary-accent uppercase text-xs tracking-wider">Affiliations</span>
+            <a class="hover:text-white transition-colors py-0.5" href="https://www.madin.edu.in" target="_blank" rel="noopener noreferrer">Ma'din Academy</a>
+            <a class="hover:text-white transition-colors py-0.5" href="https://jamiathulhind.com" target="_blank" rel="noopener noreferrer">Jamiathul Hind</a>
+            <a class="hover:text-white transition-colors py-0.5" href="#admissions">Centre: INS7572</a>
+            <a class="hover:text-white transition-colors py-0.5" href="#contact">Malappuram, Kerala</a>
           </div>
 
-          <div class="flex flex-col gap-2">
-            <span class="font-label font-bold text-white uppercase text-[11px] tracking-wider">Contact Info</span>
-            <span class="text-slate-300 text-[11px] leading-tight">Vavoor, Malappuram District, Kerala, India</span>
-            <a class="text-tertiary-accent font-medium hover:underline text-[11px]" href="tel:+919562620731">+91 95626 20731</a>
-            <span class="text-slate-300 text-[11px]">info@suffavavoor.net</span>
+          <div class="flex flex-col gap-2.5">
+            <span class="font-label font-bold text-tertiary-accent uppercase text-xs tracking-wider">Contact Info</span>
+            <span class="text-slate-300 leading-snug">Vavoor, Malappuram District, Kerala, India</span>
+            <a class="text-tertiary-accent font-semibold hover:underline" href="tel:+919562620731">+91 95626 20731</a>
+            <span class="text-slate-300">info@suffavavoor.net</span>
           </div>
         </div>
 
-        <div class="pt-4 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-2 text-center text-[10px] text-slate-400">
+        <div class="pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left text-xs text-slate-400">
           <span>© 2026 Ma'din Suffa Campus. All Rights Reserved.</span>
           <div class="flex items-center gap-3">
             <span>Affiliated with Jamiathul Hind Al Islamiyya (INS7572)</span>
             <span>•</span>
-            <a href="admin.html" class="text-slate-400 hover:text-white transition flex items-center gap-1 font-medium">
-              <span class="material-symbols-outlined text-[13px]">lock</span> Staff Portal
+            <a href="admin.html" class="text-slate-300 hover:text-tertiary-accent transition-colors flex items-center gap-1 font-medium px-2 py-1 rounded-md hover:bg-white/5">
+              <span class="material-symbols-outlined text-[15px]">lock</span> Staff Portal
             </a>
           </div>
         </div>
@@ -1191,53 +1222,53 @@
   </main>
 
   <!-- PERSISTENT MOBILE BOTTOM NAVIGATION -->
-  <nav class="fixed bottom-0 w-full z-40 pb-safe bg-surface/98 backdrop-blur-md border-t border-slate-200 shadow-lg">
-    <div class="flex justify-around items-center h-14 max-w-md mx-auto px-1">
-      <a class="nav-tab flex flex-col items-center justify-center gap-0.5 text-primary font-bold transition-colors" href="#home">
-        <span class="material-symbols-outlined text-[19px]">home</span>
-        <span class="text-[9px] font-label">Home</span>
+  <nav class="fixed bottom-0 w-full z-40 pb-safe bg-surface/98 backdrop-blur-md border-t border-slate-200/80 shadow-lg md:hidden">
+    <div class="flex justify-around items-center h-16 max-w-md mx-auto px-2">
+      <a class="nav-tab flex flex-col items-center justify-center gap-0.5 text-primary font-bold transition-colors py-1 px-2 rounded-xl" href="#home">
+        <span class="material-symbols-outlined text-[20px]">home</span>
+        <span class="text-[10px] font-label font-medium tracking-tight">Home</span>
       </a>
-      <a class="nav-tab flex flex-col items-center justify-center gap-0.5 text-slate-600 hover:text-primary transition-colors" href="#about">
-        <span class="material-symbols-outlined text-[19px]">account_balance</span>
-        <span class="text-[9px] font-label">About</span>
+      <a class="nav-tab flex flex-col items-center justify-center gap-0.5 text-slate-600 hover:text-primary transition-colors py-1 px-2 rounded-xl" href="#about">
+        <span class="material-symbols-outlined text-[20px]">account_balance</span>
+        <span class="text-[10px] font-label font-medium tracking-tight">About</span>
       </a>
-      <a class="nav-tab flex flex-col items-center justify-center gap-0.5 text-slate-600 hover:text-primary transition-colors" href="#programs">
-        <span class="material-symbols-outlined text-[19px]">school</span>
-        <span class="text-[9px] font-label">Programs</span>
+      <a class="nav-tab flex flex-col items-center justify-center gap-0.5 text-slate-600 hover:text-primary transition-colors py-1 px-2 rounded-xl" href="#programs">
+        <span class="material-symbols-outlined text-[20px]">school</span>
+        <span class="text-[10px] font-label font-medium tracking-tight">Programs</span>
       </a>
-      <a class="nav-tab flex flex-col items-center justify-center gap-0.5 text-slate-600 hover:text-primary transition-colors" href="#gallery">
-        <span class="material-symbols-outlined text-[19px]">photo_library</span>
-        <span class="text-[9px] font-label">Gallery</span>
+      <a class="nav-tab flex flex-col items-center justify-center gap-0.5 text-slate-600 hover:text-primary transition-colors py-1 px-2 rounded-xl" href="#gallery">
+        <span class="material-symbols-outlined text-[20px]">photo_library</span>
+        <span class="text-[10px] font-label font-medium tracking-tight">Gallery</span>
       </a>
-      <a class="nav-tab flex flex-col items-center justify-center gap-0.5 text-tertiary font-bold hover:text-tertiary-dark transition-colors" href="#admissions">
-        <span class="material-symbols-outlined text-[19px]">how_to_reg</span>
-        <span class="text-[9px] font-label">Apply</span>
+      <a class="nav-tab flex flex-col items-center justify-center gap-0.5 text-tertiary-dark font-bold hover:text-primary transition-colors py-1 px-2 rounded-xl" href="#admissions">
+        <span class="material-symbols-outlined text-[20px]">how_to_reg</span>
+        <span class="text-[10px] font-label font-medium tracking-tight">Apply</span>
       </a>
-      <a class="nav-tab flex flex-col items-center justify-center gap-0.5 text-slate-600 hover:text-primary transition-colors" href="#contact">
-        <span class="material-symbols-outlined text-[19px]">call</span>
-        <span class="text-[9px] font-label">Contact</span>
+      <a class="nav-tab flex flex-col items-center justify-center gap-0.5 text-slate-600 hover:text-primary transition-colors py-1 px-2 rounded-xl" href="#contact">
+        <span class="material-symbols-outlined text-[20px]">call</span>
+        <span class="text-[10px] font-label font-medium tracking-tight">Contact</span>
       </a>
     </div>
   </nav>
 
   <!-- FLOATING BACK TO TOP BUTTON -->
-  <button id="back-to-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="fixed bottom-16 right-4 z-30 w-10 h-10 rounded-full bg-primary/90 text-white shadow-lg flex items-center justify-center opacity-0 pointer-events-none transition-all duration-300 hover:bg-primary hover:scale-105" aria-label="Back to Top">
-    <span class="material-symbols-outlined text-[20px]">arrow_upward</span>
+  <button id="back-to-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="fixed bottom-20 md:bottom-6 right-4 z-30 w-11 h-11 rounded-full bg-primary/95 text-white shadow-xl flex items-center justify-center opacity-0 pointer-events-none transition-all duration-300 hover:bg-primary-dark hover:scale-105 active:scale-95" aria-label="Back to Top">
+    <span class="material-symbols-outlined text-[22px]">arrow_upward</span>
   </button>
 
   <!-- FULLSCREEN IMAGE LIGHTBOX MODAL -->
   <div id="lightbox-modal" class="fixed inset-0 z-50 bg-black/95 backdrop-blur-md hidden flex flex-col justify-between p-3 sm:p-5 select-none" onclick="if(event.target===this) closeLightbox();">
     <!-- Top Bar -->
     <div class="flex items-center justify-between text-white border-b border-white/10 pb-3">
-      <div class="flex items-center gap-2">
-        <span class="bg-tertiary text-white text-[10px] font-label font-bold px-2.5 py-0.5 rounded-full" id="lightbox-badge">Photo Archive</span>
-        <span class="text-xs text-slate-300 font-label" id="lightbox-counter">1 of 20</span>
+      <div class="flex items-center gap-2.5">
+        <span class="bg-tertiary-dark text-white text-xs font-label font-bold px-3 py-1 rounded-full" id="lightbox-badge">Photo Archive</span>
+        <span class="text-xs text-slate-300 font-label font-medium" id="lightbox-counter">1 of 20</span>
       </div>
       <div class="flex items-center gap-2">
-        <button onclick="downloadCurrentImage()" class="w-8 h-8 rounded-lg bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors" title="Open full resolution in new tab">
-          <span class="material-symbols-outlined text-[18px]">open_in_new</span>
+        <button onclick="downloadCurrentImage()" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-white/10 hover:bg-white/20 active:scale-95 text-white flex items-center justify-center transition-all" title="Open full resolution in new tab">
+          <span class="material-symbols-outlined text-[19px]">open_in_new</span>
         </button>
-        <button onclick="closeLightbox()" class="w-8 h-8 rounded-lg bg-white/10 hover:bg-red-500/80 text-white flex items-center justify-center transition-colors" title="Close (Esc)">
+        <button onclick="closeLightbox()" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-white/10 hover:bg-red-500/80 active:scale-95 text-white flex items-center justify-center transition-all" title="Close (Esc)">
           <span class="material-symbols-outlined text-[20px]">close</span>
         </button>
       </div>
@@ -1245,21 +1276,21 @@
 
     <!-- Center Image + Navigation Buttons -->
     <div class="relative flex-1 flex items-center justify-center overflow-hidden my-3">
-      <button id="lightbox-prev-btn" onclick="prevLightboxImage()" class="absolute left-2 sm:left-4 z-10 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-black/50 hover:bg-primary text-white flex items-center justify-center transition-all backdrop-blur-sm border border-white/20" aria-label="Previous Photo">
+      <button id="lightbox-prev-btn" onclick="prevLightboxImage()" class="absolute left-2 sm:left-4 z-10 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-black/60 hover:bg-primary active:scale-95 text-white flex items-center justify-center transition-all backdrop-blur-md border border-white/20" aria-label="Previous Photo">
         <span class="material-symbols-outlined text-[24px]">chevron_left</span>
       </button>
 
       <img id="lightbox-img" src="" alt="Campus Photo" class="max-h-[75vh] max-w-[95vw] object-contain rounded-xl shadow-2xl transition-all duration-300">
 
-      <button id="lightbox-next-btn" onclick="nextLightboxImage()" class="absolute right-2 sm:right-4 z-10 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-black/50 hover:bg-primary text-white flex items-center justify-center transition-all backdrop-blur-sm border border-white/20" aria-label="Next Photo">
+      <button id="lightbox-next-btn" onclick="nextLightboxImage()" class="absolute right-2 sm:right-4 z-10 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-black/60 hover:bg-primary active:scale-95 text-white flex items-center justify-center transition-all backdrop-blur-md border border-white/20" aria-label="Next Photo">
         <span class="material-symbols-outlined text-[24px]">chevron_right</span>
       </button>
     </div>
 
     <!-- Bottom Caption Bar -->
-    <div class="text-white text-center pt-2 border-t border-white/10 flex flex-col gap-1 max-w-2xl mx-auto">
-      <h4 id="lightbox-title" class="font-headline text-sm sm:text-base font-bold text-white">Title</h4>
-      <p id="lightbox-desc" class="text-xs text-slate-300 font-light">Description</p>
+    <div class="text-white text-center pt-3 pb-1 border-t border-white/10 flex flex-col gap-1 max-w-2xl mx-auto px-4">
+      <h4 id="lightbox-title" class="font-headline text-base sm:text-lg font-bold text-white tracking-wide">Title</h4>
+      <p id="lightbox-desc" class="text-xs sm:text-sm text-slate-300 font-normal leading-relaxed">Description</p>
     </div>
   </div>
 
@@ -1267,77 +1298,77 @@
   <div id="prospectus-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-3 sm:p-5" onclick="if(event.target===this) closeProspectusModal();">
     <div class="bg-surface rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl border border-slate-200 flex flex-col">
       <!-- Modal Header -->
-      <div class="p-5 bg-primary-deep text-white rounded-t-3xl flex items-center justify-between sticky top-0 z-10">
-        <div class="flex items-center gap-3">
+      <div class="p-5 sm:p-6 bg-primary-deep text-white rounded-t-3xl flex items-center justify-between sticky top-0 z-10">
+        <div class="flex items-center gap-3.5">
           <div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center text-tertiary-accent">
             <span class="material-symbols-outlined text-[24px]">menu_book</span>
           </div>
           <div>
-            <h3 class="font-headline text-lg sm:text-xl font-bold text-white">Campus Academic Prospectus</h3>
-            <span class="text-[11px] text-tertiary-accent font-label">Ma'din Suffa Campus Vavoor (Affiliated: INS7572)</span>
+            <h3 class="font-headline text-lg sm:text-xl font-bold text-white tracking-tight">Campus Academic Prospectus</h3>
+            <span class="text-xs text-tertiary-accent font-label font-medium">Ma'din Suffa Campus Vavoor (Affiliated: INS7572)</span>
           </div>
         </div>
-        <button onclick="closeProspectusModal()" class="w-8 h-8 rounded-lg bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors">
+        <button onclick="closeProspectusModal()" class="w-9 h-9 rounded-xl bg-white/10 hover:bg-white/20 active:scale-95 text-white flex items-center justify-center transition-all" aria-label="Close modal">
           <span class="material-symbols-outlined text-[20px]">close</span>
         </button>
       </div>
 
       <!-- Modal Body (Printable Content) -->
-      <div class="p-6 flex flex-col gap-5 text-on-surface text-xs sm:text-sm" id="prospectus-print-content">
-        <div class="border-b border-slate-200 pb-3">
-          <h4 class="font-headline text-base font-bold text-primary-dark">Academic Overview</h4>
-          <p class="text-on-surface-variant text-xs mt-1 leading-relaxed">
+      <div class="p-5 sm:p-6 flex flex-col gap-5 text-on-surface text-sm" id="prospectus-print-content">
+        <div class="border-b border-slate-200 pb-4">
+          <h4 class="font-headline text-base sm:text-lg font-bold text-primary-dark">Academic Overview</h4>
+          <p class="text-slate-600 text-xs sm:text-sm mt-1.5 leading-relaxed">
             Ma'din Suffa Campus, Vavoor offers an integrated academic environment under Ma'din Academy and Jamiathul Hind Al Islamiyya (Centre Code: INS7572). Designed exclusively for Huffazul Qur'an, the campus delivers dual-track collegiate education with high scholastic rigor.
           </p>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div class="p-3 bg-slate-50 rounded-xl border border-slate-200">
-            <h5 class="font-bold text-primary text-xs uppercase font-label">Integrated Syllabi</h5>
-            <ul class="list-disc list-inside mt-1 text-slate-700 text-xs space-y-1">
-              <li>Uloomul Qur’an & Tajweed Mastery</li>
-              <li>Tafseer & Classical Hadith Sciences</li>
-              <li>Da'wa Studies & Contemporary Discourse</li>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div class="p-4 bg-slate-50/80 rounded-2xl border border-slate-200/80">
+            <h5 class="font-bold text-primary text-xs uppercase font-label tracking-wider">Integrated Syllabi</h5>
+            <ul class="list-disc list-inside mt-2 text-slate-700 text-xs sm:text-sm space-y-1.5">
+              <li>Uloomul Qur’an &amp; Tajweed Mastery</li>
+              <li>Tafseer &amp; Classical Hadith Sciences</li>
+              <li>Da'wa Studies &amp; Contemporary Discourse</li>
               <li>University Bachelor Degree (Commerce / Arts)</li>
             </ul>
           </div>
-          <div class="p-3 bg-slate-50 rounded-xl border border-slate-200">
-            <h5 class="font-bold text-tertiary-dark text-xs uppercase font-label">Advanced Mentorship</h5>
-            <ul class="list-disc list-inside mt-1 text-slate-700 text-xs space-y-1">
-              <li>UGC NET & JRF Research Foundation</li>
+          <div class="p-4 bg-slate-50/80 rounded-2xl border border-slate-200/80">
+            <h5 class="font-bold text-tertiary-dark text-xs uppercase font-label tracking-wider">Advanced Mentorship</h5>
+            <ul class="list-disc list-inside mt-2 text-slate-700 text-xs sm:text-sm space-y-1.5">
+              <li>UGC NET &amp; JRF Research Foundation</li>
               <li>Multilingual Eloquence (English, Arabic, Malayalam)</li>
-              <li>Literary Arts, Debate & Calligraphy</li>
+              <li>Literary Arts, Debate &amp; Calligraphy</li>
               <li>Leadership and Community Engagement</li>
             </ul>
           </div>
         </div>
 
-        <div class="p-4 rounded-xl bg-secondary-light/40 border border-secondary/20 flex flex-col gap-1.5">
-          <h5 class="font-bold text-primary-dark text-xs uppercase font-label">Admission Protocol & Eligibility</h5>
-          <p class="text-xs text-slate-700 leading-relaxed">
+        <div class="p-4 sm:p-5 rounded-2xl bg-secondary-light/40 border border-secondary/20 flex flex-col gap-2">
+          <h5 class="font-bold text-primary-dark text-xs uppercase font-label tracking-wider">Admission Protocol &amp; Eligibility</h5>
+          <p class="text-xs sm:text-sm text-slate-700 leading-relaxed">
             • <strong>Eligibility:</strong> Only certified Huffaz who completed Holy Qur'an memorization with recognized secondary academic credentials.<br>
             • <strong>Selection Mode:</strong> Written aptitude, Tajweed oral evaluation, and academic interview.<br>
-            • <strong>Hostel & Campus Life:</strong> Complete residential boarding with state-of-the-art scholastic Halaqa halls and academic coaching facilities.
+            • <strong>Hostel &amp; Campus Life:</strong> Complete residential boarding with state-of-the-art scholastic Halaqa halls and academic coaching facilities.
           </p>
         </div>
 
-        <div class="flex flex-col gap-1 p-3 bg-slate-100 rounded-xl text-xs">
-          <span class="font-bold text-slate-700">Official Campus Contact:</span>
+        <div class="flex flex-col gap-1 p-3.5 bg-slate-100/90 rounded-2xl text-xs sm:text-sm text-slate-700">
+          <span class="font-bold text-slate-800">Official Campus Contact:</span>
           <span>Ma'din Suffa Campus, Vavoor, Malappuram District, Kerala, India</span>
           <span>Helpline: +91 95626 20731 | Email: info@suffavavoor.net</span>
         </div>
       </div>
 
       <!-- Modal Footer -->
-      <div class="p-4 bg-slate-50 border-t border-slate-200 rounded-b-3xl flex flex-col sm:flex-row items-center justify-between gap-3 sticky bottom-0">
-        <span class="text-[11px] text-slate-500 font-label">Affiliated with Jamiathul Hind Al Islamiyya (INS7572)</span>
-        <div class="flex items-center gap-2 w-full sm:w-auto">
-          <button onclick="window.print()" class="flex-1 sm:flex-none px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-800 rounded-xl font-label text-xs font-bold flex items-center justify-center gap-1.5 transition-colors">
-            <span class="material-symbols-outlined text-[16px]">print</span>
+      <div class="p-4 sm:p-5 bg-slate-50 border-t border-slate-200 rounded-b-3xl flex flex-col sm:flex-row items-center justify-between gap-3 sticky bottom-0">
+        <span class="text-xs text-slate-500 font-label">Affiliated with Jamiathul Hind Al Islamiyya (INS7572)</span>
+        <div class="flex items-center gap-2.5 w-full sm:w-auto">
+          <button onclick="window.print()" class="flex-1 sm:flex-none h-11 px-5 bg-slate-200 hover:bg-slate-300 active:scale-95 text-slate-800 rounded-xl font-label text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all">
+            <span class="material-symbols-outlined text-[18px]">print</span>
             <span>Print Prospectus</span>
           </button>
-          <a href="#admissions" onclick="closeProspectusModal()" class="flex-1 sm:flex-none px-4 py-2 bg-primary hover:bg-primary-dark text-white rounded-xl font-label text-xs font-bold flex items-center justify-center gap-1.5 transition-colors">
-            <span class="material-symbols-outlined text-[16px] text-tertiary-accent">school</span>
+          <a href="#admissions" onclick="closeProspectusModal()" class="flex-1 sm:flex-none h-11 px-5 bg-primary hover:bg-primary-dark active:scale-95 text-white rounded-xl font-label text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all shadow-md shadow-primary/20">
+            <span class="material-symbols-outlined text-[18px] text-tertiary-accent">school</span>
             <span>Apply Now</span>
           </a>
         </div>
@@ -1346,131 +1377,17 @@
   </div>
 
   <!-- JAVASCRIPT LOGIC -->
-  <script src="gallery-api.js"></script>
   <script>
-    // Gallery Data for Lightbox
-    let galleryItems = [
-      {
-        src: "https://lh3.googleusercontent.com/aida-public/AB6AXuANLo1Pd5TtFJPjWA4qJlWaLGuid9wEwPro1uTd-o8x1bDMUFQNZ95rt44S0KGp9LjIX5XNOqxZVuwOe4sO-MDqrZg1_SoGb0q5ekVY3_djo1310wK-cnzyibf5Uz1ZX9_I8I3kITN5Jk-t6ma4O0UmzZ91J8WMsjyJLJVZY9UoftPPHPwETl6KH9W_ZiJkLJarxjmBsxJwkKTPKvqikE79RGgCD-r9t4ChjH4jzvwCdaAg15zuKBotliyDp9wdoDZ9",
-        title: "Inspiraath '25 Stage Presentation",
-        desc: "Student delivers eloquent oratory during Inspiraath Art Festival at Ma'din Suffa Campus.",
-        badge: "Inspiraath '25"
-      },
-      {
-        src: "https://lh3.googleusercontent.com/aida-public/AB6AXuAsVeC1szgp_Mk2ePikYB12sWXzVg1JxGuVFJjJNTYvlx2clzcqzDNefF5MInCjOtd81kyIMpzAe_0qSuD4--Z1BV_rnhxbrsl_GNhkuD3RL5v-0Ndt6dOIOO0pDRp1EAb2-L6rcLBnxKSct-wr-Jdsa-BgehRooQCq5A0rYraVdj6KcsrJqLRpuoSArldThLa2UAbiGBhBe1TPOeqyJtNlYGSuGgr1xptj0e29ehnALqxUUOxJrwCoikjj9TcH8bG9",
-        title: "Holy Qur'an Tilawa Recitation",
-        desc: "Classical Qur'anic recitation presentation in melodious maqaamat.",
-        badge: "Qur'an & Tajweed"
-      },
-      {
-        src: "https://lh3.googleusercontent.com/aida-public/AB6AXuCpypDSHCGgd1jXNn65h2k8eJhtIwFMZPeutMPHmE52ER0R8zvMvE3QIVxLsANMwN2IUUN-wRXSUj27QnnYEV7WDtvO_9d9BwvOYc96vATDKYmorlxaeY-28cguCzHcql8DjP7Nw8hMLT8HV3742wV00V4WJq3WaYiUSaM_z8yWT0t_7NCxXhgqNidWh2rI3uTxmGvqvpsvZPrxS-EbrPzqT0UqyzzuQvUV5GC1_PzD-MLg9q_DzPIYWmm0fbg6kikn",
-        title: "Na'at & Nasheed Circle",
-        desc: "Harmonious Islamic choral ensemble presented by campus scholars.",
-        badge: "Vocal Arts"
-      },
-      {
-        src: "https://lh3.googleusercontent.com/aida-public/AB6AXuA7PwE9kWuOKbdhUHugWzR6IC5wBehGd_ODKvVnhBrIPdIMFiFTvd3xf9wiKpcdBd9FUKaozUaS3U6X3hQkXhLYuzbBk6bfN1OhOtkXu-XQumYy4k9wsfZucV4HQbuR_uTZAg3x4vwwXVSlX6LgIuvDs8VIFRlwTHJ9aEXb0IVYurvY9pSVL6Heorb5rjJuz5-IvWZz9hUDNaGKi53zbizzjWkGXLmv1Tp76GOVJK-UfyrDzcMwvctXHXaZME6hM3YL",
-        title: "Scholarly Dialogue & Stage Orators",
-        desc: "Interactive discussion on moral values, contemporary Islamic thought, and leadership.",
-        badge: "Scholarly Discourse"
-      },
-      {
-        src: "https://lh3.googleusercontent.com/aida-public/AB6AXuALcJT0Sq58JPBhJhW3aO9ZZ9_p7OL4HxxM4FWi-4t1av0W8KtxWB8Y611Pa5WwLRpgAJo2h-_fKIMaqWTH8_7HeNU5oEHB_u67n78goWup9ve8mHEFWyDr8lg44ti7SjSYWH22YJxcwuxPsBUsWh5QwFgENSAi3RPihZEMzlRMwXv2K0_jxinF_QKcvRjugBqKGrfgLtwVhZFNg-44G1AgycgPGrlnzS7caWYtWDy9gT1LItNnGZeqTSN5C5DNsLYe",
-        title: "Inspiraath Youth Orator on Dais",
-        desc: "Articulate young Hafiz delivering speech on leadership and society.",
-        badge: "Student Oratory"
-      },
-      {
-        src: "https://lh3.googleusercontent.com/aida-public/AB6AXuDKQg6LGD_4owT1BJhH9VyjKWL3Po8MZKAR7CZTZZ0OhJ5W2p32qybgIlljSimyFTNx0me1L1wRbXWHtYPvzqe1zV7fCsswIFev7-H89PdOY-dK52rtb3flZysta72nmdxq4h6Gnhj3jaCI2Lz65Rkf5RUj-4DpEqyanP9ZXONE6aTUnzgJKttVleWz3y7aKUiO_cw4wxuqqSxU1Nl_GyxCooDWgwkoJoXlhSrSOztWmo5A7j2Vwr2594Rqz10-HZ07",
-        title: "Campus Anthem Showcase",
-        desc: "Group presentation conveying institutional values and Islamic heritage.",
-        badge: "Campus Ensemble"
-      },
-      {
-        src: "https://lh3.googleusercontent.com/aida-public/AB6AXuD7GjJVKfXR-AvfsHOTRDnivY1gtvNeqQeQ4pn_WQ8w8uR--YJFM34kefggteYJJy8q3R-Ot75AgUkYQc7vM0I6PNel5o_O_VQ6ikmKHkBZPCEloeqY9TO-DbFMhqCrkmXaq_mx7WiK0iNWBYw0Pqr-glfHuIgEcebTIf0BypT1RTJ1tas5bsPvl5KLs8qzCHLhj03n4f-zGnE6YYkSX3ZZeZUOwqBLfkoRFPg4A8f5RaHuH3tzcyKA-zIsqbA-cyrE",
-        title: "Colloquium Panel Discussion",
-        desc: "Faculty panel and academic guests exchanging insights on education.",
-        badge: "Colloquium"
-      },
-      {
-        src: "https://lh3.googleusercontent.com/aida-public/AB6AXuBRjTYcULiKVgcmnnWIFX403vEqJHCHyqESE0iOx2CQnc_1ckdmeyRiL-h0RRPgxxw04lISdfCTIUKbwC88R2L_W5niqmFsFOh01ZrMMHsQOH1g6XLpAwRYH4BwiAS3IRQlvItRhtwS2HXkJqtshuXk4Bcs9T5Hk9XI2fA6LzJvBtG1aHb-A7KA44RfWyg5vCxm-SZiOAozTJQqlJcxCk3Re_oJsoPJWJNM0acZmrefJcn_pMNoERooAiI0VoEubKBs",
-        title: "Expressing Humanity Colloquium",
-        desc: "Keynote address delivered by distinguished scholar on humanitarian ethics.",
-        badge: "Keynote"
-      },
-      {
-        src: "https://lh3.googleusercontent.com/aida-public/AB6AXuBlL4XvXvJyaAhnFOdAwWyzVtQHnkE8V-yE1y_LONKNY-BUJi05wX79Tkn9b0chu8MyKTcqevpQUcTeg2lzGiKgcT-rwFVzwljxkqLSW_hOtD2Cz9cejFEyDUj88-6vi3iNKfxtgLUG9gxWCFg-fuOnmu2SFekIFlEAjvqNhFga95bObRjlErLpshUaPxL_p0Vu-_WfjnxTqAIw8a698HReLrdlrTXQFlMwByxflBHVQMlC__xeARQHDVOspqd25Fo7",
-        title: "Scholars in Assembly",
-        desc: "Eminent dignitaries participating in the annual symposium.",
-        badge: "Symposium"
-      },
-      {
-        src: "https://lh3.googleusercontent.com/aida-public/AB6AXuBrLCgMzmkDwWM0Y4dyhzm5WUqjGVvkTZgPzMsixw8iswb0Ri9tLFAgUnZEiIR-0g1KzwBqH4ORTRL1W9EPdigry46NQXVeCuQYqQ4F5vAaUAUlHx7pitchjhNFvd54FloZfwGDuO3RaTZxIXuP3yTmkBQlKYjVFxb9sLRo_ZXkczix1w3KdbKa0E8w51EFrqT5iios_Wi5150-oG1zcXiRn8krAfB-5jy0cPyUcl_T6Dd8qQBND5wSGmHYU_CeVlI6",
-        title: "Multilingual Public Speaking",
-        desc: "Students practicing eloquence and communication in Arabic and English.",
-        badge: "Communication"
-      },
-      {
-        src: "https://lh3.googleusercontent.com/aida-public/AB6AXuBCwaBnYsxU-qnN7mL2yx4_sCD7jBoYPgei5It7slLPMp7WezgAIkpg9pIT9BqQnMDymAmJW_E2cm3wcJr28YOhpldRNXm-0ijvUVzHfLSOXiLbRppS_OGZSADS2ShDLDXo2ix7POshcePPF8Ukd43gIHulpuXYP-42bjFbCwnTGo4m28f_jg6rsc1EtzB22I23KwD1myASPAWuZwh2xi-fy2MMpNqx6s3hAs7PkLEAAtlonyRaYUVGqSbKapvDGS4b",
-        title: "Inspiraath Public Lecture",
-        desc: "Scholastic address during the academic festival at Vavoor.",
-        badge: "Inspiraath '25"
-      },
-      {
-        src: "https://lh3.googleusercontent.com/aida-public/AB6AXuBelIZfuscbPuCIHtgrS1DAI5Blu3YKSdWaircFwsXSH1INTLDlqnOtkWpvZDLaH89FC9lR461-kIOvKqC8AFoiDLswqxk829d7nA_LXpKDR5Gb_E6vdAb3C0Xk_J1YSUqTigvPiFCsibVUhUmO1pgbEUB5cAjlzlUpN8hmYxtD5tioMABYYvZQSUoPac56jOGsT5uGIsY0voIhJgoII_ihhMOyi3DMdrCP6jPZTO7p5njprsnA7ar31qwwTVEcfm-W",
-        title: "Inspiraath Youth Oratory",
-        desc: "Student elocution demonstrating persuasive speaking technique.",
-        badge: "Elocution"
-      },
-      {
-        src: "https://lh3.googleusercontent.com/aida-public/AB6AXuBz3PWsH6VuCE320ohN9adPVgQvTIAv8QumDeBuBwHMRr70YO6hDJ-HiCqTbOSBz6fmFIF4sUxyTH_Dh1X6YABYxRxEZ_G8r4fzPtffExNLLeHFOncDWpH5KIJMm7iVUxPjrGhwTvyzLFJGQjmFN3vtNqQwTQ6Hf6cNCgpX-VSt8PQoeRKxdS-7e8UyS8eSX2EJzIBhp5GqKyEgiYipivTElfJntO-TpWrPFLGyJJqVm9UBP1bst47gUlQD6-LCrKuD",
-        title: "Dignitaries & Faculty",
-        desc: "Esteemed mentors and educational leaders in assembly.",
-        badge: "Faculty & Dignitaries"
-      },
-      {
-        src: "https://lh3.googleusercontent.com/aida-public/AB6AXuCG0CGE2oo8l4cPWmqWe4GOUfe7_77c6IAKawxA8gPuPb4ijZrmKO3XGVizj_Xfv6xBTNZXt3pEHkoX8WRnTG2pA0Y2fsxx5f8u9JVE7wk8DYoVb3iYCHCxQI_7fbRUD0I7YJd7TTnTd2EsQOT-E7GNH5o_uALJvTG5Udc8N7uDrao0i2m6gWpb9AqMT-Jl8JJL81eF3KeTlKvMPRMZnYNyIZR6mIxQsIWnvNsHbRRotXjVZoZAdqtfQzzu3ZJ9H0FV",
-        title: "Melodious Qur'an Tilawa",
-        desc: "A solemn recitation session of the Holy Qur'an.",
-        badge: "Qur'an Recitation"
-      },
-      {
-        src: "https://lh3.googleusercontent.com/aida-public/AB6AXuANbITY5v9X1ns3zlCkw9AQntQNlcq_gayys9PUQFUL1GQjRDB6IuKESgyu-g3TRMkxhRM0ee5ZDJD8qeCogI401AlVXVR-vrcf4qiBKQIAo94h_bv7puLnAIJHI7SqWLECEe4hJoLk4LjKW0tCuhObzwYMWYsFVGCKEEUEHR5rM8xMmrUrcHaYpGHLTP9i_ZrWo6X1QQpBUxGB2exyEjuDDuUnRpvpX1AAZnnrCRbBkScY7opy_dkCxugLbMVTGuRk",
-        title: "Sacred Scripture Recitation",
-        desc: "Mastery of Tajweed and precise phonetic articulation.",
-        badge: "Tajweed Mastery"
-      },
-      {
-        src: "https://lh3.googleusercontent.com/aida-public/AB6AXuAcF8jOOE8O3_Onk0ZJHtLoYJjn2jTmCB7_ct5JkMI0zm4STUZWYfNAO97_xgrfzAYQml_8-3nyc2NBO84mO-2iS71aNO4-fFGzdnDszzKZg4jhNlO-wuUa2QgMR2NtTBMKpsxatJITdYCotMZtz3MU6ijqqPmYWkAR9Co9iBB19p2Ara1zA86ehImRjUbud3iwouVb4EvxkKspu8tuEzJsoDYW9X9x792C-CRtjMRzH3imo-LcGpBJGBOA33749-4s",
-        title: "Trio Vocal Ensemble",
-        desc: "Students performing traditional devotional anthems in unison.",
-        badge: "Nasheed"
-      },
-      {
-        src: "https://lh3.googleusercontent.com/aida-public/AB6AXuDah-RIg4vJSWXm5ZcVtlrYKCSUrP8WWxvkWuxpmPv4Rp9Um3H22fpt2pqG38W60RBU2JDPtSbCy_NF_3nbihBCFCj34p7gd-yN-TQ2LOJM4Lg5COFHkbz8bnAcNfoGv_isp0cwrVM-cCyW8i3-t-9mm30RO1tbgQxWCJ1vSIpo1xrF703LTNRgRstBHEf5lg-oOlTSGV69HZa0xvusTkGP6WZ9G-NbsBa4alyGAbxmV2wSgriM1GoCS2TaTN-gBAY4",
-        title: "Scholarly Keynote Address",
-        desc: "Guest scholar emphasizing character building and scholarly excellence.",
-        badge: "Keynote"
-      },
-      {
-        src: "https://lh3.googleusercontent.com/aida-public/AB6AXuCj-Hx32jDrS84Uc2wEvdxPXNUNezCmSde1Cixs0fW828mIasD7ZcYcQFvHAVdQfutNHHj5oOToOlDjVmkORq8q6KFH2-nWvwYvzYxa5e_xA8DOG-GnFAdUnDIek11mbzaf4Lsx7HPr9HTEAcWuQuwxKLi9uzZSmXh7jjRzJu0xLGrU9TnU6eIuJyNWsfcTDJkWVed-s4I_xsC21j73_bDZVrrlGY-u-q-VEqnyCy-vJzwE3yFkHaZsSioZ_ESCdgSs",
-        title: "Campus Mentorship Talk",
-        desc: "Faculty lecture inspiring future leaders for global service.",
-        badge: "Mentorship"
-      },
-      {
-        src: "https://lh3.googleusercontent.com/aida-public/AB6AXuCkmRm-7cAI-g1uhJZS_QrMPyD_n6yE99XqgiBYnOucdQccSL8Ymw3o5Nd9FNuuK88HZZhWfy2OOHlDjsAlU0XMXyCZJI0dEkrDU9pEJC5t6vw7bUldLAfS2Pu_4dg5cj77l5BWxfG2yeJnbfY_pTyWn5MVILZipG4Tez8joGbx5CrBVD5HY--CV7mlJOSG1Opd946pqdQcb97Q8yu3oejPIy1nH9pIVH_BHnqCJGlCiZ0Hy-Cb_AyWpKkmJ8Dj2rbH",
-        title: "Distinguished Patron Address",
-        desc: "Inaugural words from academic patrons at the campus gathering.",
-        badge: "Inaugural"
-      },
-      {
-        src: "https://lh3.googleusercontent.com/aida-public/AB6AXuBGqzmSTboglZI5h1DO3zhBH0EOBmCTJbvDePZLQeojd-gye9pgbqnPOp8lQV3b1qwoRVzRz5ym5qTeEWDoh801SMqEXJHXcDsEghLtIL7Vt0WAnEXPp_fby6GHB6pgndPHdglIjSdthWUWus9UXSjylKQizQ1uaI1vhdOJfaEMalfBD9tfNwTyqzZKiF_OsMXi3ms-H6wnAvXxfeCIRX_CqOc_dG7fkMH6wL6t6GML14UGyUKnuKdRiC-1zEX8nMBx",
-        title: "Academic Inaugural Address",
-        desc: "Valedictory commencement ceremonies celebrating student achievement.",
-        badge: "Valedictory"
-      }
-    ];
+    // Gallery Data for Lightbox (Cloudinary Storage & Firebase Data)
+    let galleryItems = (window.SuffaFirebase && window.SuffaFirebase.initialGallery)
+      ? window.SuffaFirebase.initialGallery.map(i => ({
+          src: i.imageUrl || i.src,
+          title: i.title,
+          desc: i.caption,
+          badge: i.badge
+        }))
+      : [];
+
 
     let currentLightboxIdx = 0;
     let isSingleImageMode = false;
@@ -1481,9 +1398,11 @@
       if (open) {
         drawer.classList.remove('translate-x-full');
         backdrop.classList.remove('hidden');
+        document.body.classList.add('overflow-hidden');
       } else {
         drawer.classList.add('translate-x-full');
         backdrop.classList.add('hidden');
+        document.body.classList.remove('overflow-hidden');
       }
     }
 
@@ -1573,71 +1492,102 @@
         .replace(/'/g, '&#39;');
     }
 
-    async function loadDynamicGallery() {
-      try {
-        if (typeof GalleryAPI === 'undefined') return;
-        const items = await GalleryAPI.getAll({ publishedOnly: true });
-        if (!items || items.length === 0) return;
+    function renderGalleryItems(items) {
+      if (!items || items.length === 0) return;
 
-        galleryItems = items.map(item => ({
-          id: item.id,
-          src: GalleryAPI.resolveImageUrl(item.src),
-          title: item.title || 'Suffa Campus Capture',
-          desc: item.caption || item.desc || '',
-          badge: item.badge || item.category || 'Capture',
-          category: item.category || 'Campus'
-        }));
+      galleryItems = items.map(item => ({
+        id: item.id,
+        src: item.imageUrl || item.src,
+        imageUrl: item.imageUrl || item.src,
+        public_id: item.public_id || item.cloudinaryPublicId || '',
+        title: item.title || 'Suffa Campus Capture',
+        desc: item.caption || item.desc || '',
+        badge: item.badge || item.category || 'Capture',
+        category: item.category || 'Campus'
+      }));
 
-        const carousel = document.getElementById('gallery-carousel');
-        if (!carousel) return;
+      const carousel = document.getElementById('gallery-carousel');
+      if (!carousel) return;
 
-        carousel.innerHTML = galleryItems.map((item, idx) => {
-          const catLower = (item.category + ' ' + (item.badge || '')).toLowerCase();
-          const filterCats = [];
-          if (catLower.includes('quran') || catLower.includes('tajweed') || catLower.includes('tilawa')) filterCats.push('quran');
-          if (catLower.includes('fest') || catLower.includes('inspiraath')) filterCats.push('fest');
-          if (catLower.includes('oratory') || catLower.includes('stage') || catLower.includes('speech') || catLower.includes('elocution')) filterCats.push('oratory');
-          if (catLower.includes('academic') || catLower.includes('scholar') || catLower.includes('colloquium') || catLower.includes('symposium')) filterCats.push('academic');
-          if (filterCats.length === 0) filterCats.push('fest');
+      carousel.innerHTML = galleryItems.map((item, idx) => {
+        const catLower = (item.category + ' ' + (item.badge || '')).toLowerCase();
+        const filterCats = [];
+        if (catLower.includes('quran') || catLower.includes('tajweed') || catLower.includes('tilawa')) filterCats.push('quran');
+        if (catLower.includes('fest') || catLower.includes('inspiraath')) filterCats.push('fest');
+        if (catLower.includes('oratory') || catLower.includes('stage') || catLower.includes('speech') || catLower.includes('elocution')) filterCats.push('oratory');
+        if (catLower.includes('academic') || catLower.includes('scholar') || catLower.includes('colloquium') || catLower.includes('symposium')) filterCats.push('academic');
+        if (filterCats.length === 0) filterCats.push('fest');
 
-          return `
-            <div class="gallery-item shrink-0 snap-start w-[82vw] sm:w-[320px] rounded-2xl overflow-hidden border border-slate-200 shadow-sm bg-surface-light group relative cursor-pointer" data-category="${filterCats.join(' ')}" onclick="openGalleryLightbox(${idx})">
-              <div class="relative h-60 w-full overflow-hidden">
-                <img alt="${escapeHtml(item.title)}" class="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500" src="${item.src}" loading="lazy">
-                <div class="absolute inset-0 bg-gradient-to-t from-black/75 via-black/25 to-transparent"></div>
-                <span class="absolute top-3 left-3 bg-tertiary-dark text-white text-[10px] font-label font-bold px-2 py-0.5 rounded shadow">${escapeHtml(item.badge)}</span>
-                <span class="absolute top-3 right-3 bg-black/50 text-white p-1 rounded-full group-hover:bg-primary transition-colors material-symbols-outlined text-[16px]">fullscreen</span>
-                <div class="absolute bottom-2.5 left-3 right-3 text-white">
-                  <h3 class="font-headline text-sm font-bold text-white leading-tight truncate">${escapeHtml(item.title)}</h3>
-                  <p class="text-[11px] text-slate-200 font-light truncate">${escapeHtml(item.desc)}</p>
-                </div>
+        return `
+          <div class="gallery-item shrink-0 snap-start w-[82vw] sm:w-[320px] rounded-2xl overflow-hidden border border-slate-200 shadow-sm bg-surface-light group relative cursor-pointer" data-category="${filterCats.join(' ')}" onclick="openGalleryLightbox(${idx})">
+            <div class="relative h-60 w-full overflow-hidden">
+              <img alt="${escapeHtml(item.title)}" class="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500" src="${item.src}" loading="lazy">
+              <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
+              <span class="absolute top-3 left-3.5 bg-tertiary-dark text-white text-xs font-label font-bold px-2.5 py-0.5 rounded-md shadow-sm">${escapeHtml(item.badge)}</span>
+              <span class="absolute top-3 right-3.5 bg-black/60 text-white p-1.5 rounded-full group-hover:bg-primary transition-colors material-symbols-outlined text-[17px]">fullscreen</span>
+              <div class="absolute bottom-3 left-3.5 right-3.5 text-white">
+                <h3 class="font-headline text-sm sm:text-base font-bold text-white leading-snug truncate">${escapeHtml(item.title)}</h3>
+                <p class="text-xs text-slate-200 font-light truncate mt-0.5">${escapeHtml(item.desc)}</p>
               </div>
             </div>
-          `;
-        }).join('');
+          </div>
+        `;
+      }).join('');
 
-        const countBadge = document.getElementById('gallery-count-badge');
-        if (countBadge) countBadge.innerText = `${galleryItems.length} Event Captures`;
+      const countBadge = document.getElementById('gallery-count-badge');
+      if (countBadge) countBadge.innerText = `${galleryItems.length} Event Captures`;
 
-        const allFilterBtn = document.querySelector('.gallery-filter-btn');
-        if (allFilterBtn && allFilterBtn.textContent.includes('All')) {
-          allFilterBtn.textContent = `All (${galleryItems.length})`;
-        }
-      } catch (err) {
-        console.warn('Live gallery sync notice:', err);
+      const allFilterBtn = document.querySelector('.gallery-filter-btn');
+      if (allFilterBtn && allFilterBtn.textContent.includes('All')) {
+        allFilterBtn.textContent = `All (${galleryItems.length})`;
       }
     }
 
-    // Auto-load and sync
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', () => {
-        loadDynamicGallery();
-        if (window.GalleryAPI) GalleryAPI.subscribe(() => loadDynamicGallery());
-      });
-    } else {
-      loadDynamicGallery();
-      if (window.GalleryAPI) GalleryAPI.subscribe(() => loadDynamicGallery());
+    async function loadDynamicGallery() {
+      try {
+        let items = null;
+        // 1. Read gallery data from Firebase Firestore
+        if (window.SuffaFirebase && typeof window.SuffaFirebase.getGalleryItems === 'function') {
+          items = await window.SuffaFirebase.getGalleryItems({ publishedOnly: true });
+        }
+        // 2. Fallback to GalleryAPI if needed
+        if ((!items || items.length === 0) && typeof GalleryAPI !== 'undefined') {
+          items = await GalleryAPI.getAll({ publishedOnly: true });
+        }
+        if (items && items.length > 0) {
+          renderGalleryItems(items);
+        }
+      } catch (err) {
+        console.warn('Live Firebase gallery sync notice:', err);
+      }
     }
+
+    // Auto-load and sync with Firebase & Admin Portal
+    function initGallerySync() {
+      loadDynamicGallery();
+
+      // Real-time listener for Firebase Firestore updates
+      if (window.SuffaFirebase && typeof window.SuffaFirebase.onGalleryUpdate === 'function') {
+        window.SuffaFirebase.onGalleryUpdate(items => {
+          if (items && items.length > 0) {
+            const published = items.filter(x => x.published === true);
+            renderGalleryItems(published);
+          }
+        }, { publishedOnly: true });
+      }
+
+      // Cross-tab and backend update listener
+      if (window.GalleryAPI) {
+        GalleryAPI.subscribe(() => loadDynamicGallery());
+      }
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initGallerySync);
+    } else {
+      initGallerySync();
+    }
+
 
     // Keyboard navigation for Lightbox
     window.addEventListener('keydown', (e) => {

@@ -9,7 +9,10 @@
   <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
-  
+  <!-- Firebase SDK (v10.14.0 Compat - App & Firestore) -->
+  <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore-compat.js"></script>
+  <script src="firebase-config.js"></script>
   <script src="gallery-api.js"></script>
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
   <script id="tailwind-config">
@@ -63,6 +66,11 @@
     .tab-content { display: none; }
     .tab-content.active-tab { display: flex; flex-direction: column; }
     .pb-safe { padding-bottom: max(env(safe-area-inset-bottom, 0px), 8px); }
+    #adminSidebar {
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior-y: contain;
+      touch-action: pan-y;
+    }
   </style>
 </head>
 <body class="bg-[#f4f6fc] font-body-md text-on-surface antialiased min-h-screen flex flex-col">
@@ -124,14 +132,14 @@
     </div>
   </header>
 
-  <!-- Mobile Sidebar Backdrop Overlay -->
-  <div id="sidebarBackdrop" onclick="closeMobileSidebar()" class="fixed inset-0 bg-slate-950/50 backdrop-blur-xs z-40 transition-opacity duration-300 opacity-0 pointer-events-none lg:hidden"></div>
+  <!-- Mobile Sidebar Backdrop Overlay (Bounded between header and bottom nav, dims content) -->
+  <div id="sidebarBackdrop" onclick="closeMobileSidebar()" class="fixed top-16 bottom-[calc(4rem+env(safe-area-inset-bottom,0px))] lg:bottom-0 left-0 right-0 bg-slate-950/50 backdrop-blur-xs z-30 transition-opacity duration-300 opacity-0 pointer-events-none lg:hidden"></div>
 
   <!-- BODY LAYOUT WITH SIDEBAR -->
   <div class="pt-16 flex min-h-[calc(100vh-4rem)]">
     <!-- SIDEBAR (Slide-over on mobile/tablet, permanent fixed on lg+) -->
-    <aside id="adminSidebar" class="fixed top-16 left-0 bottom-0 w-[260px] sm:w-[240px] bg-white border-r border-outline-variant/30 flex flex-col justify-between z-40 overflow-y-auto transition-transform duration-300 transform -translate-x-full lg:translate-x-0 shadow-2xl lg:shadow-none">
-      <div class="p-3.5 sm:p-4 flex flex-col gap-3 sm:gap-4">
+    <aside id="adminSidebar" class="fixed top-16 left-0 bottom-[calc(4rem+env(safe-area-inset-bottom,0px))] lg:bottom-0 w-[260px] sm:w-[240px] bg-white border-r border-outline-variant/30 flex flex-col z-[45] overflow-y-auto overscroll-y-contain transition-transform duration-300 transform -translate-x-full lg:translate-x-0 shadow-2xl lg:shadow-none">
+      <div class="p-3.5 sm:p-4 flex flex-col gap-3 sm:gap-4 shrink-0">
         <!-- Mobile Header in Drawer -->
         <div class="flex items-center justify-between lg:hidden pb-2 border-b border-slate-100">
           <span class="text-xs font-bold text-primary font-subheading flex items-center gap-1.5">
@@ -182,7 +190,7 @@
         </nav>
       </div>
 
-      <div class="p-3 border-t border-slate-200 bg-slate-50 text-center flex flex-col gap-2">
+      <div class="p-3 border-t border-slate-200 bg-slate-50 text-center flex flex-col gap-2 mt-auto shrink-0">
         <div class="p-2 rounded bg-white border border-slate-200 text-left">
           <span class="text-[10px] text-slate-500 font-bold block uppercase">Campus Code</span>
           <span class="font-mono text-xs font-bold text-primary">INS7572-VAVOOR</span>
@@ -488,18 +496,18 @@
           </div>
 
           <div class="bg-white p-4 sm:p-5 rounded-xl border border-slate-200 flex flex-col gap-3 text-xs">
-            <h3 class="font-bold text-primary text-sm">Firebase Cloud Integration</h3>
+            <h3 class="font-bold text-primary text-sm">Cloud Infrastructure (Active)</h3>
             <div>
-              <label class="font-semibold text-slate-600">Project ID</label>
-              <input type="text" class="w-full mt-1 p-2.5 bg-slate-50 border border-slate-200 rounded-lg font-mono text-base sm:text-xs" readonly value="suffa-vavoor-5d3cd">
+              <label class="font-semibold text-slate-600">Database: Firebase Firestore</label>
+              <input type="text" class="w-full mt-1 p-2.5 bg-slate-50 border border-slate-200 rounded-lg font-mono text-base sm:text-xs" readonly value="Project: suffa-vavoor-5d3cd (gallery, admissions_enquiries)">
             </div>
             <div>
-              <label class="font-semibold text-slate-600">Measurement ID</label>
-              <input type="text" class="w-full mt-1 p-2.5 bg-slate-50 border border-slate-200 rounded-lg font-mono text-base sm:text-xs" readonly value="G-FB38GGC91M">
+              <label class="font-semibold text-slate-600">Image Storage: Cloudinary CDN</label>
+              <input type="text" class="w-full mt-1 p-2.5 bg-slate-50 border border-slate-200 rounded-lg font-mono text-base sm:text-xs" readonly value="Cloud: pnuenefp • Folder: suffa_vavoor/gallery">
             </div>
             <div class="p-2.5 bg-emerald-50 text-emerald-800 rounded-lg font-semibold text-[11px] flex items-center gap-2">
               <span class="material-symbols-outlined text-[16px] text-emerald-600">cloud_done</span>
-              <span>Cloud Firestore &amp; Analytics Active</span>
+              <span>Firebase (Database) &amp; Cloudinary (Image Storage) Online</span>
             </div>
           </div>
         </div>
@@ -509,7 +517,7 @@
   </div>
 
   <!-- MOBILE BOTTOM NAVIGATION BAR (Phones / Tablets < lg) -->
-  <nav class="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200 shadow-lg lg:hidden flex items-center justify-around px-2 py-1.5 pb-safe" aria-label="Mobile Navigation">
+  <nav class="fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-t border-slate-200 shadow-lg lg:hidden flex items-center justify-around px-2 py-1.5 pb-safe" aria-label="Mobile Navigation">
     <button onclick="switchTab('gallery')" class="mobile-tab-btn flex flex-col items-center justify-center p-1.5 text-primary" id="mob-tab-gallery">
       <span class="material-symbols-outlined text-[20px]">photo_library</span>
       <span class="text-[10px] font-bold mt-0.5">Gallery</span>
@@ -741,6 +749,7 @@
 
     // Tab switching logic (Header tabs, Sidebar tabs, Mobile Bottom tabs)
     function switchTab(tabId) {
+      closeMobileSidebar();
       document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active-tab'));
       
       // Reset desktop header tabs
@@ -860,7 +869,7 @@
       }
 
       grid.innerHTML = items.map((item, idx) => {
-        const imgUrl = GalleryAPI.resolveImageUrl(item.src);
+        const imgUrl = item.imageUrl || GalleryAPI.resolveImageUrl(item.src);
         const seq = item.order || idx + 1;
         const isPub = item.published === true;
         const dateStr = item.createdAt ? new Date(item.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : '';
@@ -1148,6 +1157,7 @@
 
     // Upload Modal Logic
     function openUploadDrawer() {
+      closeMobileSidebar();
       document.getElementById('uploadModal').classList.remove('hidden');
       document.getElementById('uploadModal').classList.add('flex');
     }

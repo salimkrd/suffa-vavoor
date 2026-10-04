@@ -213,31 +213,35 @@
           </div>
         </div>
 
-        <!-- Section: Cloud Infrastructure & Firebase -->
+        <!-- Section: Cloud Infrastructure: Firebase (Database) + Cloudinary (Image Storage) -->
         <div class="bg-white p-6 rounded-xl border border-outline-variant/30 shadow-sm flex flex-col gap-4 lg:col-span-2">
           <div class="flex items-center justify-between pb-3 border-b border-slate-100">
             <div class="flex items-center gap-2.5">
               <span class="material-symbols-outlined text-amber-600 text-[22px]">cloud_sync</span>
-              <h2 class="font-subheading text-base font-bold text-primary">Firebase Cloud Infrastructure (Active)</h2>
+              <h2 class="font-subheading text-base font-bold text-primary">Cloud Infrastructure: Firebase (Database) &amp; Cloudinary (Image Storage)</h2>
             </div>
             <span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-bold">Online &amp; Connected</span>
           </div>
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
             <div class="p-3 bg-slate-50 rounded-lg border border-slate-200">
-              <span class="text-slate-500 font-medium block">Project ID</span>
+              <span class="text-slate-500 font-medium block">Database (Firestore)</span>
               <span class="font-bold text-slate-800 font-mono text-[11px]">suffa-vavoor-5d3cd</span>
+              <span class="text-[10px] text-emerald-700 block mt-0.5">Collections: admissions_enquiries, gallery</span>
+            </div>
+            <div class="p-3 bg-slate-50 rounded-lg border border-slate-200">
+              <span class="text-slate-500 font-medium block">Image CDN Storage</span>
+              <span class="font-bold text-primary font-mono text-[11px]">Cloudinary (Cloud: pnuenefp)</span>
+              <span class="text-[10px] text-slate-500 block mt-0.5">Folder: suffa_vavoor/gallery</span>
+            </div>
+            <div class="p-3 bg-slate-50 rounded-lg border border-slate-200">
+              <span class="text-slate-500 font-medium block">Architecture Separation</span>
+              <span class="font-bold text-slate-800 text-[11px] block">Firebase = Gallery Data</span>
+              <span class="text-[10px] text-slate-500 block mt-0.5">Cloudinary = Image Files</span>
             </div>
             <div class="p-3 bg-slate-50 rounded-lg border border-slate-200">
               <span class="text-slate-500 font-medium block">Analytics Stream</span>
               <span class="font-bold text-emerald-700 font-mono text-[11px]">G-FB38GGC91M (Active)</span>
-            </div>
-            <div class="p-3 bg-slate-50 rounded-lg border border-slate-200">
-              <span class="text-slate-500 font-medium block">Storage Bucket</span>
-              <span class="font-bold text-slate-800 font-mono text-[11px] truncate block">suffa-vavoor-5d3cd.firebasestorage.app</span>
-            </div>
-            <div class="p-3 bg-slate-50 rounded-lg border border-slate-200">
-              <span class="text-slate-500 font-medium block">Firestore Collection</span>
-              <span class="font-bold text-primary font-mono text-[11px]">admissions_enquiries</span>
+              <span class="text-[10px] text-slate-500 block mt-0.5">Global Tag Integrated</span>
             </div>
           </div>
         </div>
