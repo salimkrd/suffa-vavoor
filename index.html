@@ -74,10 +74,11 @@
     }
   </style>
 
-  <!-- Firebase SDK (v10.14.0 Compat - App, Analytics & Firestore) -->
+  <!-- Firebase SDK (v10.14.0 Compat - App, Analytics, Firestore & Storage) -->
   <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-analytics-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-storage-compat.js"></script>
   <script src="firebase-config.js"></script>
   <script src="gallery-api.js"></script>
 
@@ -128,10 +129,6 @@
       <span class="text-slate-200 truncate text-xs">Jamiathul Hind Al Islamiyya — Centre Code: INS7572</span>
     </div>
     <div class="flex items-center gap-3.5 shrink-0 pl-3">
-      <a href="admin.html" class="hidden sm:inline-flex items-center gap-1.5 text-slate-300 hover:text-white transition-colors text-xs font-medium" title="Administrative Access">
-        <span class="material-symbols-outlined text-[15px] text-tertiary-accent">lock</span>
-        <span>Staff Portal</span>
-      </a>
       <button onclick="openProspectusModal()" class="hidden sm:inline-flex items-center gap-1.5 text-tertiary-accent hover:text-white transition-colors text-xs font-medium">
         <span class="material-symbols-outlined text-[15px]">description</span>
         <span>Prospectus</span>
@@ -199,7 +196,7 @@
         </button>
       </div>
 
-      <div class="text-xs font-bold text-slate-400 uppercase tracking-widest px-3 py-1">Institutional Portal</div>
+      <div class="text-xs font-bold text-slate-400 uppercase tracking-widest px-3 py-1">Campus Navigation</div>
       <nav class="flex flex-col gap-1 pt-1">
         <a class="min-h-[44px] flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-primary bg-primary/5 hover:bg-primary/10 transition-colors" href="#home" onclick="toggleDrawer(false)">
           <span class="material-symbols-outlined text-[20px]">home</span>
@@ -1096,7 +1093,7 @@
               <span class="material-symbols-outlined text-[20px]">language</span>
             </div>
             <div class="flex flex-col">
-              <span class="text-xs font-label font-bold text-tertiary uppercase tracking-wider">Web Portals</span>
+              <span class="text-xs font-label font-bold text-tertiary uppercase tracking-wider">Official Website</span>
               <span class="text-xs sm:text-sm text-primary-dark font-medium">www.suffavavoor.net</span>
             </div>
           </div>
@@ -1211,10 +1208,6 @@
           <span>© 2026 Ma'din Suffa Campus. All Rights Reserved.</span>
           <div class="flex items-center gap-3">
             <span>Affiliated with Jamiathul Hind Al Islamiyya (INS7572)</span>
-            <span>•</span>
-            <a href="admin.html" class="text-slate-300 hover:text-tertiary-accent transition-colors flex items-center gap-1 font-medium px-2 py-1 rounded-md hover:bg-white/5">
-              <span class="material-symbols-outlined text-[15px]">lock</span> Staff Portal
-            </a>
           </div>
         </div>
       </div>
@@ -1378,7 +1371,7 @@
 
   <!-- JAVASCRIPT LOGIC -->
   <script>
-    // Gallery Data for Lightbox (Cloudinary Storage & Firebase Data)
+    // Gallery Data for Lightbox (Firebase Storage & Firestore Data)
     let galleryItems = (window.SuffaFirebase && window.SuffaFirebase.initialGallery)
       ? window.SuffaFirebase.initialGallery.map(i => ({
           src: i.imageUrl || i.src,
@@ -1499,7 +1492,7 @@
         id: item.id,
         src: item.imageUrl || item.src,
         imageUrl: item.imageUrl || item.src,
-        public_id: item.public_id || item.cloudinaryPublicId || '',
+        storagePath: item.storagePath || null,
         title: item.title || 'Suffa Campus Capture',
         desc: item.caption || item.desc || '',
         badge: item.badge || item.category || 'Capture',

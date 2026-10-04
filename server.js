@@ -4,50 +4,9 @@ const cors = require('cors');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
-const cloudinary = require('cloudinary').v2;
 
 const app = express();
 const PORT = process.env.PORT || 5000;
-
-// =============================================================
-// Cloudinary Configuration (Secure Backend Credentials)
-// =============================================================
-function initCloudinary() {
-  let url = process.env.CLOUDINARY_URL || '';
-  if (url) {
-    // Strip accidental angle brackets if pasted like cloudinary://<key>:<secret>@cloud
-    url = url.replace(/<([^>]+)>/g, '$1').trim();
-    process.env.CLOUDINARY_URL = url;
-  }
-
-  const cloudName = process.env.CLOUDINARY_CLOUD_NAME ? process.env.CLOUDINARY_CLOUD_NAME.replace(/[<>]/g, '').trim() : undefined;
-  const apiKey = process.env.CLOUDINARY_API_KEY ? process.env.CLOUDINARY_API_KEY.replace(/[<>]/g, '').trim() : undefined;
-  const apiSecret = process.env.CLOUDINARY_API_SECRET ? process.env.CLOUDINARY_API_SECRET.replace(/[<>]/g, '').trim() : undefined;
-
-  if (cloudName && apiKey && apiSecret) {
-    cloudinary.config({
-      cloud_name: cloudName,
-      api_key: apiKey,
-      api_secret: apiSecret,
-      secure: true
-    });
-  } else if (url) {
-    cloudinary.config({
-      secure: true
-    });
-  }
-
-  const conf = cloudinary.config();
-  const configured = Boolean(conf.cloud_name && conf.api_key && conf.api_secret);
-  if (configured) {
-    console.log(`[Cloudinary] Storage backend active for cloud: ${conf.cloud_name}`);
-  } else {
-    console.warn(`[Cloudinary] Notice: Cloudinary credentials not fully detected. Local storage fallback will be active.`);
-  }
-  return configured;
-}
-
-initCloudinary();
 
 // Global Process Error Handlers for High Availability
 process.on('uncaughtException', (err) => {
@@ -56,79 +15,6 @@ process.on('uncaughtException', (err) => {
 process.on('unhandledRejection', (reason, promise) => {
   console.error('[Unhandled Rejection]:', reason);
 });
-
-/**
- * Upload a local file or remote image to Cloudinary securely
- * @param {string} filePathOrUrl
- * @param {string} originalFilename
- */
-async function uploadToCloudinary(filePathOrUrl, originalFilename = '') {
-  try {
-    if (!filePathOrUrl || typeof filePathOrUrl !== 'string') {
-      return null;
-    }
-    const conf = cloudinary.config();
-    if (!conf.cloud_name || !conf.api_key || !conf.api_secret) {
-      return null;
-    }
-
-    let target = filePathOrUrl.trim();
-    if (!target) return null;
-
-    // Check if target is a web URL or base64 data URI
-    const isRemoteOrData = target.startsWith('http://') || target.startsWith('https://') || target.startsWith('data:');
-
-    if (!isRemoteOrData) {
-      // Resolve local relative paths (e.g. /uploads/image.jpg or uploads/image.jpg)
-      if (target.startsWith('/') || target.startsWith('\\')) {
-        target = path.join(__dirname, target);
-      } else if (!path.isAbsolute(target)) {
-        target = path.join(__dirname, target);
-      }
-
-      if (!fs.existsSync(target)) {
-        console.warn(`[Cloudinary Notice] Local file not found for upload: ${target}`);
-        return null;
-      }
-    }
-
-    const uploadOptions = {
-      folder: process.env.CLOUDINARY_FOLDER || 'suffa_vavoor/gallery',
-      resource_type: 'auto',
-      use_filename: true,
-      unique_filename: true
-    };
-
-    const result = await cloudinary.uploader.upload(target, uploadOptions);
-    return {
-      src: result.secure_url,
-      cloudinaryPublicId: result.public_id,
-      format: result.format,
-      width: result.width,
-      height: result.height,
-      bytes: result.bytes
-    };
-  } catch (err) {
-    const errorDetails = err?.error?.message || err?.message || (typeof err?.error === 'string' ? err.error : null) || JSON.stringify(err);
-    console.error('[Cloudinary Upload Error]:', errorDetails);
-    return null;
-  }
-}
-
-/**
- * Delete an asset from Cloudinary by public ID
- * @param {string} publicId
- */
-async function deleteFromCloudinary(publicId) {
-  if (!publicId) return;
-  try {
-    const res = await cloudinary.uploader.destroy(publicId);
-    console.log(`[Cloudinary] Removed asset ${publicId}:`, res.result);
-  } catch (err) {
-    const errorDetails = err?.error?.message || err?.message || (typeof err?.error === 'string' ? err.error : null) || JSON.stringify(err);
-    console.error(`[Cloudinary Destroy Error] Failed to delete ${publicId}:`, errorDetails);
-  }
-}
 
 // Directories
 const DATA_DIR = path.join(__dirname, 'data');
@@ -142,7 +28,7 @@ if (!fs.existsSync(UPLOADS_DIR)) {
   fs.mkdirSync(UPLOADS_DIR, { recursive: true });
 }
 
-// Multer Storage Configuration
+// Multer Storage Configuration for local file fallback
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, UPLOADS_DIR);
@@ -177,7 +63,7 @@ app.use(express.urlencoded({ extended: true, limit: '25mb' }));
 app.use('/uploads', express.static(UPLOADS_DIR));
 app.use(express.static(__dirname));
 
-// Load Seed Data with Cloudinary URLs and public_ids
+// Load Seed Data
 let initialGalleryItems = [];
 try {
   if (fs.existsSync(GALLERY_FILE)) {
@@ -186,7 +72,6 @@ try {
 } catch (e) {
   console.warn('Notice: gallery.json load failed, using empty default:', e.message);
 }
-
 
 // Helper Functions
 function readGalleryData() {
@@ -219,21 +104,15 @@ function writeGalleryData(items) {
 }
 
 // -------------------------------------------------------------
-// API Endpoints
+// API Endpoints (Fast, Non-blocking, Firebase-aligned)
 // -------------------------------------------------------------
 
 // 1. Health & Status
 app.get('/api/health', (req, res) => {
-  const conf = cloudinary.config();
-  const isCloudActive = Boolean(conf.cloud_name && conf.api_key && conf.api_secret);
   res.json({
     status: 'ok',
     institution: "Ma'din Suffa Campus Vavoor (INS7572)",
-    storage: isCloudActive ? 'cloudinary' : 'local',
-    cloudinary: {
-      enabled: isCloudActive,
-      cloudName: conf.cloud_name ? `${conf.cloud_name.slice(0, 3)}***` : null
-    },
+    storage: 'firebase',
     timestamp: new Date().toISOString()
   });
 });
@@ -245,7 +124,6 @@ app.post('/api/auth/login', (req, res) => {
     return res.status(400).json({ success: false, message: 'Institutional ID and password are required.' });
   }
 
-  // Institutional credential verification (supports demo credentials)
   const id = identifier.trim().toLowerCase();
   const pass = password.trim();
 
@@ -295,7 +173,7 @@ app.get('/api/gallery', (req, res) => {
     const orderA = typeof a.order === 'number' ? a.order : 999999;
     const orderB = typeof b.order === 'number' ? b.order : 999999;
     if (orderA !== orderB) return orderA - orderB;
-    return new Date(b.createdAt) - new Date(a.createdAt);
+    return new Date(b.createdAt || 0) - new Date(a.createdAt || 0);
   });
 
   res.json({
@@ -315,60 +193,8 @@ app.get('/api/gallery/:id', (req, res) => {
   res.json({ success: true, item: found });
 });
 
-// 4b. Dedicated Cloudinary Image Storage Endpoints
-app.post('/api/gallery/upload-cloudinary', upload.single('image'), async (req, res) => {
-  try {
-    let target = null;
-    let originalName = '';
-    if (req.file) {
-      target = req.file.path;
-      originalName = req.file.originalname;
-    } else if (req.body.imageUrl || req.body.src || req.body.image) {
-      target = req.body.imageUrl || req.body.src || req.body.image;
-    } else {
-      return res.status(400).json({ success: false, message: 'No image file or URL provided for Cloudinary storage.' });
-    }
-
-    const cloudUpload = await uploadToCloudinary(target, originalName);
-    if (req.file && fs.existsSync(req.file.path)) {
-      try { fs.unlinkSync(req.file.path); } catch (e) {}
-    }
-
-    if (!cloudUpload || !cloudUpload.src) {
-      return res.status(500).json({ success: false, message: 'Cloudinary upload failed. Check server credentials.' });
-    }
-
-    res.json({
-      success: true,
-      imageUrl: cloudUpload.src,
-      public_id: cloudUpload.cloudinaryPublicId,
-      src: cloudUpload.src,
-      cloudinaryPublicId: cloudUpload.cloudinaryPublicId,
-      format: cloudUpload.format,
-      width: cloudUpload.width,
-      height: cloudUpload.height,
-      bytes: cloudUpload.bytes
-    });
-  } catch (err) {
-    console.error('[Cloudinary API Error]:', err);
-    res.status(500).json({ success: false, message: err.message });
-  }
-});
-
-const handleDeleteCloudinary = async (req, res) => {
-  const public_id = req.body.public_id || req.body.cloudinaryPublicId || req.query.public_id || req.query.cloudinaryPublicId;
-  if (!public_id) {
-    return res.status(400).json({ success: false, message: 'public_id is required to delete an asset from Cloudinary.' });
-  }
-  await deleteFromCloudinary(public_id);
-  res.json({ success: true, message: `Asset ${public_id} deleted from Cloudinary.`, public_id });
-};
-
-app.delete('/api/gallery/delete-cloudinary', handleDeleteCloudinary);
-app.post('/api/gallery/delete-cloudinary', handleDeleteCloudinary);
-
 // 5. Upload New Gallery Item(s)
-app.post('/api/gallery', upload.array('images', 10), async (req, res) => {
+app.post('/api/gallery', upload.array('images', 10), (req, res) => {
   try {
     const items = readGalleryData();
     const title = (req.body.title || '').trim() || 'Suffa Campus Event Capture';
@@ -376,10 +202,9 @@ app.post('/api/gallery', upload.array('images', 10), async (req, res) => {
     const category = (req.body.category || '').trim() || 'Campus';
     const published = req.body.published === 'true' || req.body.published === true || req.body.published === undefined;
     const featured = req.body.featured === 'true' || req.body.featured === true;
+    const storagePath = req.body.storagePath || null;
 
-    // Calculate next order
     let maxOrder = items.reduce((max, item) => (item.order && item.order > max ? item.order : max), 0);
-
     const createdItems = [];
 
     // Case A: File uploads through multer
@@ -387,31 +212,13 @@ app.post('/api/gallery', upload.array('images', 10), async (req, res) => {
       for (let index = 0; index < req.files.length; index++) {
         const file = req.files[index];
         maxOrder += 1;
-
-        let fileSrc = `/uploads/${file.filename}`;
-        let cloudinaryPublicId = null;
-
-        // Upload to Cloudinary
-        const cloudUpload = await uploadToCloudinary(file.path, file.originalname);
-        if (cloudUpload && cloudUpload.src) {
-          fileSrc = cloudUpload.src;
-          cloudinaryPublicId = cloudUpload.cloudinaryPublicId;
-          // Clean up local temporary file
-          try {
-            if (fs.existsSync(file.path)) {
-              fs.unlinkSync(file.path);
-            }
-          } catch (unlinkErr) {
-            console.warn('[Storage] Temporary file cleanup warning:', unlinkErr.message);
-          }
-        }
+        const fileSrc = `/uploads/${file.filename}`;
 
         const newItem = {
           id: `gallery_${Date.now()}_${Math.random().toString(36).substr(2, 6)}`,
           imageUrl: fileSrc,
-          public_id: cloudinaryPublicId,
           src: fileSrc,
-          cloudinaryPublicId: cloudinaryPublicId,
+          storagePath: storagePath,
           title: req.files.length > 1 ? `${title} (${index + 1})` : title,
           caption: caption,
           category: category,
@@ -428,27 +235,16 @@ app.post('/api/gallery', upload.array('images', 10), async (req, res) => {
         createdItems.push(newItem);
       }
     }
-    // Case B: URL or Base64 Image provided in body
+    // Case B: URL or Firebase Storage URL provided in body
     else if (req.body.imageUrl || req.body.src) {
       maxOrder += 1;
-      let imgSrc = req.body.imageUrl || req.body.src;
-      let cloudinaryPublicId = req.body.public_id || req.body.cloudinaryPublicId || null;
-
-      // If remote or data URL, store on Cloudinary if active
-      if (!imgSrc.includes('res.cloudinary.com')) {
-        const cloudUpload = await uploadToCloudinary(imgSrc);
-        if (cloudUpload && cloudUpload.src) {
-          imgSrc = cloudUpload.src;
-          cloudinaryPublicId = cloudUpload.cloudinaryPublicId;
-        }
-      }
+      const imgSrc = req.body.imageUrl || req.body.src;
 
       const newItem = {
-        id: `gallery_${Date.now()}_${Math.random().toString(36).substr(2, 6)}`,
+        id: req.body.id || `gallery_${Date.now()}_${Math.random().toString(36).substr(2, 6)}`,
         imageUrl: imgSrc,
-        public_id: cloudinaryPublicId,
         src: imgSrc,
-        cloudinaryPublicId: cloudinaryPublicId,
+        storagePath: storagePath,
         title: title,
         caption: caption,
         category: category,
@@ -456,7 +252,7 @@ app.post('/api/gallery', upload.array('images', 10), async (req, res) => {
         published: published,
         order: maxOrder,
         featured: featured,
-        createdAt: new Date().toISOString(),
+        createdAt: req.body.createdAt || new Date().toISOString(),
         updatedAt: new Date().toISOString()
       };
       items.unshift(newItem);
@@ -469,7 +265,7 @@ app.post('/api/gallery', upload.array('images', 10), async (req, res) => {
 
     return res.status(201).json({
       success: true,
-      message: `${createdItems.length} item(s) successfully stored in Cloudinary & saved to gallery.`,
+      message: `${createdItems.length} item(s) saved to gallery.`,
       items: createdItems,
       item: createdItems[0]
     });
@@ -480,16 +276,15 @@ app.post('/api/gallery', upload.array('images', 10), async (req, res) => {
 });
 
 // 6. Update Gallery Item
-app.put('/api/gallery/:id', upload.single('image'), async (req, res) => {
+app.put('/api/gallery/:id', upload.single('image'), (req, res) => {
   const items = readGalleryData();
   const idx = items.findIndex(item => item.id === req.params.id);
   if (idx === -1) {
-
     return res.status(404).json({ success: false, message: 'Item not found.' });
   }
 
   const current = items[idx];
-  const { title, caption, category, published, order, featured } = req.body;
+  const { title, caption, category, published, order, featured, storagePath } = req.body;
 
   if (title !== undefined) current.title = title.trim();
   if (caption !== undefined) current.caption = caption.trim();
@@ -507,55 +302,27 @@ app.put('/api/gallery/:id', upload.single('image'), async (req, res) => {
     const num = parseInt(order, 10);
     if (!isNaN(num)) current.order = num;
   }
+  if (storagePath !== undefined) {
+    current.storagePath = storagePath;
+  }
 
   // If new image file uploaded
   if (req.file) {
-    // If old file was in local uploads, delete it to keep storage clean
     if (current.src && current.src.startsWith('/uploads/')) {
       const oldPath = path.join(__dirname, current.src);
       if (fs.existsSync(oldPath)) {
         try { fs.unlinkSync(oldPath); } catch (e) { }
       }
     }
-    // If old file was on Cloudinary, delete it from Cloudinary
-    if (current.cloudinaryPublicId) {
-      await deleteFromCloudinary(current.cloudinaryPublicId);
-      current.cloudinaryPublicId = null;
-    }
-
-    let fileSrc = `/uploads/${req.file.filename}`;
-    let cloudinaryPublicId = null;
-
-    const cloudUpload = await uploadToCloudinary(req.file.path, req.file.originalname);
-    if (cloudUpload && cloudUpload.src) {
-      fileSrc = cloudUpload.src;
-      cloudinaryPublicId = cloudUpload.cloudinaryPublicId;
-      try {
-        if (fs.existsSync(req.file.path)) {
-          fs.unlinkSync(req.file.path);
-        }
-      } catch (e) { }
-    }
-
+    const fileSrc = `/uploads/${req.file.filename}`;
     current.src = fileSrc;
     current.imageUrl = fileSrc;
-    current.public_id = cloudinaryPublicId;
-    current.cloudinaryPublicId = cloudinaryPublicId;
     current.originalName = req.file.originalname;
     current.size = req.file.size;
   } else if (req.body.imageUrl || req.body.src) {
     const newSrc = req.body.imageUrl || req.body.src;
-    if (newSrc !== current.src) {
-      if (current.public_id || current.cloudinaryPublicId) {
-        await deleteFromCloudinary(current.public_id || current.cloudinaryPublicId);
-        current.public_id = null;
-        current.cloudinaryPublicId = null;
-      }
-      current.src = newSrc;
-      current.imageUrl = newSrc;
-      current.public_id = req.body.public_id || req.body.cloudinaryPublicId || null;
-      current.cloudinaryPublicId = current.public_id;
-    }
+    current.src = newSrc;
+    current.imageUrl = newSrc;
   }
 
   current.updatedAt = new Date().toISOString();
@@ -601,7 +368,6 @@ app.patch('/api/gallery/reorder', (req, res) => {
   const effectiveIds = ids || (Array.isArray(order) && typeof order[0] === 'string' ? order : null);
 
   if (Array.isArray(effectiveOrderList)) {
-    // orderList format: [{ id: "...", order: 1 }, ...]
     const map = new Map(effectiveOrderList.map(item => [item.id, parseInt(item.order, 10)]));
     items.forEach(item => {
       if (map.has(item.id)) {
@@ -610,7 +376,6 @@ app.patch('/api/gallery/reorder', (req, res) => {
       }
     });
   } else if (Array.isArray(effectiveIds)) {
-    // ids format: [id1, id2, id3, ...] representing exact sequence
     effectiveIds.forEach((id, index) => {
       const found = items.find(item => item.id === id);
       if (found) {
@@ -619,10 +384,9 @@ app.patch('/api/gallery/reorder', (req, res) => {
       }
     });
   } else {
-    return res.status(400).json({ success: false, message: 'Invalid reorder payload. Expecting "ids" array, "order" array, or "orderList" array.' });
+    return res.status(400).json({ success: false, message: 'Invalid reorder payload.' });
   }
 
-  // Sort items internally
   items.sort((a, b) => (a.order || 99999) - (b.order || 99999));
   writeGalleryData(items);
 
@@ -634,7 +398,7 @@ app.patch('/api/gallery/reorder', (req, res) => {
 });
 
 // 9. Delete Gallery Item
-app.delete('/api/gallery/:id', async (req, res) => {
+app.delete('/api/gallery/:id', (req, res) => {
   const items = readGalleryData();
   const idx = items.findIndex(item => item.id === req.params.id);
   if (idx === -1) {
@@ -651,23 +415,13 @@ app.delete('/api/gallery/:id', async (req, res) => {
     }
   }
 
-  // If Cloudinary asset, delete from Cloudinary
-  const cloudPubId = removed.public_id || removed.cloudinaryPublicId;
-  if (cloudPubId) {
-    await deleteFromCloudinary(cloudPubId);
-  } else if (removed.src && removed.src.includes('res.cloudinary.com')) {
-    const match = removed.src.match(/\/upload\/(?:v\d+\/)?([^\.]+)/);
-    if (match && match[1]) {
-      await deleteFromCloudinary(match[1]);
-    }
-  }
-
   writeGalleryData(items);
 
   res.json({
     success: true,
     message: 'Item removed from gallery.',
-    deletedId: req.params.id
+    deletedId: req.params.id,
+    storagePath: removed.storagePath || null
   });
 });
 
@@ -678,19 +432,14 @@ app.get('/', (req, res) => {
 
 // Start Server
 app.listen(PORT, '0.0.0.0', () => {
-  const conf = cloudinary.config();
-  const cloudStatus = (conf.cloud_name && conf.api_key && conf.api_secret)
-    ? `Active (${conf.cloud_name})`
-    : 'Local Storage Fallback';
-
   console.log(`=======================================================`);
   console.log(` Ma'din Suffa Campus - Shared Backend & Gallery API`);
   console.log(` Server running on http://127.0.0.1:${PORT}`);
-  console.log(` Cloudinary:        ${cloudStatus}`);
+  console.log(` Image Storage:     Firebase Storage + Local Cache`);
   console.log(` Public Website:    http://127.0.0.1:${PORT}/index.html`);
   console.log(` Admin Portal:      http://127.0.0.1:${PORT}/admin.html`);
   console.log(` Gallery API:       http://127.0.0.1:${PORT}/api/gallery`);
   console.log(` Uploads Directory: http://127.0.0.1:${PORT}/uploads/`);
-  console.log(` CORS:              Enabled for all origins (* / 5500 / 5501)`);
+  console.log(` CORS:              Enabled for all origins`);
   console.log(`=======================================================`);
 });

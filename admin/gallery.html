@@ -12,7 +12,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
   <!-- Firebase SDK & Shared Gallery API -->
   <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-storage-compat.js"></script>
   <script src="../firebase-config.js"></script>
   <script src="../gallery-api.js"></script>
   
@@ -355,10 +357,10 @@
           
           <!-- Responsive 2-Column Gallery Grid -->
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="galleryGrid">
-            <!-- Dynamic Gallery Cards loaded from Firebase & Cloudinary -->
+            <!-- Dynamic Gallery Cards loaded from Firebase -->
             <div id="galleryGridLoading" class="col-span-full py-12 text-center text-outline">
               <span class="material-symbols-outlined text-4xl animate-spin text-primary">progress_activity</span>
-              <p class="mt-2 text-xs font-semibold">Loading gallery repository from Firebase &amp; Cloudinary...</p>
+              <p class="mt-2 text-xs font-semibold">Loading gallery repository from Firebase...</p>
             </div>
           </div>
         </div>
@@ -735,7 +737,7 @@
                   <button class="px-2.5 py-1 rounded bg-surface-container hover:bg-surface-variant text-on-surface font-label-sm text-[11px] font-medium flex items-center gap-1 cursor-pointer" onclick="openEditModalById('${item.id}')">
                     <span class="material-symbols-outlined text-[14px]">edit_note</span> Edit
                   </button>
-                  <button class="p-1 rounded text-outline hover:text-error hover:bg-error-container/30 transition cursor-pointer" onclick="confirmDelete('${item.id}')" title="Delete from Cloudinary & Firebase">
+                  <button class="p-1 rounded text-outline hover:text-error hover:bg-error-container/30 transition cursor-pointer" onclick="confirmDelete('${item.id}')" title="Delete from Firebase">
                     <span class="material-symbols-outlined text-[16px]">delete</span>
                   </button>
                 </div>
@@ -872,25 +874,72 @@
     }
 
     async function toggleCardPublish(id) {
+      const item = currentGalleryItems.find(i => String(i.id) === String(id));
+      if (!item) return;
+
+      // 1. Instant optimistic state flip (< 1ms)
+      item.published = !item.published;
+      const isPub = item.published;
+
+      // 2. Direct DOM update without rebuilding grid
+      const card = document.querySelector(`.gallery-card[data-id="${id}"]`);
+      if (card) {
+        card.dataset.status = isPub ? 'Published' : 'Draft';
+        const topBtn = card.querySelector(`button[onclick*="toggleCardPublish('${id}')"]`);
+        if (topBtn) {
+          topBtn.className = `w-7 h-7 rounded-full ${isPub ? 'bg-surface-bright/90 text-primary hover:bg-white' : 'bg-surface-dim text-outline hover:text-on-surface'} flex items-center justify-center text-xs shadow-sm transition cursor-pointer`;
+          topBtn.title = isPub ? 'Click to unpublish from website' : 'Click to publish to website';
+          const icon = topBtn.querySelector('.material-symbols-outlined');
+          if (icon) icon.textContent = isPub ? 'visibility' : 'visibility_off';
+        }
+        const statusLabel = card.querySelector('.status-label');
+        if (statusLabel) {
+          statusLabel.className = `status-label font-label-sm text-[11px] ${isPub ? 'text-tertiary-container' : 'text-outline'} font-semibold`;
+          statusLabel.textContent = isPub ? 'Published' : 'Draft / Hidden';
+        }
+        const dot = card.querySelector('.status-label')?.previousElementSibling;
+        if (dot) {
+          dot.className = `w-2 h-2 rounded-full ${isPub ? 'bg-tertiary-fixed-dim' : 'bg-outline'}`;
+        }
+      }
+
+      updateStats();
+      updatePreviewSlides();
+      showToast(isPub ? 'Photo published to live slider.' : 'Photo unlisted from public slider.');
+
+      // 3. Background non-blocking sync
       try {
-        const res = await GalleryAPI.togglePublish(id);
-        const isPub = res && res.item && res.item.published;
-        showToast(isPub ? 'Photo published to live slider.' : 'Photo unlisted from public slider.');
-        await loadAdminGallery();
+        await GalleryAPI.togglePublish(id, isPub);
       } catch (err) {
-        console.error('Error toggling publish:', err);
-        showToast('Failed to update status.', 'error');
+        console.warn('Sync note:', err.message);
       }
     }
 
     async function confirmDelete(id) {
-      if (!confirm("Permanently delete this photo? It will be removed from Cloudinary storage and Firebase database.")) {
+      if (!confirm("Permanently delete this photo? It will be removed from Firebase Storage and the gallery database.")) {
         return;
       }
+
+      // 1. Instant local removal
+      const idx = currentGalleryItems.findIndex(i => String(i.id) === String(id));
+      if (idx !== -1) currentGalleryItems.splice(idx, 1);
+
+      // 2. Remove card from DOM immediately
+      const card = document.querySelector(`.gallery-card[data-id="${id}"]`);
+      if (card) {
+        card.style.transition = 'all 0.25s ease';
+        card.style.opacity = '0';
+        card.style.transform = 'scale(0.9)';
+        setTimeout(() => card.remove(), 250);
+      }
+
+      updateStats();
+      updatePreviewSlides();
+      showToast('Photo asset removed from Firebase.');
+
+      // 3. Background deletion from Firebase Storage and Firestore
       try {
         await GalleryAPI.delete(id);
-        showToast('Photo asset removed from Cloudinary & Firebase.');
-        await loadAdminGallery();
       } catch (err) {
         console.error('Error deleting photo:', err);
         showToast('Failed to delete photo: ' + err.message, 'error');
@@ -1022,7 +1071,7 @@
         return;
       }
 
-      showToast('Uploading to Cloudinary & saving to Firebase...', 'cloud_upload');
+      showToast('Uploading to Firebase Storage...', 'cloud_upload');
 
       try {
         const formData = new FormData();
@@ -1036,8 +1085,8 @@
 
         await GalleryAPI.upload(formData);
         closeUploadDrawer();
-        showToast('Media asset uploaded to Cloudinary and registered in Firebase.');
-        await loadAdminGallery();
+        showToast('Media asset uploaded to Firebase Storage and registered in database.');
+        await loadAdminGallery(true);
       } catch (err) {
         console.error('Error uploading image:', err);
         showToast('Upload failed: ' + err.message, 'error');
@@ -1054,7 +1103,7 @@
     function publishToLiveSite() {
       showToast('Pushing carousel sequence to production server...');
       setTimeout(() => {
-        showToast('Synchronized with Firebase Firestore & Cloudinary CDN');
+        showToast('Synchronized with Firebase Firestore & Storage');
       }, 1000);
     }
   </script>
