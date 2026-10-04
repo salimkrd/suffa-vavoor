@@ -134,7 +134,7 @@ app.post('/api/auth/login', (req, res) => {
     id.includes('suffa')
   );
 
-  if (isValidAdmin && (pass === 'suffa@2026' || pass === 'password123' || pass === 'admin123' || pass.length >= 4)) {
+  if (isValidAdmin && pass.length >= 6) {
     return res.json({
       success: true,
       token: 'suffa_sec_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
@@ -150,7 +150,7 @@ app.post('/api/auth/login', (req, res) => {
 
   return res.status(401).json({
     success: false,
-    message: 'Invalid credentials. Hint: use admin@madin.edu.in / suffa@2026'
+    message: 'Invalid institutional credentials. Please check your username and password.'
   });
 });
 

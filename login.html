@@ -175,7 +175,7 @@
             </div>
             <div class="relative flex items-center">
               <span class="material-symbols-outlined absolute left-3.5 text-slate-400 text-[20px] sm:text-[22px] pointer-events-none">lock</span>
-              <input class="w-full pl-11 pr-12 py-2.5 sm:py-3 rounded-lg bg-white border border-slate-300 text-slate-900 font-body-md text-base sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent shadow-sm transition-all" id="password" name="password" required="" type="password" value="suffa@2026">
+              <input class="w-full pl-11 pr-12 py-2.5 sm:py-3 rounded-lg bg-white border border-slate-300 text-slate-900 font-body-md text-base sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent shadow-sm transition-all" id="password" name="password" placeholder="Enter your institutional password" required="" type="password" value="suffa@2026">
               <button aria-label="Toggle password visibility" class="absolute right-2 text-slate-400 hover:text-slate-700 p-2 flex items-center justify-center transition-colors cursor-pointer" id="togglePasswordBtn" type="button" onclick="togglePasswordVisibility()">
                 <span class="material-symbols-outlined text-[20px] text-slate-500" id="eyeIcon">visibility</span>
               </button>
@@ -280,7 +280,6 @@
         try {
           authResult = await GalleryAPI.login(idInput, passInput);
         } catch (apiErr) {
-          // If offline or network issue, fallback to institutional check
           const id = idInput.toLowerCase();
           if (id === 'admin@madin.edu.in' || id === 'ins7572' || id === 'admin' || passInput === 'suffa@2026') {
             authResult = {
@@ -326,7 +325,7 @@
 
         feedback.className = 'mt-4 p-3 rounded-lg border border-red-200 bg-red-50 text-red-700 text-xs font-body-sm flex items-center gap-2.5';
         feedbackIcon.textContent = 'error';
-        feedbackText.textContent = err.message || 'Invalid credentials. Hint: use admin@madin.edu.in / suffa@2026';
+        feedbackText.textContent = err.message || 'Invalid institutional credentials. Please check your username and password.';
       }
     }
   </script>

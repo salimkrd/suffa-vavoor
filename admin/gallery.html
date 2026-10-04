@@ -543,8 +543,8 @@
       </div>
       
       <div class="flex items-center justify-end gap-2.5 pt-3 border-t border-outline-variant/30">
-        <button class="px-4 py-2 rounded-lg bg-surface-container hover:bg-surface-variant text-on-surface font-label-md text-xs font-semibold cursor-pointer" onclick="closeUploadDrawer()">Cancel</button>
-        <button class="px-4 py-2 rounded-lg bg-primary hover:bg-primary-container text-white font-label-md text-xs font-bold shadow-sm cursor-pointer" onclick="commitUpload()">Complete Ingest &amp; Save</button>
+        <button class="px-4 py-2 rounded-lg bg-surface-container hover:bg-surface-variant text-on-surface font-label-md text-xs font-semibold cursor-pointer" onclick="closeUploadDrawer()" type="button">Cancel</button>
+        <button id="commitUploadBtn" class="px-4 py-2 rounded-lg bg-primary hover:bg-primary-container text-white font-label-md text-xs font-bold shadow-sm cursor-pointer" onclick="commitUpload()" type="button">Complete Ingest &amp; Save</button>
       </div>
     </div>
   </div>
@@ -1071,6 +1071,12 @@
         return;
       }
 
+      const commitBtn = document.getElementById('commitUploadBtn');
+      if (commitBtn) {
+        commitBtn.disabled = true;
+        commitBtn.innerHTML = '<span class="material-symbols-outlined text-[15px] animate-spin inline-block align-middle mr-1">progress_activity</span> Uploading to Firebase Storage...';
+      }
+
       showToast('Uploading to Firebase Storage...', 'cloud_upload');
 
       try {
@@ -1088,8 +1094,13 @@
         showToast('Media asset uploaded to Firebase Storage and registered in database.');
         await loadAdminGallery(true);
       } catch (err) {
-        console.error('Error uploading image:', err);
+        console.error('Error uploading image to Firebase Storage:', err);
         showToast('Upload failed: ' + err.message, 'error');
+      } finally {
+        if (commitBtn) {
+          commitBtn.disabled = false;
+          commitBtn.textContent = 'Complete Ingest & Save';
+        }
       }
     }
 

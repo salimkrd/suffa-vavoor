@@ -138,27 +138,30 @@
             let uploadRes = null;
 
             // Upload directly to Firebase Storage
-            if (global.SuffaFirebase && typeof global.SuffaFirebase.uploadImageToStorage === 'function') {
-              try {
-                uploadRes = await global.SuffaFirebase.uploadImageToStorage(file, 'gallery');
-              } catch (e) {
-                console.warn('Firebase Storage direct upload note:', e.message);
-              }
+            if (!global.SuffaFirebase || typeof global.SuffaFirebase.uploadImageToStorage !== 'function') {
+              throw new Error('Firebase Storage service is not loaded.');
+            }
+
+            uploadRes = await global.SuffaFirebase.uploadImageToStorage(file, 'gallery');
+            if (!uploadRes || !uploadRes.imageUrl) {
+              throw new Error('Firebase Storage upload failed: No download URL returned.');
             }
 
             const itemTitle = files.length > 1 ? `${title} (${i + 1})` : title;
             const newItemPayload = {
               id: `gallery_${Date.now()}_${Math.random().toString(36).substr(2, 6)}`,
-              imageUrl: uploadRes ? uploadRes.imageUrl : '',
-              src: uploadRes ? uploadRes.imageUrl : '',
-              storagePath: uploadRes ? uploadRes.storagePath : null,
+              imageUrl: uploadRes.imageUrl,
+              src: uploadRes.imageUrl,
+              storagePath: uploadRes.storagePath || null,
               title: itemTitle,
               caption: caption,
               category: category,
               badge: category,
               published: published,
               order: 999,
-              featured: false
+              featured: false,
+              createdAt: new Date().toISOString(),
+              updatedAt: new Date().toISOString()
             };
 
             // Save record in Firebase Firestore
@@ -218,16 +221,18 @@
         if (published !== null) updatePayload.published = (published === 'true' || published === true);
 
         // If new image file uploaded, store in Firebase Storage
-        if (file && file.name && global.SuffaFirebase) {
-          try {
-            const uploadRes = await global.SuffaFirebase.uploadImageToStorage(file, 'gallery');
-            if (uploadRes && uploadRes.imageUrl) {
-              updatePayload.imageUrl = uploadRes.imageUrl;
-              updatePayload.src = uploadRes.imageUrl;
-              updatePayload.storagePath = uploadRes.storagePath;
+        if (file && file.name && file.size > 0 && global.SuffaFirebase) {
+          const oldItem = await this.getById(id);
+          const uploadRes = await global.SuffaFirebase.uploadImageToStorage(file, 'gallery');
+          if (uploadRes && uploadRes.imageUrl) {
+            updatePayload.imageUrl = uploadRes.imageUrl;
+            updatePayload.src = uploadRes.imageUrl;
+            updatePayload.storagePath = uploadRes.storagePath;
+
+            // Clean up previous image from Firebase Storage if replaced
+            if (oldItem && (oldItem.storagePath || (oldItem.imageUrl && oldItem.imageUrl.includes('firebasestorage')))) {
+              await global.SuffaFirebase.deleteImageFromStorage(oldItem.storagePath || oldItem.imageUrl);
             }
-          } catch (e) {
-            console.warn('Firebase Storage update file note:', e.message);
           }
         }
       } else {
@@ -334,21 +339,37 @@
      */
     login: async function (identifier, password) {
       if (global.SuffaFirebase && typeof global.SuffaFirebase.loginAdmin === 'function') {
-        return global.SuffaFirebase.loginAdmin(identifier, password);
+        try {
+          return await global.SuffaFirebase.loginAdmin(identifier, password);
+        } catch (fbErr) {
+          // If Firebase throws, try backend REST endpoint if accessible
+          if (backendOrigin) {
+            try {
+              const res = await fetch(`${BASE_API}/auth/login`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ identifier, password })
+              });
+              const data = await res.json();
+              if (res.ok && data.success) return data;
+            } catch (beErr) { }
+          }
+          throw fbErr;
+        }
       }
 
-      // Institutional fallback check
-      const id = (identifier || '').trim().toLowerCase();
-      const pass = (password || '').trim();
-      if (id === 'admin@madin.edu.in' || id === 'ins7572' || id === 'admin' || pass === 'suffa@2026') {
-        return {
-          success: true,
-          token: 'suffa_local_' + Date.now(),
-          user: { identifier, name: 'Super Administrator', role: 'super' }
-        };
+      if (backendOrigin) {
+        const res = await fetch(`${BASE_API}/auth/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ identifier, password })
+        });
+        const data = await res.json();
+        if (res.ok && data.success) return data;
+        throw new Error(data.message || 'Invalid institutional credentials.');
       }
 
-      throw new Error('Invalid credentials. Hint: use admin@madin.edu.in / suffa@2026');
+      throw new Error('Authentication service is currently unavailable.');
     },
 
     /**
