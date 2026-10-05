@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="scroll-smooth" lang="en">
+<html class="scroll-smooth lg:scroll-pt-20" lang="en">
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport">
@@ -11,23 +11,33 @@
   <!-- Google Fonts & Material Symbols -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
 
   <style>
     @layer base {
       html, body {
+        font-family: "Manrope", sans-serif;
         width: 100%;
         max-width: 100%;
         margin: 0;
         padding: 0;
         background-color: #f8fafc;
-        overflow-x: hidden;
+        overflow-x: clip;
       }
       body {
+        font-family: "Manrope", sans-serif;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
         text-rendering: optimizeLegibility;
+      }
+      button, input, select, textarea, optgroup {
+        font-family: "Manrope", sans-serif;
+      }
+      h1, h2, h3, h4, h5, h6 {
+        font-family: "Manrope", sans-serif;
+        letter-spacing: -0.022em;
+        font-feature-settings: "cv02", "cv03", "cv04", "cv11";
       }
       .pb-safe { padding-bottom: env(safe-area-inset-bottom, 0px); }
       .pt-safe { padding-top: env(safe-area-inset-top, 0px); }
@@ -35,12 +45,26 @@
     ::-webkit-scrollbar { display: none; }
     * { -ms-overflow-style: none; scrollbar-width: none; }
 
-    /* Touch & Typography Ergonomics */
+    /* Touch & Typography Ergonomics with Manrope */
     .font-headline {
-      letter-spacing: -0.015em;
+      font-family: "Manrope", sans-serif;
+      letter-spacing: -0.022em;
+    }
+    .font-subheading {
+      font-family: "Manrope", sans-serif;
+      letter-spacing: -0.012em;
     }
     .font-label {
-      letter-spacing: 0.01em;
+      font-family: "Manrope", sans-serif;
+      letter-spacing: 0.015em;
+    }
+    .font-body {
+      font-family: "Manrope", sans-serif;
+    }
+    .font-cinzel {
+      font-family: "Manrope", sans-serif;
+      font-weight: 800;
+      letter-spacing: -0.02em;
     }
     button, a, input, select, textarea {
       touch-action: manipulation;
@@ -56,6 +80,26 @@
     }
     .gallery-item.hidden-item {
       display: none !important;
+    }
+
+    /* Desktop Header: Fixed/Sticky only on desktop (>= 1024px), not on tablet/mobile */
+    @media (min-width: 1024px) {
+      html {
+        scroll-padding-top: 5rem;
+      }
+      #main-header {
+        position: -webkit-sticky !important;
+        position: sticky !important;
+        top: 0 !important;
+        z-index: 40 !important;
+      }
+    }
+
+    @media (max-width: 1023px) {
+      #main-header {
+        position: relative !important;
+        top: auto !important;
+      }
     }
 
     @media print {
@@ -107,11 +151,13 @@
             "border-subtle": "#e2e8f0"
           },
           fontFamily: {
-            "cinzel": ["Cinzel", "Georgia", "serif"],
-            "headline": ["Playfair Display", "Georgia", "serif"],
-            "body": ["Inter", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "sans-serif"],
-            "subheading": ["Outfit", "Inter", "sans-serif"],
-            "label": ["Outfit", "Inter", "sans-serif"]
+            "sans": ["Manrope", "sans-serif"],
+            "manrope": ["Manrope", "sans-serif"],
+            "cinzel": ["Manrope", "sans-serif"],
+            "headline": ["Manrope", "sans-serif"],
+            "body": ["Manrope", "sans-serif"],
+            "subheading": ["Manrope", "sans-serif"],
+            "label": ["Manrope", "sans-serif"]
           }
         }
       }
@@ -122,7 +168,7 @@
 <body class="bg-surface-light font-body text-on-surface antialiased selection:bg-primary/20 selection:text-primary pb-16">
 
   <!-- TOP NOTIFICATION STRIP (JAMIATHUL HIND STYLE) -->
-  <div class="bg-primary-deep text-white text-xs font-label border-b border-white/10 px-4 sm:px-6 lg:px-8 py-2 flex items-center justify-between sticky top-0 z-50">
+  <div class="bg-primary-deep text-white text-xs font-label border-b border-white/10 px-4 sm:px-6 lg:px-8 py-2 flex items-center justify-between relative z-30">
     <div class="flex items-center gap-2 truncate">
       <span class="w-2 h-2 rounded-full bg-tertiary-accent animate-ping shrink-0"></span>
       <span class="text-tertiary-accent font-semibold tracking-wide shrink-0 text-xs">AFFILIATED:</span>
@@ -142,7 +188,7 @@
   </div>
 
   <!-- INSTITUTIONAL UNIVERSITY HEADER -->
-  <header class="sticky top-[33px] w-full z-40 bg-surface/98 backdrop-blur-md border-b border-border-subtle shadow-xs transition-all">
+  <header id="main-header" class="relative lg:sticky lg:top-0 w-full z-40 bg-surface/98 backdrop-blur-md border-b border-border-subtle shadow-xs transition-all">
     <div class="h-20 px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-3 max-w-5xl mx-auto">
       <a class="flex items-center gap-2 flex-1 min-w-0" href="#home">
         <img alt="Madin Academy & Madin Suffa Campus Official Dual Logo" class="h-11 sm:h-12 w-auto max-w-[230px] object-contain flex-shrink-0" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAVjnU7SabWuxc9MHlCDgcnGZRFAczu-9rBuJNQzGrxJC5j4nZQFpcRWZIBQYdaB5wXEJ3Y-0YkgOABHtPoOtjxqF_86_pmc0gKce1ZdMf4IFFUWwgbr5uUbjYOP7DPb4nvUfDySCvFnbh0OVOgJTjpxXyjoeMigP9gveSjnYx3f9yaZadg1WhobtlrPEtff0qSOPnSoBMvBbTMEFAmqM0zXUxnUV23WrQkFfZKfVncE1xFhUDjyLKobOwb4eItjp33">
@@ -601,10 +647,10 @@
             <p class="text-sm text-slate-600">Archived glimpses from Inspiraath '25, scholastic symposiums, and campus life. Click any photo to expand.</p>
           </div>
           <div class="flex items-center gap-2 shrink-0 self-end sm:self-auto">
-            <button aria-label="Previous slide" class="w-10 h-10 rounded-full border border-slate-300 hover:border-primary hover:bg-primary/5 text-primary-dark flex items-center justify-center transition-colors shadow-2xs" onclick="const el=document.getElementById('gallery-carousel'); el.scrollBy({left: -el.offsetWidth * 0.75, behavior: 'smooth'});">
+            <button id="gallery-prev-btn" aria-label="Previous slide" class="w-10 h-10 rounded-full border border-slate-300 hover:border-primary hover:bg-primary/5 text-primary-dark flex items-center justify-center transition-colors shadow-2xs cursor-pointer" onclick="galleryPrev(true)">
               <span class="material-symbols-outlined text-[22px]">chevron_left</span>
             </button>
-            <button aria-label="Next slide" class="w-10 h-10 rounded-full border border-slate-300 hover:border-primary hover:bg-primary/5 text-primary-dark flex items-center justify-center transition-colors shadow-2xs" onclick="const el=document.getElementById('gallery-carousel'); el.scrollBy({left: el.offsetWidth * 0.75, behavior: 'smooth'});">
+            <button id="gallery-next-btn" aria-label="Next slide" class="w-10 h-10 rounded-full border border-slate-300 hover:border-primary hover:bg-primary/5 text-primary-dark flex items-center justify-center transition-colors shadow-2xs cursor-pointer" onclick="galleryNext(true)">
               <span class="material-symbols-outlined text-[22px]">chevron_right</span>
             </button>
           </div>
@@ -1399,6 +1445,216 @@
       }
     }
 
+    // ==========================================
+    // GALLERY CAROUSEL AUTOPLAY & CONTROLS
+    // ==========================================
+    let galleryAutoplayTimer = null;
+    let isGalleryPausedByHover = false;
+    let isGalleryPausedByTouch = false;
+    let isGalleryLightboxOpen = false;
+    let isGalleryUserInteracting = false;
+    let isGalleryInView = true;
+    let galleryScrollDebounce = null;
+    const GALLERY_AUTOPLAY_INTERVAL = 4500; // 4.5 seconds per slide (comfortable interval)
+
+    function getVisibleGalleryItems() {
+      const carousel = document.getElementById('gallery-carousel');
+      if (!carousel) return [];
+      return Array.from(carousel.querySelectorAll('.gallery-item:not(.hidden-item)'));
+    }
+
+    function galleryNext(isManual = false) {
+      const carousel = document.getElementById('gallery-carousel');
+      if (!carousel) return;
+      const items = getVisibleGalleryItems();
+      if (items.length === 0) return;
+
+      const maxScroll = carousel.scrollWidth - carousel.clientWidth;
+      if (maxScroll <= 5) return;
+
+      // If at or near the end (within 15px), loop smoothly back to start
+      if (carousel.scrollLeft >= maxScroll - 15) {
+        carousel.scrollTo({ left: 0, behavior: 'smooth' });
+      } else {
+        const carouselRect = carousel.getBoundingClientRect();
+        // Find first item whose left edge is more than 10px to the right of carousel's left edge
+        const nextItem = items.find(item => {
+          const rect = item.getBoundingClientRect();
+          return (rect.left - carouselRect.left) > 10;
+        });
+
+        if (nextItem) {
+          const itemRect = nextItem.getBoundingClientRect();
+          const targetLeft = carousel.scrollLeft + (itemRect.left - carouselRect.left);
+          carousel.scrollTo({ left: Math.min(targetLeft, maxScroll), behavior: 'smooth' });
+        } else {
+          carousel.scrollTo({ left: 0, behavior: 'smooth' });
+        }
+      }
+
+      if (isManual) {
+        resetAutoplayTimer();
+      }
+    }
+
+    function galleryPrev(isManual = false) {
+      const carousel = document.getElementById('gallery-carousel');
+      if (!carousel) return;
+      const items = getVisibleGalleryItems();
+      if (items.length === 0) return;
+
+      const maxScroll = carousel.scrollWidth - carousel.clientWidth;
+      if (maxScroll <= 5) return;
+
+      // If at or near the beginning (within 15px), loop smoothly to the end
+      if (carousel.scrollLeft <= 15) {
+        carousel.scrollTo({ left: maxScroll, behavior: 'smooth' });
+      } else {
+        const carouselRect = carousel.getBoundingClientRect();
+        // Find items whose left edge is to the left of the carousel's left edge
+        const prevItems = items.filter(item => {
+          const rect = item.getBoundingClientRect();
+          return (rect.left - carouselRect.left) < -10;
+        });
+
+        if (prevItems.length > 0) {
+          const prevItem = prevItems[prevItems.length - 1];
+          const itemRect = prevItem.getBoundingClientRect();
+          const targetLeft = carousel.scrollLeft + (itemRect.left - carouselRect.left);
+          carousel.scrollTo({ left: Math.max(0, targetLeft), behavior: 'smooth' });
+        } else {
+          carousel.scrollTo({ left: 0, behavior: 'smooth' });
+        }
+      }
+
+      if (isManual) {
+        resetAutoplayTimer();
+      }
+    }
+
+    function canGalleryAutoplay() {
+      if (document.hidden) return false;
+      if (isGalleryPausedByHover) return false;
+      if (isGalleryPausedByTouch) return false;
+      if (isGalleryLightboxOpen) return false;
+      if (isGalleryUserInteracting) return false;
+      if (!isGalleryInView) return false;
+      const carousel = document.getElementById('gallery-carousel');
+      if (!carousel) return false;
+      return true;
+    }
+
+    function startGalleryAutoplay() {
+      stopGalleryAutoplay();
+      galleryAutoplayTimer = setInterval(() => {
+        if (canGalleryAutoplay()) {
+          galleryNext(false);
+        }
+      }, GALLERY_AUTOPLAY_INTERVAL);
+    }
+
+    function stopGalleryAutoplay() {
+      if (galleryAutoplayTimer) {
+        clearInterval(galleryAutoplayTimer);
+        galleryAutoplayTimer = null;
+      }
+    }
+
+    function resetAutoplayTimer() {
+      stopGalleryAutoplay();
+      startGalleryAutoplay();
+    }
+
+    function initGalleryAutoplay() {
+      const carousel = document.getElementById('gallery-carousel');
+      if (!carousel) return;
+
+      // Mouse hover pause / resume on desktop
+      carousel.addEventListener('mouseenter', () => {
+        isGalleryPausedByHover = true;
+      });
+      carousel.addEventListener('mouseleave', () => {
+        isGalleryPausedByHover = false;
+        resetAutoplayTimer();
+      });
+
+      // Controls hover pause / resume
+      const prevBtn = document.getElementById('gallery-prev-btn');
+      const nextBtn = document.getElementById('gallery-next-btn');
+      [prevBtn, nextBtn].forEach(btn => {
+        if (!btn) return;
+        btn.addEventListener('mouseenter', () => { isGalleryPausedByHover = true; });
+        btn.addEventListener('mouseleave', () => {
+          isGalleryPausedByHover = false;
+          resetAutoplayTimer();
+        });
+      });
+
+      // Touch interactions on mobile & tablet
+      carousel.addEventListener('touchstart', () => {
+        isGalleryPausedByTouch = true;
+      }, { passive: true });
+
+      carousel.addEventListener('touchend', () => {
+        isGalleryPausedByTouch = false;
+        resetAutoplayTimer();
+      }, { passive: true });
+
+      carousel.addEventListener('touchcancel', () => {
+        isGalleryPausedByTouch = false;
+        resetAutoplayTimer();
+      }, { passive: true });
+
+      // User drag / wheel / scroll handling
+      carousel.addEventListener('pointerdown', () => {
+        isGalleryUserInteracting = true;
+      }, { passive: true });
+
+      carousel.addEventListener('wheel', () => {
+        isGalleryUserInteracting = true;
+        clearTimeout(galleryScrollDebounce);
+        galleryScrollDebounce = setTimeout(() => {
+          isGalleryUserInteracting = false;
+          resetAutoplayTimer();
+        }, 2000);
+      }, { passive: true });
+
+      carousel.addEventListener('scroll', () => {
+        if (isGalleryUserInteracting || isGalleryPausedByTouch) {
+          clearTimeout(galleryScrollDebounce);
+          galleryScrollDebounce = setTimeout(() => {
+            isGalleryUserInteracting = false;
+            resetAutoplayTimer();
+          }, 2000);
+        }
+      }, { passive: true });
+
+      // Tab visibility
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+          stopGalleryAutoplay();
+        } else {
+          startGalleryAutoplay();
+        }
+      });
+
+      // Viewport Intersection Observer (pause autoplay when gallery is off-screen)
+      if ('IntersectionObserver' in window) {
+        const gallerySec = document.getElementById('gallery');
+        if (gallerySec) {
+          const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+              isGalleryInView = entry.isIntersecting;
+            });
+          }, { threshold: 0.1 });
+          observer.observe(gallerySec);
+        }
+      }
+
+      // Start the autoplay loop
+      startGalleryAutoplay();
+    }
+
     function openGalleryLightbox(index) {
       isSingleImageMode = false;
       currentLightboxIdx = index;
@@ -1407,6 +1663,7 @@
       document.getElementById('lightbox-next-btn').classList.remove('hidden');
       document.getElementById('lightbox-modal').classList.remove('hidden');
       document.body.style.overflow = 'hidden';
+      isGalleryLightboxOpen = true;
     }
 
     function openSingleLightbox(src, title, desc) {
@@ -1420,6 +1677,7 @@
       document.getElementById('lightbox-next-btn').classList.add('hidden');
       document.getElementById('lightbox-modal').classList.remove('hidden');
       document.body.style.overflow = 'hidden';
+      isGalleryLightboxOpen = true;
     }
 
     function updateLightboxContent() {
@@ -1446,6 +1704,8 @@
     function closeLightbox() {
       document.getElementById('lightbox-modal').classList.add('hidden');
       document.body.style.overflow = '';
+      isGalleryLightboxOpen = false;
+      resetAutoplayTimer();
     }
 
     function downloadCurrentImage() {
@@ -1473,6 +1733,10 @@
         }
       });
       document.getElementById('gallery-count-badge').innerText = `${visibleCount} Event Captures`;
+
+      const carousel = document.getElementById('gallery-carousel');
+      if (carousel) carousel.scrollTo({ left: 0, behavior: 'smooth' });
+      resetAutoplayTimer();
     }
 
     function escapeHtml(str) {
@@ -1534,6 +1798,7 @@
       if (allFilterBtn && allFilterBtn.textContent.includes('All')) {
         allFilterBtn.textContent = `All (${galleryItems.length})`;
       }
+      resetAutoplayTimer();
     }
 
     async function loadDynamicGallery() {
@@ -1576,9 +1841,13 @@
     }
 
     if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', initGallerySync);
+      document.addEventListener('DOMContentLoaded', () => {
+        initGallerySync();
+        initGalleryAutoplay();
+      });
     } else {
       initGallerySync();
+      initGalleryAutoplay();
     }
 
 
