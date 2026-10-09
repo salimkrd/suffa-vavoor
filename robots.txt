@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /login.html
+Disallow: /api/
+Disallow: /uploads/
+Disallow: /test
+Disallow: /tests/
+
+Sitemap: https://suffavavoor.online/sitemap.xml
