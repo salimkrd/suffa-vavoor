@@ -3,17 +3,7 @@
   "trailingSlash": false,
   "functions": {
     "server.js": {
-      "includeFiles": [
-        "*.html",
-        "*.js",
-        "*.txt",
-        "*.xml",
-        "*.png",
-        "*.ico",
-        "*.webmanifest",
-        "admin/**",
-        "data/gallery.json"
-      ]
+      "includeFiles": "{*.html,*.js,*.txt,*.xml,*.png,*.ico,*.webmanifest,admin/**,data/gallery.json}"
     }
   },
   "routes": [
