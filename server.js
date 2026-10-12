@@ -61,7 +61,15 @@ app.use(express.urlencoded({ extended: true, limit: '25mb' }));
 
 // Serve Uploads & Static Website Files
 app.use('/uploads', express.static(UPLOADS_DIR));
-app.use(express.static(__dirname));
+app.use(express.static(__dirname, { index: false }));
+
+app.get('/robots.txt', (req, res) => {
+  res.type('text/plain').sendFile(path.join(__dirname, 'robots.txt'));
+});
+
+app.get('/sitemap.xml', (req, res) => {
+  res.type('application/xml').sendFile(path.join(__dirname, 'sitemap.xml'));
+});
 
 // Load Seed Data
 let initialGalleryItems = [];
