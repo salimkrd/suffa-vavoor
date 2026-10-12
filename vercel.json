@@ -1,6 +1,21 @@
 {
   "cleanUrls": false,
   "trailingSlash": false,
+  "functions": {
+    "server.js": {
+      "includeFiles": [
+        "*.html",
+        "*.js",
+        "*.txt",
+        "*.xml",
+        "*.png",
+        "*.ico",
+        "*.webmanifest",
+        "admin/**",
+        "data/gallery.json"
+      ]
+    }
+  },
   "routes": [
     { "handle": "filesystem" },
     { "src": "/(.*)", "dest": "/index.html" }
