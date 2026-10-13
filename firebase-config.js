@@ -16,7 +16,7 @@ const firebaseConfig = {
   storageBucket: "suffa-vavoor-5d3cd.firebasestorage.app",
   messagingSenderId: "350648551215",
   appId: "1:350648551215:web:fad1ed0d1f57190f9683da",
-  measurementId: "G-CETB1Y1JMY"
+  measurementId: "G-DBGLLHQHMM"
 };
 
 // Initial 20 Curated Campus Gallery Items (Fast High-Res CDN / Firebase Storage format)
