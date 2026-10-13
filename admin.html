@@ -475,11 +475,9 @@
               </select>
               <select id="admissionsTrackFilter" onchange="filterAdmissionsDesk()" class="px-3 py-2 bg-white border border-slate-200 rounded-lg text-xs font-semibold text-slate-700 focus:outline-none shadow-2xs">
                 <option value="All">All Tracks</option>
-                <option value="Uloomul Qur’an">Uloomul Qur’an</option>
-                <option value="UGC-NET">UGC-NET / JRF</option>
-                <option value="Commerce">Commerce + Islamic</option>
-                <option value="Humanities">Humanities + Islamic</option>
-                <option value="General">General Consultation</option>
+                <option value="Science + Islamic Science">Science + Islamic Science</option>
+                <option value="Commerce + Islamic Science">Commerce + Islamic Science</option>
+                <option value="Humanities + Islamic Science">Humanities + Islamic Science</option>
               </select>
             </div>
           </div>
@@ -786,9 +784,9 @@
       <div>
         <label class="font-semibold text-slate-600 block mb-1">Track</label>
         <select id="wTrack" class="w-full p-2.5 border rounded-lg text-base sm:text-xs bg-white">
-          <option>Islamic Sciences &amp; Hadith</option>
-          <option>Sharia &amp; University Dual Degree</option>
-          <option>Tahfeez Advanced Halaqa</option>
+          <option value="Science + Islamic Science">Science + Islamic Science</option>
+          <option value="Commerce + Islamic Science">Commerce + Islamic Science</option>
+          <option value="Humanities + Islamic Science">Humanities + Islamic Science</option>
         </select>
       </div>
       <div class="flex flex-col-reverse sm:flex-row justify-end gap-2 pt-2 border-t">
@@ -1575,7 +1573,19 @@
 
         const matchQ = !q || name.includes(q) || phone.includes(q) || msg.includes(q) || track.includes(q);
         const matchStatus = (statusFilter === 'All') || (status === statusFilter);
-        const matchTrack = (trackFilter === 'All') || track.includes(trackFilter.toLowerCase());
+        let matchTrack = (trackFilter === 'All');
+        if (!matchTrack) {
+          const tf = trackFilter.toLowerCase();
+          if (tf.includes('science') && !tf.includes('commerce') && !tf.includes('humanities')) {
+            matchTrack = track.includes('science') && !track.includes('commerce') && !track.includes('humanities');
+          } else if (tf.includes('commerce')) {
+            matchTrack = track.includes('commerce');
+          } else if (tf.includes('humanities')) {
+            matchTrack = track.includes('humanities');
+          } else {
+            matchTrack = track.includes(tf);
+          }
+        }
 
         return matchQ && matchStatus && matchTrack;
       });
@@ -1611,6 +1621,16 @@
         const dateStr = item.timestampStr || formatEnquiryDate(item.timestamp || item.createdAt);
         const cleanPhone = (item.phone || '').replace(/[^0-9]/g, '');
 
+        let trackBadgeStyle = 'bg-slate-100 text-slate-800 border border-slate-200';
+        const trackLower = (item.track || '').toLowerCase();
+        if (trackLower.includes('science') && !trackLower.includes('commerce') && !trackLower.includes('humanities')) {
+          trackBadgeStyle = 'bg-blue-50 text-blue-800 border border-blue-200';
+        } else if (trackLower.includes('commerce')) {
+          trackBadgeStyle = 'bg-emerald-50 text-emerald-800 border border-emerald-200';
+        } else if (trackLower.includes('humanities')) {
+          trackBadgeStyle = 'bg-purple-50 text-purple-800 border border-purple-200';
+        }
+
         tr.innerHTML = `
           <td class="py-3 px-4">
             <p class="font-bold text-slate-900">${escapeHtml(item.name || 'Anonymous')}</p>
@@ -1624,7 +1644,7 @@
             </a>
           </td>
           <td class="py-3 px-4">
-            <span class="px-2 py-0.5 bg-blue-50 text-blue-800 rounded-full text-xs font-semibold inline-block">
+            <span class="px-2 py-0.5 rounded-full text-xs font-semibold inline-block ${trackBadgeStyle}">
               ${escapeHtml(item.track || 'General Consultation')}
             </span>
           </td>

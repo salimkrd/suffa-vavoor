@@ -949,7 +949,7 @@ window.SuffaFirebase = {
     }
 
     const normalizedPhone = this.normalizePhone(rawPhone);
-    const track = enquiryData.track || 'Integrated Islamic Sciences';
+    const track = (enquiryData.track || '').trim() || 'Science + Islamic Science';
     const message = (enquiryData.message || '').trim();
     const channel = enquiryData.channel || 'Public Web Form';
     const nowIso = new Date().toISOString();

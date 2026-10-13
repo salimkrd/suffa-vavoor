@@ -1247,12 +1247,11 @@
 
             <div>
               <label class="text-xs font-label text-slate-700 block mb-1.5 uppercase font-semibold tracking-wider">Program Track *</label>
-              <select id="enquiry-track" class="w-full h-11 sm:h-12 px-4 rounded-xl bg-white text-on-surface border border-slate-300 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm transition-all shadow-2xs">
-                <option value="Uloomul Qur’an & Da'wa Studies">Uloomul Qur’an & Da'wa Studies</option>
-                <option value="UGC-NET / JRF Mentorship Program">UGC-NET / JRF Mentorship Program</option>
-                <option value="Commerce Degree + Islamic Sciences">Commerce Degree + Islamic Sciences</option>
-                <option value="Humanities Degree + Islamic Sciences">Humanities Degree + Islamic Sciences</option>
-                <option value="General Campus Admission Consultation">General Campus Admission Consultation</option>
+              <select id="enquiry-track" required class="w-full h-11 sm:h-12 px-4 rounded-xl bg-white text-on-surface border border-slate-300 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm transition-all shadow-2xs">
+                <option value="" disabled selected>Select Your Program</option>
+                <option value="Science + Islamic Science">Science + Islamic Science</option>
+                <option value="Commerce + Islamic Science">Commerce + Islamic Science</option>
+                <option value="Humanities + Islamic Science">Humanities + Islamic Science</option>
               </select>
             </div>
 
@@ -2125,7 +2124,7 @@
 
       const name = (nameEl ? nameEl.value : '').trim();
       const phone = (phoneEl ? phoneEl.value : '').trim();
-      const track = trackEl ? trackEl.value : "Uloomul Qur’an & Da'wa Studies";
+      const track = (trackEl ? trackEl.value : '').trim();
       const msg = (msgEl ? msgEl.value : '').trim();
 
       if (!name || name.length < 2) {
@@ -2137,6 +2136,11 @@
       if (!phone || digits.length < 7) {
         showEnquiryToast('Please enter a valid contact phone number with at least 7 digits.', 'error');
         if (phoneEl) phoneEl.focus();
+        return;
+      }
+      if (!track) {
+        showEnquiryToast('Please select your preferred program track.', 'error');
+        if (trackEl) trackEl.focus();
         return;
       }
 
@@ -2183,7 +2187,7 @@
 
       const name = (nameEl ? nameEl.value : '').trim();
       const phone = (phoneEl ? phoneEl.value : '').trim();
-      const track = trackEl ? trackEl.value : "Uloomul Qur’an & Da'wa Studies";
+      const track = (trackEl ? trackEl.value : '').trim();
       const msg = (msgEl ? msgEl.value : '').trim();
 
       // Field validation
@@ -2196,6 +2200,11 @@
       if (!phone || digits.length < 7) {
         showEnquiryToast('Please enter a valid contact phone number with at least 7 digits.', 'error');
         if (phoneEl) phoneEl.focus();
+        return;
+      }
+      if (!track) {
+        showEnquiryToast('Please select your preferred program track.', 'error');
+        if (trackEl) trackEl.focus();
         return;
       }
 

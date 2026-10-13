@@ -562,7 +562,7 @@ app.post('/api/admissions/enquiry', (req, res) => {
 
   const normalizedPhone = normalizePhoneNumber(rawPhone);
   const sanitizedName = name.trim().slice(0, 100);
-  const selectedTrack = (track || 'Integrated Islamic Sciences').trim().slice(0, 100);
+  const selectedTrack = (track || 'Science + Islamic Science').trim().slice(0, 100);
   const sanitizedMsg = (message || '').trim().slice(0, 1000);
   const submissionChannel = (channel || 'Public Web Form').trim().slice(0, 50);
 
