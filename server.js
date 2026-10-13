@@ -21,11 +21,15 @@ const DATA_DIR = path.join(__dirname, 'data');
 const UPLOADS_DIR = path.join(__dirname, 'uploads');
 const GALLERY_FILE = path.join(DATA_DIR, 'gallery.json');
 
-if (!fs.existsSync(DATA_DIR)) {
-  fs.mkdirSync(DATA_DIR, { recursive: true });
-}
-if (!fs.existsSync(UPLOADS_DIR)) {
-  fs.mkdirSync(UPLOADS_DIR, { recursive: true });
+try {
+  if (!fs.existsSync(DATA_DIR)) {
+    fs.mkdirSync(DATA_DIR, { recursive: true });
+  }
+  if (!fs.existsSync(UPLOADS_DIR)) {
+    fs.mkdirSync(UPLOADS_DIR, { recursive: true });
+  }
+} catch (e) {
+  // Read-only serverless environment fallback
 }
 
 // Multer Storage Configuration for local file fallback
@@ -59,17 +63,24 @@ app.use(cors({
 app.use(express.json({ limit: '25mb' }));
 app.use(express.urlencoded({ extended: true, limit: '25mb' }));
 
-// Serve Uploads & Static Website Files
-app.use('/uploads', express.static(UPLOADS_DIR));
-app.use(express.static(__dirname, { index: false }));
-
+// Dedicated SEO Endpoints with standard MIME types and edge-cache headers
 app.get('/robots.txt', (req, res) => {
-  res.type('text/plain').sendFile(path.join(__dirname, 'robots.txt'));
+  res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+  res.setHeader('Cache-Control', 'public, max-age=3600, s-maxage=86400, stale-while-revalidate=86400');
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.sendFile(path.join(__dirname, 'robots.txt'));
 });
 
 app.get('/sitemap.xml', (req, res) => {
-  res.type('application/xml').sendFile(path.join(__dirname, 'sitemap.xml'));
+  res.setHeader('Content-Type', 'application/xml; charset=utf-8');
+  res.setHeader('Cache-Control', 'public, max-age=3600, s-maxage=86400, stale-while-revalidate=86400');
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.sendFile(path.join(__dirname, 'sitemap.xml'));
 });
+
+// Serve Uploads & Static Website Files
+app.use('/uploads', express.static(UPLOADS_DIR));
+app.use(express.static(__dirname, { index: false }));
 
 // Load Seed Data
 let initialGalleryItems = [];
