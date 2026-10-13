@@ -19,6 +19,9 @@
     });
   </script>
   
+  <!-- Search Engine Protection -->
+  <meta name="robots" content="noindex, nofollow">
+
   <!-- Favicon & Touch Icons -->
   <link rel="icon" type="image/x-icon" href="../favicon.ico">
   <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
@@ -824,7 +827,7 @@
       if (confirm("Log out from Ma'din Suffa administrative workspace?")) {
         localStorage.removeItem('suffa_auth');
         sessionStorage.removeItem('suffa_auth');
-        window.location.href = 'login.html';
+        window.location.href = '/login';
       }
     }
 

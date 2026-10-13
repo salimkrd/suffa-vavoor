@@ -18,12 +18,15 @@
     });
   </script>
   
+  <!-- Search Engine Protection -->
+  <meta name="robots" content="noindex, nofollow">
+
   <!-- Favicon & Touch Icons -->
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
-  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
-  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
-  <link rel="manifest" href="site.webmanifest">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
   <meta name="theme-color" content="#003e6b">
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -35,8 +38,8 @@
   <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-storage-compat.js"></script>
-  <script src="firebase-config.js"></script>
-  <script src="gallery-api.js"></script>
+  <script src="/firebase-config.js"></script>
+  <script src="/gallery-api.js"></script>
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
   <script id="tailwind-config">
     tailwind.config = {
@@ -143,7 +146,7 @@
         <span class="material-symbols-outlined text-[24px]">menu</span>
       </button>
 
-      <a href="index.html" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-primary-container flex items-center justify-center text-white shadow-sm ring-2 ring-primary/10 transition-transform hover:scale-105 shrink-0" title="View Public Website">
+      <a href="/" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-primary-container flex items-center justify-center text-white shadow-sm ring-2 ring-primary/10 transition-transform hover:scale-105 shrink-0" title="View Public Website">
         <span class="material-symbols-outlined text-[20px] sm:text-[22px]">account_balance</span>
       </a>
 
@@ -176,7 +179,7 @@
 
     <!-- Right Controls -->
     <div class="flex items-center gap-1.5 sm:gap-3 shrink-0">
-      <a class="inline-flex items-center gap-1 sm:gap-1.5 px-2.5 py-1.5 sm:px-3 sm:py-1.5 rounded-lg bg-secondary-fixed text-on-secondary-fixed hover:bg-blue-100 font-label-md text-xs font-semibold transition shadow-sm border border-secondary/15" href="index.html" target="_blank" title="View Public Website">
+      <a class="inline-flex items-center gap-1 sm:gap-1.5 px-2.5 py-1.5 sm:px-3 sm:py-1.5 rounded-lg bg-secondary-fixed text-on-secondary-fixed hover:bg-blue-100 font-label-md text-xs font-semibold transition shadow-sm border border-secondary/15" href="/" target="_blank" title="View Public Website">
         <span class="material-symbols-outlined text-[16px]">open_in_new</span>
         <span class="hidden md:inline">Public Website</span>
       </a>
@@ -244,7 +247,7 @@
             <span class="material-symbols-outlined text-[18px] text-slate-400">settings</span>
             <span>System Settings</span>
           </button>
-          <a href="index.html#gallery" target="_blank" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-xs font-semibold text-slate-700 hover:bg-slate-50 transition">
+          <a href="/#gallery" target="_blank" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-xs font-semibold text-slate-700 hover:bg-slate-50 transition">
             <span class="material-symbols-outlined text-[18px] text-slate-400">visibility</span>
             <span>Public Website</span>
           </a>
@@ -858,7 +861,7 @@
     function checkAdminSession() {
       const auth = sessionStorage.getItem('suffa_admin_auth') || localStorage.getItem('suffa_admin_auth') || localStorage.getItem('suffa_auth');
       if (!auth) {
-        window.location.href = 'login.html';
+        window.location.href = '/login';
         return null;
       }
       try {
@@ -879,7 +882,7 @@
       localStorage.removeItem('suffa_auth');
       showToast('Logged out of Admin Portal.');
       setTimeout(() => {
-        window.location.href = 'login.html';
+        window.location.href = '/login';
       }, 400);
     }
 

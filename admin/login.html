@@ -19,12 +19,15 @@
     });
   </script>
   
+  <!-- Search Engine Protection -->
+  <meta name="robots" content="noindex, nofollow">
+
   <!-- Favicon & Touch Icons -->
-  <link rel="icon" type="image/x-icon" href="../favicon.ico">
-  <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
-  <link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
-  <link rel="manifest" href="../site.webmanifest">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
   <meta name="theme-color" content="#003e6b">
   
   <!-- Google Fonts & Material Symbols -->
@@ -211,7 +214,7 @@
     <div class="lg:w-1/2 xl:w-7/12 bg-surface flex flex-col justify-between p-4 sm:p-8 md:p-12 lg:p-14 xl:p-18 overflow-y-auto min-h-screen relative">
       <!-- Top Utility Bar: Return to Website & Portal Build -->
       <div class="w-full flex items-center justify-between pb-4 sm:pb-6 border-b border-outline-variant/40">
-        <a class="inline-flex items-center gap-1.5 font-label-md text-xs sm:text-sm font-semibold text-slate-600 hover:text-slate-900 transition-colors duration-200 group" href="../index.html">
+        <a class="inline-flex items-center gap-1.5 font-label-md text-xs sm:text-sm font-semibold text-slate-600 hover:text-slate-900 transition-colors duration-200 group" href="/">
           <span class="material-symbols-outlined text-[18px] sm:text-[20px] transition-transform duration-200 group-hover:-translate-x-1 text-slate-600 group-hover:text-slate-900">arrow_back</span>
           <span class="hidden sm:inline">Return to Public Website</span>
           <span class="sm:hidden">Public Website</span>
@@ -395,12 +398,12 @@
         }
 
         // Determine destination based on role
-        let targetPage = '../admin.html';
+        let targetPage = '/admin';
         if (activeRole === 'admissions' || idInput.includes('admissions')) {
           targetPage = 'admissions.html';
           activeRoleName = 'Admissions Registrar';
         } else if (activeRole === 'super' || idInput.includes('admin@')) {
-          targetPage = '../admin.html';
+          targetPage = '/admin';
           activeRoleName = 'Super Administrator';
         }
 

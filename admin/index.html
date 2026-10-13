@@ -17,32 +17,23 @@
     });
   </script>
   
+  <!-- Search Engine Protection -->
+  <meta name="robots" content="noindex, nofollow">
+
   <!-- Favicon & Touch Icons -->
-  <link rel="icon" type="image/x-icon" href="../favicon.ico">
-  <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
-  <link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
-  <link rel="manifest" href="../site.webmanifest">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
   <meta name="theme-color" content="#003e6b">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700&display=swap" rel="stylesheet">
   <script>
-    // Route to appropriate workspace based on authentication
+    // Route to canonical Admin Dashboard
     (function() {
-      const auth = localStorage.getItem('suffa_auth') || sessionStorage.getItem('suffa_auth');
-      if (auth) {
-        try {
-          const user = JSON.parse(auth);
-          if (user.role === 'admissions') {
-            window.location.replace('admissions.html');
-            return;
-          }
-          window.location.replace('gallery.html');
-          return;
-        } catch(e) {}
-      }
-      window.location.replace('login.html');
+      window.location.replace('/admin');
     })();
   </script>
 </head>

@@ -8,6 +8,55 @@
   },
   "routes": [
     {
+      "src": "^/admin\\.html$",
+      "status": 308,
+      "headers": {
+        "Location": "/admin"
+      }
+    },
+    {
+      "src": "^/login\\.html$",
+      "status": 308,
+      "headers": {
+        "Location": "/login"
+      }
+    },
+    {
+      "src": "^/admin/$",
+      "status": 308,
+      "headers": {
+        "Location": "/admin"
+      }
+    },
+    {
+      "src": "^/login/$",
+      "status": 308,
+      "headers": {
+        "Location": "/login"
+      }
+    },
+    {
+      "src": "^/admin/index\\.html$",
+      "status": 308,
+      "headers": {
+        "Location": "/admin"
+      }
+    },
+    {
+      "src": "^/admin$",
+      "headers": {
+        "X-Robots-Tag": "noindex, nofollow"
+      },
+      "dest": "/server.js"
+    },
+    {
+      "src": "^/login$",
+      "headers": {
+        "X-Robots-Tag": "noindex, nofollow"
+      },
+      "dest": "/server.js"
+    },
+    {
       "src": "^/sitemap\\.xml$",
       "headers": {
         "Content-Type": "application/xml; charset=utf-8",

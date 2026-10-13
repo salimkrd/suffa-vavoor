@@ -78,7 +78,43 @@ app.get('/sitemap.xml', (req, res) => {
   res.sendFile(path.join(__dirname, 'sitemap.xml'));
 });
 
-// Serve Uploads & Static Website Files
+// Middleware for Clean URLs & Canonical Permanent 308 Redirects
+// Intercepts before static middleware to avoid directory and index routing conflicts
+app.use((req, res, next) => {
+  const parsedUrl = new URL(req.url, 'http://localhost');
+  const pathname = parsedUrl.pathname;
+  const search = parsedUrl.search; // preserves ?query=string if present
+
+  // 308 redirect from legacy /admin.html, /admin/, or /admin/index.html to canonical /admin
+  if (pathname === '/admin.html' || pathname === '/admin/' || pathname === '/admin/index.html') {
+    return res.redirect(308, `/admin${search}`);
+  }
+
+  // 308 redirect from legacy /login.html or /login/ to canonical /login
+  if (pathname === '/login.html' || pathname === '/login/') {
+    return res.redirect(308, `/login${search}`);
+  }
+
+  next();
+});
+
+// Canonical Admin Dashboard Route (/admin)
+app.get('/admin', (req, res) => {
+  res.setHeader('Content-Type', 'text/html; charset=utf-8');
+  res.setHeader('X-Robots-Tag', 'noindex, nofollow');
+  res.setHeader('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+  res.sendFile(path.join(__dirname, 'admin.html'));
+});
+
+// Canonical Admin Login Route (/login)
+app.get('/login', (req, res) => {
+  res.setHeader('Content-Type', 'text/html; charset=utf-8');
+  res.setHeader('X-Robots-Tag', 'noindex, nofollow');
+  res.setHeader('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+  res.sendFile(path.join(__dirname, 'login.html'));
+});
+
+// Serve Uploads & Static Website Files (including nested /admin/* pages)
 app.use('/uploads', express.static(UPLOADS_DIR));
 app.use(express.static(__dirname, { index: false }));
 
@@ -450,15 +486,20 @@ app.get('/', (req, res) => {
 });
 
 // Start Server
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`=======================================================`);
-  console.log(` Ma'din Suffa Campus - Shared Backend & Gallery API`);
-  console.log(` Server running on http://127.0.0.1:${PORT}`);
-  console.log(` Image Storage:     Firebase Storage + Local Cache`);
-  console.log(` Public Website:    http://127.0.0.1:${PORT}/index.html`);
-  console.log(` Admin Portal:      http://127.0.0.1:${PORT}/admin.html`);
-  console.log(` Gallery API:       http://127.0.0.1:${PORT}/api/gallery`);
-  console.log(` Uploads Directory: http://127.0.0.1:${PORT}/uploads/`);
-  console.log(` CORS:              Enabled for all origins`);
-  console.log(`=======================================================`);
-});
+if (process.env.NODE_ENV !== 'test') {
+  app.listen(PORT, '0.0.0.0', () => {
+    console.log(`=======================================================`);
+    console.log(` Ma'din Suffa Campus - Shared Backend & Gallery API`);
+    console.log(` Server running on http://127.0.0.1:${PORT}`);
+    console.log(` Image Storage:     Firebase Storage + Local Cache`);
+    console.log(` Public Website:    http://127.0.0.1:${PORT}/`);
+    console.log(` Admin Portal:      http://127.0.0.1:${PORT}/admin`);
+    console.log(` Admin Login:       http://127.0.0.1:${PORT}/login`);
+    console.log(` Gallery API:       http://127.0.0.1:${PORT}/api/gallery`);
+    console.log(` Uploads Directory: http://127.0.0.1:${PORT}/uploads/`);
+    console.log(` CORS:              Enabled for all origins`);
+    console.log(`=======================================================`);
+  });
+}
+
+module.exports = app;
