@@ -4,6 +4,40 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport">
   <meta content="mobile_tab" name="shell-type">
+
+  <!-- Google tag (gtag.js) - Google Analytics 4 -->
+  <link rel="preconnect" href="https://www.googletagmanager.com">
+  <link rel="dns-prefetch" href="https://www.googletagmanager.com">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-CETB1Y1JMY"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    // Google Consent Mode v2 (Default state based on saved visitor preference)
+    var initialAnalyticsConsent = 'granted';
+    try {
+      var savedConsent = localStorage.getItem('suffa_cookie_consent');
+      if (savedConsent === 'denied') {
+        initialAnalyticsConsent = 'denied';
+      }
+    } catch (e) {}
+
+    gtag('consent', 'default', {
+      'analytics_storage': initialAnalyticsConsent,
+      'ad_storage': 'denied',
+      'ad_user_data': 'denied',
+      'ad_personalization': 'denied'
+    });
+
+    // Configure Measurement ID G-CETB1Y1JMY
+    gtag('config', 'G-CETB1Y1JMY', {
+      send_page_view: true,
+      page_title: document.title,
+      page_location: window.location.href
+    });
+  </script>
+
   <meta name="description" content="Discover Ma'din Suffa Campus Vavoor, an educational campus for Huffaz under Ma'din Academy, combining Islamic learning, academics, skills and leadership.">
   <meta name="robots" content="index, follow, max-image-preview:large">
   <link rel="canonical" href="https://suffavavoor.online/">
@@ -167,9 +201,8 @@
     }
   </style>
 
-  <!-- Firebase SDK (v10.14.0 Compat - App, Analytics, Firestore & Storage) -->
+  <!-- Firebase SDK (v10.14.0 Compat - App, Firestore & Storage) -->
   <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-analytics-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-storage-compat.js"></script>
   <script src="firebase-config.js"></script>
@@ -1302,6 +1335,8 @@
         <div class="pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left text-xs text-slate-400">
           <span>© 2026 Ma'din Suffa Campus. All Rights Reserved.</span>
           <div class="flex items-center gap-3">
+            <button onclick="openPrivacyModal()" class="hover:text-white underline transition-colors cursor-pointer" aria-label="Open Privacy and Cookie Policy">Privacy &amp; Cookie Policy</button>
+            <span class="text-white/20">•</span>
             <span>Affiliated with Jamiathul Hind Al Islamiyya (INS7572)</span>
           </div>
         </div>
@@ -1461,6 +1496,118 @@
           </a>
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- CAMPUS PRIVACY POLICY & ANALYTICS NOTICE MODAL -->
+  <div id="privacy-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-3 sm:p-5" onclick="if(event.target===this) closePrivacyModal();">
+    <div class="bg-surface rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl border border-slate-200 flex flex-col">
+      <!-- Modal Header -->
+      <div class="p-5 sm:p-6 bg-primary-deep text-white rounded-t-3xl flex items-center justify-between sticky top-0 z-10">
+        <div class="flex items-center gap-3.5">
+          <div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center text-tertiary-accent">
+            <span class="material-symbols-outlined text-[24px]">policy</span>
+          </div>
+          <div>
+            <h3 class="font-headline text-lg sm:text-xl font-bold text-white tracking-tight">Privacy Notice &amp; Analytics Policy</h3>
+            <span class="text-xs text-tertiary-accent font-label font-medium">Ma'din Suffa Campus Vavoor (Affiliated: INS7572)</span>
+          </div>
+        </div>
+        <button onclick="closePrivacyModal()" class="w-9 h-9 rounded-xl bg-white/10 hover:bg-white/20 active:scale-95 text-white flex items-center justify-center transition-all" aria-label="Close modal">
+          <span class="material-symbols-outlined text-[20px]">close</span>
+        </button>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="p-5 sm:p-6 flex flex-col gap-5 text-on-surface text-sm">
+        <div class="border-b border-slate-200 pb-4">
+          <h4 class="font-headline text-base sm:text-lg font-bold text-primary-dark">Commitment to Visitor Privacy</h4>
+          <p class="text-slate-600 text-xs sm:text-sm mt-1.5 leading-relaxed">
+            Ma'din Suffa Campus Vavoor respects and protects your digital privacy. This notice outlines how website visitor metrics and admissions data are handled across <strong>https://suffavavoor.online</strong>.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div class="p-4 bg-slate-50/80 rounded-2xl border border-slate-200/80">
+            <h5 class="font-bold text-primary text-xs uppercase font-label tracking-wider flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-[16px]">analytics</span>
+              <span>Google Analytics 4</span>
+            </h5>
+            <p class="text-slate-600 text-xs mt-2 leading-relaxed">
+              We employ Google Analytics 4 (Measurement ID: <code class="bg-slate-200 px-1 py-0.5 rounded font-mono text-[11px] text-slate-800">G-CETB1Y1JMY</code>) through the official <code class="text-slate-700 font-mono text-[11px]">gtag.js</code> library to measure aggregated page views, device types, session duration, and navigation flow to enhance our academic portal.
+            </p>
+          </div>
+          <div class="p-4 bg-slate-50/80 rounded-2xl border border-slate-200/80">
+            <h5 class="font-bold text-tertiary-dark text-xs uppercase font-label tracking-wider flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-[16px]">cookie</span>
+              <span>Cookie Usage</span>
+            </h5>
+            <p class="text-slate-600 text-xs mt-2 leading-relaxed">
+              Google Analytics sets first-party cookies (<code class="bg-slate-200 px-1 py-0.5 rounded font-mono text-[11px] text-slate-800">_ga</code>, <code class="bg-slate-200 px-1 py-0.5 rounded font-mono text-[11px] text-slate-800">_ga_CETB1Y1JMY</code>) to distinguish visitor sessions anonymously. IP anonymization is active by default.
+            </p>
+          </div>
+        </div>
+
+        <div class="p-4 sm:p-5 rounded-2xl bg-secondary-light/40 border border-secondary/20 flex flex-col gap-2">
+          <h5 class="font-bold text-primary-dark text-xs uppercase font-label tracking-wider flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-[16px]">shield</span>
+            <span>Admissions Inquiry Handling</span>
+          </h5>
+          <p class="text-xs sm:text-sm text-slate-700 leading-relaxed">
+            Personal details provided through our admissions desk or WhatsApp form (name, contact phone, program selection, message) are utilized exclusively by the Suffa Campus Admissions Committee and are never disclosed, rented, or transferred to third parties.
+          </p>
+        </div>
+
+        <div class="p-4 bg-slate-50/90 rounded-2xl border border-slate-200 flex flex-col gap-2.5">
+          <h5 class="font-bold text-slate-800 text-xs uppercase font-label tracking-wider">Your Analytics Consent Preference</h5>
+          <p class="text-xs text-slate-600">
+            You may adjust your analytics tracking preference at any time. Your selection is remembered on this browser.
+          </p>
+          <div class="flex flex-wrap items-center gap-3 pt-1">
+            <button onclick="updateConsentStatus('granted')" class="h-9 px-4 rounded-xl bg-primary hover:bg-primary-dark active:scale-95 text-white text-xs font-label font-bold transition-all shadow-xs cursor-pointer">
+              Grant Analytics Consent
+            </button>
+            <button onclick="updateConsentStatus('denied')" class="h-9 px-4 rounded-xl bg-slate-200 hover:bg-slate-300 active:scale-95 text-slate-700 text-xs font-label font-bold transition-all cursor-pointer">
+              Deny Analytics
+            </button>
+            <span id="consent-current-badge" class="text-xs text-slate-500 font-label ml-auto"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="p-4 sm:p-5 bg-slate-50 border-t border-slate-200 rounded-b-3xl flex items-center justify-between sticky bottom-0">
+        <span class="text-xs text-slate-500 font-label">Measurement ID: G-CETB1Y1JMY</span>
+        <button onclick="closePrivacyModal()" class="h-10 px-5 bg-primary hover:bg-primary-dark active:scale-95 text-white rounded-xl font-label text-xs sm:text-sm font-bold flex items-center justify-center transition-all shadow-sm cursor-pointer">
+          <span>Close Notice</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- COOKIE & PRIVACY CONSENT BANNER -->
+  <div id="cookie-consent-banner" class="fixed bottom-18 md:bottom-5 left-4 right-4 md:left-auto md:right-5 max-w-lg z-50 bg-surface/98 backdrop-blur-md rounded-2xl p-4 border border-slate-200 shadow-2xl transition-all duration-300 hidden">
+    <div class="flex items-start gap-3">
+      <div class="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0 mt-0.5">
+        <span class="material-symbols-outlined text-[20px]">cookie</span>
+      </div>
+      <div class="flex flex-col gap-2 flex-1">
+        <p class="text-xs text-slate-700 leading-relaxed">
+          We use Google Analytics to measure visitor activity and improve campus services. Review our
+          <button onclick="openPrivacyModal()" class="text-primary font-bold underline hover:text-primary-dark cursor-pointer">Privacy &amp; Cookie Policy</button>.
+        </p>
+        <div class="flex items-center gap-2 pt-0.5">
+          <button onclick="acceptCookieConsent()" class="h-8 px-3.5 rounded-lg bg-primary hover:bg-primary-dark text-white text-xs font-label font-semibold shadow-2xs active:scale-95 transition-all cursor-pointer">
+            Accept
+          </button>
+          <button onclick="declineCookieConsent()" class="h-8 px-3.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-label font-medium active:scale-95 transition-all cursor-pointer">
+            Decline
+          </button>
+        </div>
+      </div>
+      <button onclick="dismissCookieBanner()" class="text-slate-400 hover:text-slate-600 p-1 rounded-lg cursor-pointer" aria-label="Dismiss banner">
+        <span class="material-symbols-outlined text-[18px]">close</span>
+      </button>
     </div>
   </div>
 
@@ -1713,6 +1860,14 @@
       document.getElementById('lightbox-modal').classList.remove('hidden');
       document.body.style.overflow = 'hidden';
       isGalleryLightboxOpen = true;
+
+      if (typeof window.gtag === 'function' && galleryItems[index]) {
+        window.gtag('event', 'select_content', {
+          content_type: 'image',
+          item_id: galleryItems[index].id || String(index),
+          item_name: galleryItems[index].title || 'Campus Capture'
+        });
+      }
     }
 
     function openSingleLightbox(src, title, desc) {
@@ -1900,32 +2055,48 @@
     }
 
 
-    // Keyboard navigation for Lightbox
+    // Keyboard navigation for Modals & Lightbox
     window.addEventListener('keydown', (e) => {
       const modal = document.getElementById('lightbox-modal');
-      if (!modal.classList.contains('hidden')) {
+      if (modal && !modal.classList.contains('hidden')) {
         if (e.key === 'Escape') closeLightbox();
         if (e.key === 'ArrowLeft') prevLightboxImage();
         if (e.key === 'ArrowRight') nextLightboxImage();
       }
       const prospectus = document.getElementById('prospectus-modal');
-      if (!prospectus.classList.contains('hidden') && e.key === 'Escape') {
+      if (prospectus && !prospectus.classList.contains('hidden') && e.key === 'Escape') {
         closeProspectusModal();
+      }
+      const privacyModal = document.getElementById('privacy-modal');
+      if (privacyModal && !privacyModal.classList.contains('hidden') && e.key === 'Escape') {
+        closePrivacyModal();
       }
     });
 
-    // Prospectus Modal Functions
+    // Prospectus Modal Functions (Tracked in GA4)
     function openProspectusModal() {
-      document.getElementById('prospectus-modal').classList.remove('hidden');
-      document.body.style.overflow = 'hidden';
+      const modal = document.getElementById('prospectus-modal');
+      if (modal) {
+        modal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+        if (typeof window.suffaTrackPageView === 'function') {
+          window.suffaTrackPageView('#prospectus', "Campus Academic Prospectus | Ma'din Suffa Campus");
+        }
+      }
     }
 
     function closeProspectusModal() {
-      document.getElementById('prospectus-modal').classList.add('hidden');
-      document.body.style.overflow = '';
+      const modal = document.getElementById('prospectus-modal');
+      if (modal) {
+        modal.classList.add('hidden');
+        document.body.style.overflow = '';
+        if (typeof window.suffaTrackPageView === 'function') {
+          window.suffaTrackPageView(window.location.hash || '#home');
+        }
+      }
     }
 
-    // Enquiry WhatsApp & Firebase Handler
+    // Enquiry WhatsApp & Firebase Handler (Tracked in GA4)
     function handleEnquirySubmit(e) {
       e.preventDefault();
       const name = document.getElementById('enquiry-name').value.trim();
@@ -1948,6 +2119,15 @@
           channel: 'WhatsApp & Web Form'
         });
         window.SuffaFirebase.logEvent('admission_enquiry_submitted', { track: track });
+      }
+
+      // Track Standard GA4 Lead Event
+      if (typeof window.gtag === 'function') {
+        window.gtag('event', 'generate_lead', {
+          event_category: 'Admissions',
+          event_label: track,
+          channel: 'WhatsApp & Web Form'
+        });
       }
 
       const text = `Assalamu Alaikum.%0A%0A*ADMISSION ENQUIRY - MA'DIN SUFFA CAMPUS VAVOOR*%0A------------------------------------%0A*Applicant/Guardian:* ${encodeURIComponent(name)}%0A*Phone:* ${encodeURIComponent(phone)}%0A*Program Track:* ${encodeURIComponent(track)}%0A${msg ? `*Message:* ${encodeURIComponent(msg)}%0A` : ''}*Affiliation:* Jamiathul Hind Al Islamiyya (INS7572)%0A------------------------------------%0APlease provide course details and the entrance interview schedule.`;
@@ -1982,10 +2162,177 @@
         window.SuffaFirebase.logEvent('admission_direct_desk_submitted', { track: track });
       }
 
+      // Track Standard GA4 Lead Event
+      if (typeof window.gtag === 'function') {
+        window.gtag('event', 'generate_lead', {
+          event_category: 'Admissions',
+          event_label: track,
+          channel: 'Admissions Desk Direct'
+        });
+      }
+
       const toast = document.getElementById('enquiry-toast');
       document.getElementById('toast-message').innerText = `✓ Thank you, ${name}. Your admission inquiry has been synced with the Admissions Desk. We will contact you at ${phone}.`;
       toast.classList.remove('hidden');
       document.getElementById('enquiry-form').reset();
+    }
+
+    // ==============================================================
+    // GOOGLE ANALYTICS 4 (GA4) CLIENT-SIDE NAVIGATION TRACKER
+    // Measurement ID: G-CETB1Y1JMY
+    // ==============================================================
+    const SECTION_TITLES = {
+      '': "Ma'din Suffa Campus Vavoor | Suffa Campus",
+      '#home': "Ma'din Suffa Campus Vavoor | University Home",
+      '#about': "About Ma'din Suffa Campus | Institutional Overview",
+      '#legacy-stats': "Academic Highlights & Legacy | Ma'din Suffa Campus",
+      '#programs': "Academic Programs & Coaching | Ma'din Suffa Campus",
+      '#life-at-campus': "Life at Our Campus | Ma'din Suffa Campus",
+      '#gallery': "Campus Archives & Gallery | Ma'din Suffa Campus",
+      '#competencies': "Scholarly Values & Competencies | Ma'din Suffa Campus",
+      '#admissions': "Single Window Admissions | Ma'din Suffa Campus",
+      '#contact': "Contact Directory & Campus Desk | Ma'din Suffa Campus",
+      '#prospectus': "Campus Academic Prospectus | Ma'din Suffa Campus",
+      '#privacy-policy': "Privacy Notice & Analytics Policy | Ma'din Suffa Campus"
+    };
+
+    let lastTrackedPath = window.location.pathname + (window.location.hash || '');
+    let navDebounceTimer = null;
+
+    function trackClientNavigation(targetHash, customTitle) {
+      if (typeof window.gtag !== 'function') return;
+      const cleanHash = targetHash || '';
+      const newPath = window.location.pathname + cleanHash;
+
+      // Prevent duplicate page_view events for the same path
+      if (newPath === lastTrackedPath) return;
+      lastTrackedPath = newPath;
+
+      const pageTitle = customTitle || SECTION_TITLES[cleanHash] || document.title;
+
+      window.gtag('event', 'page_view', {
+        page_title: pageTitle,
+        page_location: window.location.origin + newPath,
+        page_path: newPath
+      });
+    }
+
+    window.suffaTrackPageView = trackClientNavigation;
+
+    // Track hash changes across on-page navigation
+    window.addEventListener('hashchange', () => {
+      clearTimeout(navDebounceTimer);
+      navDebounceTimer = setTimeout(() => {
+        trackClientNavigation(window.location.hash);
+      }, 150);
+    });
+
+    // Track anchor navigation clicks
+    document.addEventListener('click', (e) => {
+      const anchor = e.target.closest('a[href^="#"]');
+      if (anchor) {
+        const hash = anchor.getAttribute('href');
+        if (hash && hash !== '#') {
+          trackClientNavigation(hash);
+        }
+      }
+    });
+
+    // ==============================================================
+    // PRIVACY POLICY & CONSENT HANDLING (Google Consent Mode v2)
+    // ==============================================================
+    function checkCookieConsent() {
+      try {
+        const consent = localStorage.getItem('suffa_cookie_consent');
+        if (!consent) {
+          const banner = document.getElementById('cookie-consent-banner');
+          if (banner) banner.classList.remove('hidden');
+        }
+      } catch (e) {}
+    }
+
+    function acceptCookieConsent() {
+      try {
+        localStorage.setItem('suffa_cookie_consent', 'granted');
+        if (typeof window.gtag === 'function') {
+          window.gtag('consent', 'update', {
+            'analytics_storage': 'granted'
+          });
+        }
+      } catch (e) {}
+      dismissCookieBanner();
+      updateConsentBadge();
+    }
+
+    function declineCookieConsent() {
+      try {
+        localStorage.setItem('suffa_cookie_consent', 'denied');
+        if (typeof window.gtag === 'function') {
+          window.gtag('consent', 'update', {
+            'analytics_storage': 'denied'
+          });
+        }
+      } catch (e) {}
+      dismissCookieBanner();
+      updateConsentBadge();
+    }
+
+    function dismissCookieBanner() {
+      const banner = document.getElementById('cookie-consent-banner');
+      if (banner) banner.classList.add('hidden');
+    }
+
+    function openPrivacyModal() {
+      const modal = document.getElementById('privacy-modal');
+      if (modal) {
+        modal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+        updateConsentBadge();
+        if (typeof window.suffaTrackPageView === 'function') {
+          window.suffaTrackPageView('#privacy-policy', "Privacy Notice & Analytics Policy | Ma'din Suffa Campus");
+        }
+      }
+    }
+
+    function closePrivacyModal() {
+      const modal = document.getElementById('privacy-modal');
+      if (modal) {
+        modal.classList.add('hidden');
+        document.body.style.overflow = '';
+      }
+    }
+
+    function updateConsentStatus(status) {
+      if (status === 'granted') {
+        acceptCookieConsent();
+      } else {
+        declineCookieConsent();
+      }
+    }
+
+    function updateConsentBadge() {
+      const badge = document.getElementById('consent-current-badge');
+      if (!badge) return;
+      try {
+        const consent = localStorage.getItem('suffa_cookie_consent');
+        if (consent === 'granted') {
+          badge.textContent = 'Status: Analytics Granted ✓';
+          badge.className = 'text-xs text-emerald-600 font-label font-bold ml-auto';
+        } else if (consent === 'denied') {
+          badge.textContent = 'Status: Analytics Denied ✗';
+          badge.className = 'text-xs text-red-500 font-label font-bold ml-auto';
+        } else {
+          badge.textContent = 'Status: Default Granted';
+          badge.className = 'text-xs text-slate-500 font-label ml-auto';
+        }
+      } catch (e) {}
+    }
+
+    // Initialize consent check on page load
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', checkCookieConsent);
+    } else {
+      checkCookieConsent();
     }
 
     // Back to top button visibility
