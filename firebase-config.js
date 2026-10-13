@@ -916,47 +916,302 @@ window.SuffaFirebase = {
   },
 
   // =========================================================================
-  // ADMISSIONS ENQUIRIES (Preserved Exactly)
+  // ADMISSIONS ENQUIRIES (Live Firebase Firestore & Secure API Sync)
   // =========================================================================
 
+  normalizePhone: function(rawPhone) {
+    if (!rawPhone || typeof rawPhone !== 'string') return '';
+    const cleaned = rawPhone.replace(/[^\d+]/g, '').trim();
+    const digitsOnly = rawPhone.replace(/\D/g, '');
+    if (digitsOnly.length === 10) {
+      return `+91 ${digitsOnly.slice(0, 5)} ${digitsOnly.slice(5)}`;
+    } else if (digitsOnly.length === 12 && digitsOnly.startsWith('91')) {
+      return `+91 ${digitsOnly.slice(2, 7)} ${digitsOnly.slice(7)}`;
+    }
+    return cleaned || rawPhone.trim();
+  },
+
+  /**
+   * Save a new admission enquiry securely to Firebase Firestore
+   * Supports server-generated timestamp, validation, and API fallback
+   */
   saveEnquiry: async function(enquiryData) {
+    this.init();
+    const name = (enquiryData.name || '').trim();
+    const rawPhone = (enquiryData.phone || '').trim();
+    const digits = rawPhone.replace(/\D/g, '');
+
+    if (!name || name.length < 2) {
+      throw new Error('Please enter a valid applicant or guardian name.');
+    }
+    if (digits.length < 7) {
+      throw new Error('Please enter a valid contact phone number with at least 7 digits.');
+    }
+
+    const normalizedPhone = this.normalizePhone(rawPhone);
+    const track = enquiryData.track || 'Integrated Islamic Sciences';
+    const message = (enquiryData.message || '').trim();
+    const channel = enquiryData.channel || 'Public Web Form';
+    const nowIso = new Date().toISOString();
+    const nowKolkata = new Date().toLocaleString('en-US', { timeZone: 'Asia/Kolkata' });
+
     const payload = {
-      name: enquiryData.name || '',
-      phone: enquiryData.phone || '',
-      track: enquiryData.track || 'Integrated Islamic Sciences',
-      message: enquiryData.message || '',
-      channel: enquiryData.channel || 'Public Web Form',
-      status: enquiryData.status || 'New Enquiry',
+      name: name,
+      phone: normalizedPhone,
+      track: track,
+      message: message,
+      channel: channel,
+      status: 'New Enquiry',
       centreCode: 'INS7572',
-      campus: 'Ma\'din Suffa Campus Vavoor',
-      createdAt: firebase && firebase.firestore ? firebase.firestore.FieldValue.serverTimestamp() : new Date().toISOString(),
-      timestampStr: new Date().toLocaleString('en-US', { timeZone: 'Asia/Kolkata' })
+      campus: "Ma'din Suffa Campus Vavoor",
+      deleted: false,
+      deletedAt: null,
+      deletedBy: null,
+      createdAt: typeof firebase !== 'undefined' && firebase.firestore ? firebase.firestore.FieldValue.serverTimestamp() : nowIso,
+      createdAtMillis: Date.now(),
+      timestampStr: nowKolkata
     };
 
+    // 1. Primary: Save directly to Firebase Firestore
     if (this.db) {
       try {
         const docRef = await this.db.collection('admissions_enquiries').add(payload);
         this.logEvent('admission_enquiry_recorded', { track: payload.track });
-        return { success: true, id: docRef.id };
-      } catch (err) {
-        console.warn("Firestore write error, saving to local fallback:", err);
+        
+        // Log to audit collection
+        this.recordAuditLog({
+          action: 'ENQUIRY_CREATED',
+          description: `New admission enquiry received for "${name}" (${track})`,
+          actor: 'Public Visitor',
+          targetId: docRef.id,
+          targetName: name
+        });
+
+        return { success: true, id: docRef.id, enquiry: { id: docRef.id, ...payload } };
+      } catch (firestoreErr) {
+        console.warn("Firestore client write error, attempting server endpoint fallback:", firestoreErr.message);
       }
     }
 
+    // 2. Secondary: Fallback to production server API endpoint
     try {
-      const local = JSON.parse(localStorage.getItem('suffa_local_enquiries') || '[]');
-      local.unshift(payload);
-      localStorage.setItem('suffa_local_enquiries', JSON.stringify(local.slice(0, 100)));
-      return { success: true, isLocal: true };
-    } catch (e) {
-      return { success: false, error: e };
+      const res = await fetch('/api/admissions/enquiry', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, phone: normalizedPhone, track, message, channel })
+      });
+      if (res.ok) {
+        const data = await res.json();
+        return { success: true, id: data.id, enquiry: data.enquiry };
+      }
+      const errData = await res.json().catch(() => ({}));
+      throw new Error(errData.message || 'Server error while recording admission inquiry.');
+    } catch (apiErr) {
+      console.error("Admissions write error:", apiErr);
+      throw new Error(apiErr.message || 'Unable to connect to Admissions Desk. Please try again or message us on WhatsApp.');
     }
   },
 
-  onEnquiriesUpdate: function(callback) {
+  /**
+   * Subscribe to live enquiries from Firebase Firestore in real-time
+   * Automatically filters out soft-deleted records and sorts newest first
+   */
+  subscribeEnquiries: function(callback, onError) {
+    this.init();
+    let hasReturnedSnapshot = false;
+
     if (this.db) {
       try {
-        return this.db.collection('admissions_enquiries')
+        const unsubscribe = this.db.collection('admissions_enquiries')
+          .onSnapshot(snapshot => {
+            hasReturnedSnapshot = true;
+            const list = [];
+            snapshot.forEach(doc => {
+              const data = doc.data();
+              if (data.deleted !== true && data.status !== 'Deleted') {
+                list.push({ id: doc.id, ...data });
+              }
+            });
+
+            // Sort newest first: using createdAtMillis or createdAt timestamp
+            list.sort((a, b) => {
+              const timeA = a.createdAtMillis || (a.createdAt && a.createdAt.toMillis ? a.createdAt.toMillis() : new Date(a.createdAt || 0).getTime());
+              const timeB = b.createdAtMillis || (b.createdAt && b.createdAt.toMillis ? b.createdAt.toMillis() : new Date(b.createdAt || 0).getTime());
+              return timeB - timeA;
+            });
+
+            callback(list);
+          }, error => {
+            console.warn("Firestore snapshot listener error, falling back to API poll:", error.message);
+            if (onError) onError(error);
+            this.fetchServerEnquiries(callback);
+          });
+
+        return unsubscribe;
+      } catch (err) {
+        console.warn("Firestore subscription failed, falling back to API:", err);
+      }
+    }
+
+    // Fallback: API fetch
+    this.fetchServerEnquiries(callback);
+    const pollTimer = setInterval(() => this.fetchServerEnquiries(callback), 8000);
+    return () => clearInterval(pollTimer);
+  },
+
+  // Backward compatibility alias for subscribeEnquiries
+  onEnquiriesUpdate: function(callback) {
+    return this.subscribeEnquiries(callback);
+  },
+
+  /**
+   * Fetch enquiries from production server API fallback
+   */
+  fetchServerEnquiries: async function(callback) {
+    try {
+      const res = await fetch('/api/admissions/enquiries');
+      if (res.ok) {
+        const data = await res.json();
+        callback(data.enquiries || []);
+      }
+    } catch (e) {
+      callback([]);
+    }
+  },
+
+  /**
+   * Update enquiry admission status in Firebase Firestore
+   */
+  updateEnquiryStatus: async function(id, newStatus, adminInfo = {}) {
+    this.init();
+    const adminName = adminInfo.name || adminInfo.identifier || 'Administrator';
+    const nowIso = new Date().toISOString();
+
+    // 1. Try Firebase Firestore
+    if (this.db) {
+      try {
+        await this.db.collection('admissions_enquiries').doc(id).update({
+          status: newStatus,
+          updatedAt: typeof firebase !== 'undefined' && firebase.firestore ? firebase.firestore.FieldValue.serverTimestamp() : nowIso,
+          updatedBy: adminName
+        });
+
+        this.recordAuditLog({
+          action: 'ENQUIRY_STATUS_UPDATED',
+          description: `Admission status updated to "${newStatus}"`,
+          actor: adminName,
+          targetId: id
+        });
+
+        return { success: true };
+      } catch (err) {
+        console.warn("Firestore status update error, trying API fallback:", err.message);
+      }
+    }
+
+    // 2. Try Server API fallback
+    try {
+      const res = await fetch(`/api/admissions/enquiries/${encodeURIComponent(id)}/status`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: newStatus, adminInfo })
+      });
+      return res.ok ? { success: true } : { success: false };
+    } catch (e) {
+      return { success: false, error: e.message };
+    }
+  },
+
+  /**
+   * Soft-delete an admission enquiry from Firestore with administrative recovery support
+   */
+  deleteEnquiry: async function(id, applicantName = '', adminInfo = {}) {
+    this.init();
+    const adminName = adminInfo.name || adminInfo.identifier || 'Administrator';
+    const nowIso = new Date().toISOString();
+
+    // 1. Try Firebase Firestore soft-delete
+    if (this.db) {
+      try {
+        await this.db.collection('admissions_enquiries').doc(id).update({
+          deleted: true,
+          deletedAt: typeof firebase !== 'undefined' && firebase.firestore ? firebase.firestore.FieldValue.serverTimestamp() : nowIso,
+          deletedBy: adminName,
+          status: 'Deleted'
+        });
+
+        this.recordAuditLog({
+          action: 'ENQUIRY_DELETED',
+          description: `Admissions enquiry for "${applicantName || id}" deleted by ${adminName}`,
+          actor: adminName,
+          targetId: id,
+          targetName: applicantName
+        });
+
+        return { success: true, id };
+      } catch (err) {
+        console.warn("Firestore soft-delete error, trying API fallback:", err.message);
+      }
+    }
+
+    // 2. Try Server API fallback
+    try {
+      const res = await fetch(`/api/admissions/enquiries/${encodeURIComponent(id)}`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ adminInfo })
+      });
+      return res.ok ? { success: true, id } : { success: false };
+    } catch (e) {
+      return { success: false, error: e.message };
+    }
+  },
+
+  /**
+   * Record entry in persistent Audit Log collection
+   */
+  recordAuditLog: async function(logData) {
+    this.init();
+    const nowIso = new Date().toISOString();
+    const nowKolkata = new Date().toLocaleString('en-US', { timeZone: 'Asia/Kolkata' });
+
+    const entry = {
+      action: logData.action || 'ADMIN_ACTION',
+      description: logData.description || 'Administrative event logged',
+      actor: logData.actor || 'System',
+      targetId: logData.targetId || null,
+      targetName: logData.targetName || null,
+      createdAt: typeof firebase !== 'undefined' && firebase.firestore ? firebase.firestore.FieldValue.serverTimestamp() : nowIso,
+      createdAtMillis: Date.now(),
+      timestampStr: nowKolkata
+    };
+
+    if (this.db) {
+      try {
+        await this.db.collection('audit_logs').add(entry);
+        return { success: true };
+      } catch (e) { }
+    }
+
+    try {
+      await fetch('/api/audit-logs', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(entry)
+      });
+    } catch (e) { }
+
+    return { success: true };
+  },
+
+  /**
+   * Subscribe to real-time Audit Log updates
+   */
+  subscribeAuditLogs: function(callback) {
+    this.init();
+    if (this.db) {
+      try {
+        return this.db.collection('audit_logs')
           .orderBy('createdAt', 'desc')
           .limit(50)
           .onSnapshot(snapshot => {
@@ -965,23 +1220,24 @@ window.SuffaFirebase = {
               list.push({ id: doc.id, ...doc.data() });
             });
             callback(list);
-          }, error => {
-            console.warn("Firestore snapshot listener error:", error);
-            this.loadLocalEnquiries(callback);
+          }, () => {
+            this.fetchServerAuditLogs(callback);
           });
-      } catch (e) {
-        console.warn("Live listener setup failed:", e);
-        this.loadLocalEnquiries(callback);
-      }
-    } else {
-      this.loadLocalEnquiries(callback);
+      } catch (e) { }
     }
+
+    this.fetchServerAuditLogs(callback);
+    const timer = setInterval(() => this.fetchServerAuditLogs(callback), 12000);
+    return () => clearInterval(timer);
   },
 
-  loadLocalEnquiries: function(callback) {
+  fetchServerAuditLogs: async function(callback) {
     try {
-      const local = JSON.parse(localStorage.getItem('suffa_local_enquiries') || '[]');
-      callback(local);
+      const res = await fetch('/api/audit-logs');
+      if (res.ok) {
+        const data = await res.json();
+        callback(data.logs || []);
+      }
     } catch (e) {
       callback([]);
     }

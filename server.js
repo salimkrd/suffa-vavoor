@@ -480,6 +480,218 @@ app.delete('/api/gallery/:id', (req, res) => {
   });
 });
 
+// -------------------------------------------------------------
+// Admissions Enquiry Management API (Live, Secure, Firebase-aligned)
+// -------------------------------------------------------------
+
+// Rate limiting map for admissions enquiries (in-memory per client IP)
+const enquiryRateLimitMap = new Map();
+function checkEnquiryRateLimit(ip) {
+  const now = Date.now();
+  const windowMs = 60 * 1000; // 1 minute
+  const maxRequests = 10;
+  const clientData = enquiryRateLimitMap.get(ip) || { count: 0, resetAt: now + windowMs };
+
+  if (now > clientData.resetAt) {
+    clientData.count = 1;
+    clientData.resetAt = now + windowMs;
+    enquiryRateLimitMap.set(ip, clientData);
+    return true;
+  }
+
+  if (clientData.count >= maxRequests) {
+    return false;
+  }
+
+  clientData.count += 1;
+  enquiryRateLimitMap.set(ip, clientData);
+  return true;
+}
+
+function normalizePhoneNumber(rawPhone) {
+  if (!rawPhone || typeof rawPhone !== 'string') return '';
+  const cleaned = rawPhone.replace(/[^\d+]/g, '').trim();
+  const digitsOnly = rawPhone.replace(/\D/g, '');
+  if (digitsOnly.length === 10) {
+    return `+91 ${digitsOnly.slice(0, 5)} ${digitsOnly.slice(5)}`;
+  } else if (digitsOnly.length === 12 && digitsOnly.startsWith('91')) {
+    return `+91 ${digitsOnly.slice(2, 7)} ${digitsOnly.slice(7)}`;
+  }
+  return cleaned || rawPhone.trim();
+}
+
+let liveAdmissionsEnquiries = [];
+let liveAuditLogs = [];
+
+function recordServerAudit(data) {
+  const entry = {
+    id: `log_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`,
+    action: data.action || 'SYSTEM_ACTION',
+    description: data.description || data.details || 'Administrative event logged',
+    details: data.description || data.details || 'Administrative event logged',
+    actor: data.actor || data.user || 'System',
+    user: data.actor || data.user || 'System',
+    targetId: data.targetId || data.enquiryId || null,
+    enquiryId: data.targetId || data.enquiryId || null,
+    targetName: data.targetName || null,
+    createdAt: new Date().toISOString(),
+    timestampStr: new Date().toLocaleString('en-US', { timeZone: 'Asia/Kolkata' })
+  };
+  liveAuditLogs.unshift(entry);
+  if (liveAuditLogs.length > 200) liveAuditLogs.pop();
+  return entry;
+}
+
+// 10. Public Admission Enquiry Submission
+app.post('/api/admissions/enquiry', (req, res) => {
+  const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress || 'unknown';
+  if (!checkEnquiryRateLimit(ip)) {
+    return res.status(429).json({ success: false, message: 'Too many submissions. Please wait a moment before trying again.' });
+  }
+
+  const { name, phone, track, message, channel } = req.body || {};
+  if (!name || typeof name !== 'string' || name.trim().length < 2) {
+    return res.status(400).json({ success: false, message: 'Please provide a valid applicant or guardian name.' });
+  }
+
+  const rawPhone = (phone || '').toString().trim();
+  const digits = rawPhone.replace(/\D/g, '');
+  if (digits.length < 7) {
+    return res.status(400).json({ success: false, message: 'Please provide a valid contact phone number with at least 7 digits.' });
+  }
+
+  const normalizedPhone = normalizePhoneNumber(rawPhone);
+  const sanitizedName = name.trim().slice(0, 100);
+  const selectedTrack = (track || 'Integrated Islamic Sciences').trim().slice(0, 100);
+  const sanitizedMsg = (message || '').trim().slice(0, 1000);
+  const submissionChannel = (channel || 'Public Web Form').trim().slice(0, 50);
+
+  const newId = `enq_${Date.now()}_${Math.random().toString(36).substr(2, 6)}`;
+  const nowIso = new Date().toISOString();
+  const nowKolkata = new Date().toLocaleString('en-US', { timeZone: 'Asia/Kolkata' });
+
+  const enquiry = {
+    id: newId,
+    name: sanitizedName,
+    phone: normalizedPhone,
+    track: selectedTrack,
+    message: sanitizedMsg,
+    channel: submissionChannel,
+    status: 'New Enquiry',
+    centreCode: 'INS7572',
+    campus: "Ma'din Suffa Campus Vavoor",
+    deleted: false,
+    deletedAt: null,
+    deletedBy: null,
+    createdAt: nowIso,
+    createdAtMillis: Date.now(),
+    timestampStr: nowKolkata
+  };
+
+  liveAdmissionsEnquiries.unshift(enquiry);
+
+  recordServerAudit({
+    action: 'ENQUIRY_CREATED',
+    description: `New admission enquiry received for "${sanitizedName}" (${selectedTrack})`,
+    actor: 'Public Visitor',
+    targetId: newId,
+    targetName: sanitizedName
+  });
+
+  res.status(201).json({
+    success: true,
+    message: `Admission enquiry recorded successfully for ${sanitizedName}.`,
+    id: newId,
+    enquiry
+  });
+});
+
+// 11. Get All Active Admissions Enquiries
+app.get('/api/admissions/enquiries', (req, res) => {
+  const active = liveAdmissionsEnquiries.filter(e => !e.deleted);
+  res.json({
+    success: true,
+    total: active.length,
+    enquiries: active
+  });
+});
+
+// 12. Update Enquiry Status
+app.patch('/api/admissions/enquiries/:id/status', (req, res) => {
+  const { status, adminInfo } = req.body || {};
+  const validStatuses = ['New Enquiry', 'Contacted', 'Interview Scheduled', 'Confirmed', 'Rejected'];
+  if (!status || !validStatuses.includes(status)) {
+    return res.status(400).json({ success: false, message: 'Invalid admission status value.' });
+  }
+
+  const idx = liveAdmissionsEnquiries.findIndex(e => e.id === req.params.id);
+  if (idx === -1) {
+    return res.status(404).json({ success: false, message: 'Enquiry record not found.' });
+  }
+
+  liveAdmissionsEnquiries[idx].status = status;
+  liveAdmissionsEnquiries[idx].updatedAt = new Date().toISOString();
+  liveAdmissionsEnquiries[idx].updatedBy = (adminInfo && adminInfo.name) ? adminInfo.name : 'Administrator';
+
+  recordServerAudit({
+    action: 'ENQUIRY_STATUS_UPDATED',
+    description: `Admission status for "${liveAdmissionsEnquiries[idx].name}" updated to "${status}"`,
+    actor: (adminInfo && adminInfo.identifier) || 'Administrator',
+    targetId: req.params.id,
+    targetName: liveAdmissionsEnquiries[idx].name
+  });
+
+  res.json({
+    success: true,
+    message: `Status updated to "${status}".`,
+    enquiry: liveAdmissionsEnquiries[idx]
+  });
+});
+
+// 13. Delete / Soft-Delete Admission Enquiry
+app.delete('/api/admissions/enquiries/:id', (req, res) => {
+  const { adminInfo } = req.body || {};
+  const idx = liveAdmissionsEnquiries.findIndex(e => e.id === req.params.id);
+  if (idx === -1) {
+    return res.status(404).json({ success: false, message: 'Enquiry record not found.' });
+  }
+
+  const applicantName = liveAdmissionsEnquiries[idx].name;
+  liveAdmissionsEnquiries[idx].deleted = true;
+  liveAdmissionsEnquiries[idx].deletedAt = new Date().toISOString();
+  liveAdmissionsEnquiries[idx].deletedBy = (adminInfo && adminInfo.name) || 'Administrator';
+  liveAdmissionsEnquiries[idx].status = 'Deleted';
+
+  recordServerAudit({
+    action: 'ENQUIRY_DELETED',
+    description: `Admission enquiry for "${applicantName}" deleted by administrator`,
+    actor: (adminInfo && adminInfo.identifier) || 'Administrator',
+    targetId: req.params.id,
+    targetName: applicantName
+  });
+
+  res.json({
+    success: true,
+    message: `Enquiry for "${applicantName}" archived and removed from active registry.`,
+    deletedId: req.params.id
+  });
+});
+
+// 14. Activity Audit Logs
+app.get('/api/audit-logs', (req, res) => {
+  res.json({
+    success: true,
+    total: liveAuditLogs.length,
+    logs: liveAuditLogs.slice(0, 50)
+  });
+});
+
+app.post('/api/audit-logs', (req, res) => {
+  const { action, description, actor, targetId, targetName } = req.body || {};
+  const entry = recordServerAudit({ action, description, actor, targetId, targetName });
+  res.status(201).json({ success: true, log: entry });
+});
+
 // Fallback route for SPA / root
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));

@@ -13,11 +13,14 @@
   let backendOrigin = '';
 
   if (global.location) {
-    if (global.location.port === String(DEFAULT_BACKEND_PORT)) {
+    const hostname = global.location.hostname || '';
+    if (hostname !== 'localhost' && hostname !== '127.0.0.1' && hostname !== '') {
+      // Production: Always use relative origin, never use port 5000
+      backendOrigin = '';
+    } else if (global.location.port === String(DEFAULT_BACKEND_PORT)) {
       backendOrigin = '';
     } else {
-      const hostname = global.location.hostname || '127.0.0.1';
-      backendOrigin = `${global.location.protocol}//${hostname}:${DEFAULT_BACKEND_PORT}`;
+      backendOrigin = `${global.location.protocol}//${hostname || '127.0.0.1'}:${DEFAULT_BACKEND_PORT}`;
     }
   } else {
     backendOrigin = `http://127.0.0.1:${DEFAULT_BACKEND_PORT}`;

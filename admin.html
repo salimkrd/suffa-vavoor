@@ -167,7 +167,7 @@
       </button>
       <button onclick="switchTab('admissions')" class="tab-btn px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-700 hover:text-primary transition flex items-center gap-1.5" id="btn-tab-admissions">
         <span class="material-symbols-outlined text-[16px]">school</span> Admissions Desk
-        <span class="px-1.5 py-0.2 rounded text-[10px] bg-emerald-100 text-emerald-800 font-bold" id="headerNewCount">14</span>
+        <span class="px-1.5 py-0.2 rounded text-[10px] bg-emerald-100 text-emerald-800 font-bold" id="headerNewCount">0</span>
       </button>
       <button onclick="switchTab('audit')" class="tab-btn px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-700 hover:text-primary transition flex items-center gap-1.5" id="btn-tab-audit">
         <span class="material-symbols-outlined text-[16px]">manage_history</span> Audit Log
@@ -233,7 +233,7 @@
               <span class="material-symbols-outlined text-[18px] text-slate-400">school</span>
               <span>Admissions Desk</span>
             </div>
-            <span class="px-1.5 py-0.2 rounded text-[10px] font-bold bg-secondary-fixed text-on-secondary-fixed">14</span>
+            <span class="px-1.5 py-0.2 rounded text-[10px] font-bold bg-secondary-fixed text-on-secondary-fixed" id="sidebarAdmissionsCount">0</span>
           </button>
           <button onclick="openUploadDrawer(); closeMobileSidebar();" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-xs font-semibold text-slate-700 hover:bg-slate-50 transition text-left cursor-pointer">
             <span class="material-symbols-outlined text-[18px] text-slate-400">cloud_upload</span>
@@ -417,76 +417,96 @@
           </div>
         </div>
 
-        <!-- Table Container with Horizontal Scroll -->
-        <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-          <div class="p-3 sm:p-4 border-b border-slate-200 bg-slate-50 flex items-center justify-between flex-wrap gap-2">
-            <span class="text-xs font-bold text-slate-700 uppercase tracking-wider">Recent Candidate Inquiries</span>
-            <span class="text-[11px] sm:text-xs text-slate-500 font-medium">Affiliation Code: INS7572</span>
+        <!-- Admissions Summary Stat Cards -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+          <div class="bg-white p-3.5 sm:p-4 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
+            <div>
+              <span class="text-[11px] uppercase tracking-wider text-slate-500 font-semibold block">Total Active</span>
+              <p class="text-xl sm:text-2xl font-bold text-primary mt-0.5" id="statAdmissionsTotal">0</p>
+            </div>
+            <div class="w-10 h-10 rounded-lg bg-blue-50 text-primary flex items-center justify-center">
+              <span class="material-symbols-outlined text-[22px]">group</span>
+            </div>
+          </div>
+          <div class="bg-white p-3.5 sm:p-4 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
+            <div>
+              <span class="text-[11px] uppercase tracking-wider text-slate-500 font-semibold block">New Enquiries</span>
+              <p class="text-xl sm:text-2xl font-bold text-amber-600 mt-0.5" id="statAdmissionsNew">0</p>
+            </div>
+            <div class="w-10 h-10 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center">
+              <span class="material-symbols-outlined text-[22px]">mark_email_unread</span>
+            </div>
+          </div>
+          <div class="bg-white p-3.5 sm:p-4 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
+            <div>
+              <span class="text-[11px] uppercase tracking-wider text-slate-500 font-semibold block">Interviews</span>
+              <p class="text-xl sm:text-2xl font-bold text-indigo-600 mt-0.5" id="statAdmissionsInterview">0</p>
+            </div>
+            <div class="w-10 h-10 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center">
+              <span class="material-symbols-outlined text-[22px]">calendar_month</span>
+            </div>
+          </div>
+          <div class="bg-white p-3.5 sm:p-4 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
+            <div>
+              <span class="text-[11px] uppercase tracking-wider text-slate-500 font-semibold block">Confirmed</span>
+              <p class="text-xl sm:text-2xl font-bold text-emerald-600 mt-0.5" id="statAdmissionsConfirmed">0</p>
+            </div>
+            <div class="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center">
+              <span class="material-symbols-outlined text-[22px]">verified</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Table Container with Filter & Controls -->
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden flex flex-col">
+          <div class="p-3 sm:p-4 border-b border-slate-200 bg-slate-50/70 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+            <div class="relative flex-1 max-w-md">
+              <span class="material-symbols-outlined absolute left-3 top-2.5 text-slate-400 text-[18px]">search</span>
+              <input type="text" id="admissionsSearch" oninput="filterAdmissionsDesk()" placeholder="Search applicant, phone, or guardian..." class="w-full pl-9 pr-3 py-2 text-xs sm:text-sm bg-white rounded-lg border border-slate-200 focus:border-primary focus:outline-none transition shadow-2xs">
+            </div>
+            <div class="flex items-center gap-2 flex-wrap sm:flex-nowrap">
+              <select id="admissionsStatusFilter" onchange="filterAdmissionsDesk()" class="px-3 py-2 bg-white border border-slate-200 rounded-lg text-xs font-semibold text-slate-700 focus:outline-none shadow-2xs">
+                <option value="All">All Statuses</option>
+                <option value="New Enquiry">New Enquiry</option>
+                <option value="Contacted">Contacted</option>
+                <option value="Interview Scheduled">Interview Scheduled</option>
+                <option value="Confirmed">Confirmed</option>
+                <option value="Rejected">Rejected</option>
+              </select>
+              <select id="admissionsTrackFilter" onchange="filterAdmissionsDesk()" class="px-3 py-2 bg-white border border-slate-200 rounded-lg text-xs font-semibold text-slate-700 focus:outline-none shadow-2xs">
+                <option value="All">All Tracks</option>
+                <option value="Uloomul Qur’an">Uloomul Qur’an</option>
+                <option value="UGC-NET">UGC-NET / JRF</option>
+                <option value="Commerce">Commerce + Islamic</option>
+                <option value="Humanities">Humanities + Islamic</option>
+                <option value="General">General Consultation</option>
+              </select>
+            </div>
           </div>
           <div class="overflow-x-auto">
-            <table class="w-full text-left text-xs sm:text-sm min-w-[560px]">
+            <table class="w-full text-left text-xs sm:text-sm min-w-[760px]">
               <thead class="bg-slate-50 border-b text-slate-600 font-semibold text-[11px] sm:text-xs uppercase tracking-wider">
                 <tr>
-                  <th class="py-3 px-4">Applicant &amp; Guardian</th>
-                  <th class="py-3 px-4">Contact</th>
+                  <th class="py-3 px-4">Applicant &amp; Notes</th>
+                  <th class="py-3 px-4">Contact Phone</th>
                   <th class="py-3 px-4">Program Track</th>
-                  <th class="py-3 px-4">Status</th>
-                  <th class="py-3 px-4 text-right">Direct Action</th>
+                  <th class="py-3 px-4">Submission Date</th>
+                  <th class="py-3 px-4">Current Status</th>
+                  <th class="py-3 px-4 text-right">Actions</th>
                 </tr>
               </thead>
               <tbody class="divide-y divide-slate-100" id="admissionsTableBody">
-                <tr class="hover:bg-slate-50 transition">
-                  <td class="py-3 px-4">
-                    <p class="font-bold text-slate-900">Ahmad Hashim</p>
-                    <p class="text-[11px] text-slate-500">Guardian: Mohammed Hashim (Manjeri)</p>
-                  </td>
-                  <td class="py-3 px-4 font-mono font-medium">+91 94471 28900</td>
-                  <td class="py-3 px-4">
-                    <span class="px-2 py-0.5 bg-blue-50 text-blue-800 rounded-full text-xs font-semibold">Islamic Sciences &amp; Hadith</span>
-                  </td>
-                  <td class="py-3 px-4">
-                    <span class="px-2 py-0.5 bg-amber-100 text-amber-800 rounded-full text-xs font-bold">New Enquiry</span>
-                  </td>
-                  <td class="py-3 px-4 text-right">
-                    <button onclick="replyWhatsApp('Ahmad Hashim', '919447128900', 'Islamic Sciences & Hadith')" class="px-2.5 py-1.5 bg-emerald-600 text-white rounded-lg text-xs font-bold hover:bg-emerald-700 transition inline-flex items-center gap-1">
-                      <span>WhatsApp</span>
-                    </button>
+                <tr id="admissionsLoadingRow">
+                  <td colspan="6" class="py-12 text-center text-slate-500">
+                    <span class="material-symbols-outlined text-[24px] animate-spin text-primary align-middle">progress_activity</span>
+                    <span class="ml-2 font-medium">Loading live admission enquiries from database...</span>
                   </td>
                 </tr>
-                <tr class="hover:bg-slate-50 transition">
-                  <td class="py-3 px-4">
-                    <p class="font-bold text-slate-900">Muhammed Fayis</p>
-                    <p class="text-[11px] text-slate-500">Guardian: Abdul Kareem (Kondotty)</p>
-                  </td>
-                  <td class="py-3 px-4 font-mono font-medium">+91 98462 77114</td>
-                  <td class="py-3 px-4">
-                    <span class="px-2 py-0.5 bg-purple-50 text-purple-800 rounded-full text-xs font-semibold">Sharia &amp; Dual Degree</span>
-                  </td>
-                  <td class="py-3 px-4">
-                    <span class="px-2 py-0.5 bg-blue-100 text-blue-800 rounded-full text-xs font-bold">Interview Scheduled</span>
-                  </td>
-                  <td class="py-3 px-4 text-right">
-                    <button onclick="replyWhatsApp('Muhammed Fayis', '919846277114', 'Sharia & University Dual Degree')" class="px-2.5 py-1.5 bg-emerald-600 text-white rounded-lg text-xs font-bold hover:bg-emerald-700 transition inline-flex items-center gap-1">
-                      <span>WhatsApp</span>
-                    </button>
-                  </td>
-                </tr>
-                <tr class="hover:bg-slate-50 transition">
-                  <td class="py-3 px-4">
-                    <p class="font-bold text-slate-900">Sayyid Bilal Al Bukhari</p>
-                    <p class="text-[11px] text-slate-500">Guardian: Sayyid Alavi (Kozhikode)</p>
-                  </td>
-                  <td class="py-3 px-4 font-mono font-medium">+91 97455 33021</td>
-                  <td class="py-3 px-4">
-                    <span class="px-2 py-0.5 bg-emerald-50 text-emerald-800 rounded-full text-xs font-semibold">Tahfeez Advanced Halaqa</span>
-                  </td>
-                  <td class="py-3 px-4">
-                    <span class="px-2 py-0.5 bg-emerald-100 text-emerald-800 rounded-full text-xs font-bold">Confirmed</span>
-                  </td>
-                  <td class="py-3 px-4 text-right">
-                    <button onclick="replyWhatsApp('Sayyid Bilal', '919745533021', 'Tahfeez Advanced Halaqa')" class="px-2.5 py-1.5 bg-emerald-600 text-white rounded-lg text-xs font-bold hover:bg-emerald-700 transition inline-flex items-center gap-1">
-                      <span>WhatsApp</span>
-                    </button>
+                <tr id="admissionsEmptyRow" class="hidden">
+                  <td colspan="6" class="py-12 text-center text-slate-400">
+                    <span class="material-symbols-outlined text-[36px] block mx-auto text-slate-300 mb-2">inbox</span>
+                    <p class="font-medium text-slate-600">No admission enquiries found</p>
+                    <p class="text-[11px] text-slate-400 mt-0.5">Enquiries submitted via the public admission form will appear here automatically.</p>
                   </td>
                 </tr>
               </tbody>
@@ -506,7 +526,7 @@
             Export Audit
           </button>
         </div>
-        <div class="bg-white rounded-xl border border-slate-200 divide-y text-xs sm:text-sm">
+        <div class="bg-white rounded-xl border border-slate-200 divide-y text-xs sm:text-sm" id="auditLogContainer">
           <div class="p-3.5 sm:p-4 flex items-start gap-3">
             <div class="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 mt-0.5">
               <span class="material-symbols-outlined text-[18px]">publish</span>
@@ -589,7 +609,7 @@
     <button onclick="switchTab('admissions')" class="mobile-tab-btn flex flex-col items-center justify-center p-1.5 text-slate-500 hover:text-primary relative" id="mob-tab-admissions">
       <div class="relative">
         <span class="material-symbols-outlined text-[20px]">school</span>
-        <span class="absolute -top-1 -right-2 px-1 py-0.2 rounded-full text-[8px] font-bold bg-secondary-fixed text-on-secondary-fixed">14</span>
+        <span class="absolute -top-1 -right-2 px-1 py-0.2 rounded-full text-[8px] font-bold bg-secondary-fixed text-on-secondary-fixed" id="mobAdmissionsCount">0</span>
       </div>
       <span class="text-[10px] font-medium mt-0.5">Admissions</span>
     </button>
@@ -774,6 +794,31 @@
       <div class="flex flex-col-reverse sm:flex-row justify-end gap-2 pt-2 border-t">
         <button onclick="closeWalkinModal()" class="px-3.5 py-2 text-slate-600 rounded-lg hover:bg-slate-100 transition text-center">Cancel</button>
         <button onclick="saveWalkin()" class="px-4 py-2 bg-primary text-white font-bold rounded-lg shadow-sm hover:bg-primary-container transition text-center">Save Record</button>
+      </div>
+    </div>
+  <!-- DELETE ENQUIRY CONFIRMATION MODAL -->
+  <div id="deleteEnquiryModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden items-center justify-center p-3 sm:p-4">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md p-5 sm:p-6 flex flex-col gap-4 text-xs">
+      <div class="flex items-center gap-3 text-red-600">
+        <div class="w-10 h-10 rounded-xl bg-red-50 flex items-center justify-center shrink-0">
+          <span class="material-symbols-outlined text-[24px]">delete_forever</span>
+        </div>
+        <div>
+          <h3 class="font-bold text-slate-900 text-sm sm:text-base">Delete Admission Enquiry</h3>
+          <p class="text-[11px] text-slate-500">Record will be soft-deleted and removed from active admissions</p>
+        </div>
+      </div>
+      <p class="text-xs sm:text-sm text-slate-700 leading-relaxed">
+        Are you sure you want to delete the enquiry for <strong id="deleteApplicantName" class="text-slate-900 font-bold">Applicant</strong>?
+      </p>
+      <div class="flex items-center justify-end gap-2.5 pt-2 border-t">
+        <button type="button" onclick="closeDeleteEnquiryModal()" class="px-3.5 py-2 rounded-lg text-slate-600 hover:bg-slate-100 font-semibold transition cursor-pointer">
+          Cancel
+        </button>
+        <button type="button" id="btnConfirmDeleteEnquiry" onclick="confirmDeleteEnquiry()" class="px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white font-bold transition flex items-center gap-1.5 cursor-pointer shadow-sm">
+          <span class="material-symbols-outlined text-[16px]">delete</span>
+          <span>Confirm Delete</span>
+        </button>
       </div>
     </div>
   </div>
@@ -1406,6 +1451,8 @@
     document.addEventListener('DOMContentLoaded', () => {
       checkAdminSession();
       loadAdminGallery();
+      initAdmissionsDesk();
+      initAuditLogs();
       if (window.GalleryAPI) {
         GalleryAPI.subscribe(() => {
           loadAdminGallery();
@@ -1413,10 +1460,294 @@
       }
     });
 
-    // Admissions functions
+    // ==============================================================
+    // ADMISSIONS MANAGEMENT SYSTEM (LIVE FIRESTORE & DB INTEGRATION)
+    // ==============================================================
+    let activeEnquiries = [];
+    let pendingDeleteEnquiryId = null;
+    let pendingDeleteApplicantName = '';
+
+    function initAdmissionsDesk() {
+      if (window.SuffaFirebase && typeof window.SuffaFirebase.subscribeEnquiries === 'function') {
+        window.SuffaFirebase.subscribeEnquiries(enquiries => {
+          activeEnquiries = Array.isArray(enquiries) ? enquiries : [];
+          updateAdmissionsUI();
+        });
+      } else {
+        fetchAdmissionsFallback();
+      }
+    }
+
+    async function fetchAdmissionsFallback() {
+      try {
+        const resp = await fetch('/api/admissions/enquiries');
+        const data = await resp.json();
+        if (data && data.success && Array.isArray(data.enquiries)) {
+          activeEnquiries = data.enquiries;
+          updateAdmissionsUI();
+        }
+      } catch (e) {
+        console.warn('Fallback fetch error:', e);
+      }
+    }
+
+    function updateAdmissionsUI() {
+      // 1. Synchronize all count badges across header, sidebar, mobile bar, and stat cards
+      const totalCount = activeEnquiries.length;
+      const newCount = activeEnquiries.filter(e => (e.status || 'New Enquiry') === 'New Enquiry').length;
+      const interviewCount = activeEnquiries.filter(e => e.status === 'Interview Scheduled').length;
+      const confirmedCount = activeEnquiries.filter(e => e.status === 'Confirmed').length;
+
+      // Badges
+      const headerBadge = document.getElementById('headerNewCount');
+      if (headerBadge) headerBadge.textContent = totalCount;
+
+      const sidebarBadge = document.getElementById('sidebarAdmissionsCount');
+      if (sidebarBadge) sidebarBadge.textContent = totalCount;
+
+      const mobBadge = document.getElementById('mobAdmissionsCount');
+      if (mobBadge) mobBadge.textContent = totalCount;
+
+      // Summary stat cards
+      const statTotal = document.getElementById('statAdmissionsTotal');
+      if (statTotal) statTotal.textContent = totalCount;
+
+      const statNew = document.getElementById('statAdmissionsNew');
+      if (statNew) statNew.textContent = newCount;
+
+      const statInterview = document.getElementById('statAdmissionsInterview');
+      if (statInterview) statInterview.textContent = interviewCount;
+
+      const statConfirmed = document.getElementById('statAdmissionsConfirmed');
+      if (statConfirmed) statConfirmed.textContent = confirmedCount;
+
+      // 2. Render table
+      renderAdmissionsTable();
+    }
+
+    function filterAdmissionsDesk() {
+      renderAdmissionsTable();
+    }
+
+    function formatEnquiryDate(ts) {
+      if (!ts) return 'Recent';
+      try {
+        let d = null;
+        if (typeof ts.toDate === 'function') {
+          d = ts.toDate();
+        } else if (ts._seconds) {
+          d = new Date(ts._seconds * 1000);
+        } else {
+          d = new Date(ts);
+        }
+        if (isNaN(d.getTime())) return 'Recent';
+        return d.toLocaleDateString('en-IN', {
+          day: 'numeric',
+          month: 'short',
+          year: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        });
+      } catch (e) {
+        return 'Recent';
+      }
+    }
+
+    function renderAdmissionsTable() {
+      const tbody = document.getElementById('admissionsTableBody');
+      const loadingRow = document.getElementById('admissionsLoadingRow');
+      const emptyRow = document.getElementById('admissionsEmptyRow');
+      if (!tbody) return;
+
+      if (loadingRow) loadingRow.classList.add('hidden');
+
+      const searchInput = document.getElementById('admissionsSearch');
+      const q = searchInput ? searchInput.value.trim().toLowerCase() : '';
+      const statusFilter = document.getElementById('admissionsStatusFilter')?.value || 'All';
+      const trackFilter = document.getElementById('admissionsTrackFilter')?.value || 'All';
+
+      const filtered = activeEnquiries.filter(item => {
+        const name = (item.name || '').toLowerCase();
+        const phone = (item.phone || '').toLowerCase();
+        const msg = (item.message || item.guardian || '').toLowerCase();
+        const track = (item.track || '').toLowerCase();
+        const status = item.status || 'New Enquiry';
+
+        const matchQ = !q || name.includes(q) || phone.includes(q) || msg.includes(q) || track.includes(q);
+        const matchStatus = (statusFilter === 'All') || (status === statusFilter);
+        const matchTrack = (trackFilter === 'All') || track.includes(trackFilter.toLowerCase());
+
+        return matchQ && matchStatus && matchTrack;
+      });
+
+      // Clear dynamic rows, keeping loadingRow and emptyRow
+      Array.from(tbody.children).forEach(child => {
+        if (child.id !== 'admissionsLoadingRow' && child.id !== 'admissionsEmptyRow') {
+          tbody.removeChild(child);
+        }
+      });
+
+      if (filtered.length === 0) {
+        if (emptyRow) emptyRow.classList.remove('hidden');
+        return;
+      }
+
+      if (emptyRow) emptyRow.classList.add('hidden');
+
+      filtered.forEach(item => {
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-slate-50/80 transition';
+        tr.setAttribute('data-enquiry-id', item.id || '');
+
+        const status = item.status || 'New Enquiry';
+        const statusColors = {
+          'New Enquiry': 'bg-amber-100 text-amber-800 border-amber-300',
+          'Contacted': 'bg-sky-100 text-sky-800 border-sky-300',
+          'Interview Scheduled': 'bg-indigo-100 text-indigo-800 border-indigo-300',
+          'Confirmed': 'bg-emerald-100 text-emerald-800 border-emerald-300',
+          'Rejected': 'bg-rose-100 text-rose-800 border-rose-300'
+        };
+        const statusClass = statusColors[status] || 'bg-slate-100 text-slate-800 border-slate-300';
+        const dateStr = item.timestampStr || formatEnquiryDate(item.timestamp || item.createdAt);
+        const cleanPhone = (item.phone || '').replace(/[^0-9]/g, '');
+
+        tr.innerHTML = `
+          <td class="py-3 px-4">
+            <p class="font-bold text-slate-900">${escapeHtml(item.name || 'Anonymous')}</p>
+            <p class="text-[11px] text-slate-500 max-w-xs truncate" title="${escapeHtml(item.message || '')}">
+              ${escapeHtml(item.message ? item.message : (item.channel ? 'Channel: ' + item.channel : 'Direct Web Form'))}
+            </p>
+          </td>
+          <td class="py-3 px-4 font-mono font-medium text-slate-800 whitespace-nowrap">
+            <a href="tel:${escapeHtml(cleanPhone)}" class="hover:text-primary transition underline decoration-dotted">
+              ${escapeHtml(item.phone || '—')}
+            </a>
+          </td>
+          <td class="py-3 px-4">
+            <span class="px-2 py-0.5 bg-blue-50 text-blue-800 rounded-full text-xs font-semibold inline-block">
+              ${escapeHtml(item.track || 'General Consultation')}
+            </span>
+          </td>
+          <td class="py-3 px-4 text-slate-500 text-xs whitespace-nowrap">
+            ${escapeHtml(dateStr)}
+          </td>
+          <td class="py-3 px-4">
+            <select onchange="handleEnquiryStatusChange('${escapeHtml(item.id)}', this.value)" class="text-xs font-bold px-2 py-1 rounded-lg border focus:outline-none transition cursor-pointer ${statusClass}">
+              <option value="New Enquiry" ${status === 'New Enquiry' ? 'selected' : ''}>New Enquiry</option>
+              <option value="Contacted" ${status === 'Contacted' ? 'selected' : ''}>Contacted</option>
+              <option value="Interview Scheduled" ${status === 'Interview Scheduled' ? 'selected' : ''}>Interview Scheduled</option>
+              <option value="Confirmed" ${status === 'Confirmed' ? 'selected' : ''}>Confirmed</option>
+              <option value="Rejected" ${status === 'Rejected' ? 'selected' : ''}>Rejected</option>
+            </select>
+          </td>
+          <td class="py-3 px-4 text-right whitespace-nowrap">
+            <div class="inline-flex items-center gap-1.5 justify-end">
+              <button onclick="replyWhatsApp('${escapeHtml(item.name || '')}', '${escapeHtml(cleanPhone)}', '${escapeHtml(item.track || '')}')" class="px-2.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold transition inline-flex items-center gap-1 shadow-2xs cursor-pointer" title="Chat via WhatsApp">
+                <span class="material-symbols-outlined text-[15px]">chat</span>
+                <span class="hidden sm:inline">WhatsApp</span>
+              </button>
+              <button onclick="openDeleteEnquiryModal('${escapeHtml(item.id)}', '${escapeHtml(item.name || 'Applicant')}')" class="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition cursor-pointer" title="Delete Enquiry">
+                <span class="material-symbols-outlined text-[18px]">delete</span>
+              </button>
+            </div>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    async function handleEnquiryStatusChange(enquiryId, newStatus) {
+      if (!enquiryId) return;
+      try {
+        const item = activeEnquiries.find(e => e.id === enquiryId);
+        const name = item ? item.name : 'Applicant';
+
+        if (window.SuffaFirebase && typeof window.SuffaFirebase.updateEnquiryStatus === 'function') {
+          await window.SuffaFirebase.updateEnquiryStatus(enquiryId, newStatus);
+        } else {
+          const resp = await fetch(`/api/admissions/enquiries/${encodeURIComponent(enquiryId)}/status`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ status: newStatus })
+          });
+          const data = await resp.json();
+          if (!data || !data.success) throw new Error(data && data.message ? data.message : 'Update failed');
+        }
+
+        if (item) item.status = newStatus;
+        updateAdmissionsUI();
+        showToast(`Status updated to "${newStatus}" for ${name}.`);
+      } catch (err) {
+        console.error('Status change error:', err);
+        showToast(`Error updating status: ${err.message || 'Network error'}`);
+        updateAdmissionsUI();
+      }
+    }
+
+    // Modal Delete handlers
+    function openDeleteEnquiryModal(id, name) {
+      pendingDeleteEnquiryId = id;
+      pendingDeleteApplicantName = name;
+      const nameEl = document.getElementById('deleteApplicantName');
+      if (nameEl) nameEl.textContent = name;
+      const modal = document.getElementById('deleteEnquiryModal');
+      if (modal) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      }
+    }
+
+    function closeDeleteEnquiryModal() {
+      pendingDeleteEnquiryId = null;
+      pendingDeleteApplicantName = '';
+      const modal = document.getElementById('deleteEnquiryModal');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+    }
+
+    async function confirmDeleteEnquiry() {
+      if (!pendingDeleteEnquiryId) return;
+      const id = pendingDeleteEnquiryId;
+      const name = pendingDeleteApplicantName || 'Applicant';
+      const btn = document.getElementById('btnConfirmDeleteEnquiry');
+
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<span class="material-symbols-outlined text-[16px] animate-spin">progress_activity</span> Deleting...';
+      }
+
+      try {
+        if (window.SuffaFirebase && typeof window.SuffaFirebase.deleteEnquiry === 'function') {
+          await window.SuffaFirebase.deleteEnquiry(id);
+        } else {
+          const resp = await fetch(`/api/admissions/enquiries/${encodeURIComponent(id)}`, {
+            method: 'DELETE'
+          });
+          const data = await resp.json();
+          if (!data || !data.success) throw new Error(data && data.message ? data.message : 'Delete failed');
+        }
+
+        // Optimistically remove from active list immediately
+        activeEnquiries = activeEnquiries.filter(e => e.id !== id);
+        closeDeleteEnquiryModal();
+        updateAdmissionsUI();
+        showToast(`Enquiry for ${name} removed successfully.`);
+      } catch (err) {
+        console.error('Delete enquiry error:', err);
+        showToast(`Failed to delete enquiry: ${err.message || 'Network error'}`);
+      } finally {
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = '<span class="material-symbols-outlined text-[16px]">delete</span><span>Confirm Delete</span>';
+        }
+      }
+    }
+
     function replyWhatsApp(name, phone, track) {
       const num = phone.replace(/[^0-9]/g, '');
-      const msg = `Assalamu Alaikum wa Rahmatullah ${name}.%0A%0AWe received your admission inquiry for *${encodeURIComponent(track)}* at *Ma'din Suffa Campus, Vavoor (Affiliated: Jamiathul Hind - INS7572)*.%0A%0AWe would like to invite you for the Tajweed Halaqa review and academic assessment. Please let us know your convenient time.`;
+      const msg = `Assalamu Alaikum wa Rahmatullah ${name}.%0A%0AWe received your admission inquiry for *${encodeURIComponent(track || 'Specialized Academic Program')}* at *Ma'din Suffa Campus, Vavoor (Affiliated: Jamiathul Hind - INS7572)*.%0A%0AWe would like to invite you for the Tajweed Halaqa review and academic aptitude assessment. Please let us know your convenient time.`;
       window.open(`https://wa.me/${num}?text=${msg}`, '_blank');
     }
 
@@ -1429,54 +1760,91 @@
       document.getElementById('walkinModal').classList.remove('flex');
     }
 
-    function saveWalkin() {
-      const name = document.getElementById('wName').value.trim();
-      const phone = document.getElementById('wPhone').value.trim();
-      const track = document.getElementById('wTrack').value;
+    async function saveWalkin() {
+      const nameEl = document.getElementById('wName');
+      const phoneEl = document.getElementById('wPhone');
+      const trackEl = document.getElementById('wTrack');
+      const name = nameEl ? nameEl.value.trim() : '';
+      const phone = phoneEl ? phoneEl.value.trim() : '';
+      const track = trackEl ? trackEl.value : 'Islamic Sciences & Hadith';
+
       if (!name || !phone) {
-        alert('Please enter name and phone.');
+        alert('Please enter student name and contact phone.');
         return;
       }
-      const tbody = document.getElementById('admissionsTableBody');
-      const tr = document.createElement('tr');
-      tr.className = 'hover:bg-slate-50 transition border-l-4 border-emerald-500';
-      tr.innerHTML = `
-        <td class="py-3 px-4">
-          <p class="font-bold text-slate-900">${escapeHtml(name)}</p>
-          <p class="text-[11px] text-emerald-700 font-semibold">Walk-in Registration</p>
-        </td>
-        <td class="py-3 px-4 font-mono font-medium">${escapeHtml(phone)}</td>
-        <td class="py-3 px-4">
-          <span class="px-2 py-0.5 bg-blue-50 text-blue-800 rounded-full text-xs font-semibold">${escapeHtml(track)}</span>
-        </td>
-        <td class="py-3 px-4">
-          <span class="px-2 py-0.5 bg-amber-100 text-amber-800 rounded-full text-xs font-bold">New Enquiry</span>
-        </td>
-        <td class="py-3 px-4 text-right">
-          <button onclick="replyWhatsApp('${escapeHtml(name)}', '${escapeHtml(phone)}', '${escapeHtml(track)}')" class="px-2.5 py-1.5 bg-emerald-600 text-white rounded-lg text-xs font-bold hover:bg-emerald-700 transition inline-flex items-center gap-1">
-            <span>WhatsApp</span>
-          </button>
-        </td>
-      `;
-      tbody.prepend(tr);
-      closeWalkinModal();
-      showToast('Applicant recorded successfully.');
+
+      try {
+        if (window.SuffaFirebase && typeof window.SuffaFirebase.saveEnquiry === 'function') {
+          await window.SuffaFirebase.saveEnquiry({
+            name,
+            phone,
+            track,
+            channel: 'Walk-in Admission Desk',
+            status: 'New Enquiry'
+          });
+        } else {
+          await fetch('/api/admissions/enquiry', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, phone, track, channel: 'Walk-in Admission Desk' })
+          });
+        }
+        if (nameEl) nameEl.value = '';
+        if (phoneEl) phoneEl.value = '';
+        closeWalkinModal();
+        showToast(`Walk-in applicant ${name} registered successfully.`);
+      } catch (err) {
+        alert(`Error saving walk-in: ${err.message || 'Network error'}`);
+      }
     }
 
     function exportApplicantsCSV() {
-      let csv = "Name,Phone,Track,Status\n";
-      document.querySelectorAll('#admissionsTableBody tr').forEach(r => {
-        const name = r.cells[0].querySelector('p').textContent;
-        const phone = r.cells[1].textContent;
-        const track = r.cells[2].textContent.trim();
-        const status = r.cells[3].textContent.trim();
-        csv += `"${name}","${phone}","${track}","${status}"\n`;
+      let csv = "ID,Name,Phone,Track,Status,Date,Notes\n";
+      activeEnquiries.forEach(item => {
+        const dateStr = item.timestampStr || formatEnquiryDate(item.timestamp || item.createdAt);
+        csv += `"${item.id || ''}","${(item.name || '').replace(/"/g, '""')}","${item.phone || ''}","${(item.track || '').replace(/"/g, '""')}","${item.status || 'New Enquiry'}","${dateStr}","${(item.message || '').replace(/"/g, '""')}"\n`;
       });
-      const blob = new Blob([csv], { type: 'text/csv' });
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
       const a = document.createElement('a');
       a.href = URL.createObjectURL(blob);
-      a.download = `madin_suffa_candidates.csv`;
+      a.download = `madin_suffa_admissions_${Date.now()}.csv`;
       a.click();
+    }
+
+    // ==============================================================
+    // ACTIVITY AUDIT LOG LISTENER & RENDERER
+    // ==============================================================
+    function initAuditLogs() {
+      if (window.SuffaFirebase && typeof window.SuffaFirebase.subscribeAuditLogs === 'function') {
+        window.SuffaFirebase.subscribeAuditLogs(logs => {
+          renderAuditLogs(logs);
+        });
+      }
+    }
+
+    function renderAuditLogs(logs) {
+      const container = document.getElementById('auditLogContainer');
+      if (!container || !Array.isArray(logs) || logs.length === 0) return;
+
+      container.innerHTML = '';
+      logs.slice(0, 20).forEach(log => {
+        const item = document.createElement('div');
+        item.className = 'p-3.5 sm:p-4 flex items-start gap-3 hover:bg-slate-50 transition';
+        const icon = log.action && log.action.includes('delete') ? 'delete' : (log.action && log.action.includes('status') ? 'edit_note' : 'verified_user');
+        const color = log.action && log.action.includes('delete') ? 'bg-red-50 text-red-600' : 'bg-blue-50 text-blue-600';
+
+        item.innerHTML = `
+          <div class="w-8 h-8 rounded-lg ${color} flex items-center justify-center shrink-0 mt-0.5">
+            <span class="material-symbols-outlined text-[18px]">${icon}</span>
+          </div>
+          <div class="min-w-0 flex-1">
+            <p class="font-bold text-slate-900">${escapeHtml(log.action || 'System Action')}</p>
+            <p class="text-xs text-slate-600 mt-0.5">${escapeHtml(log.details || log.enquiryId || '')}</p>
+            <span class="text-[10px] text-slate-400 mt-1 block">${escapeHtml(log.timestampStr || formatEnquiryDate(log.timestamp))} • User: ${escapeHtml(log.user || 'Admin')}</span>
+          </div>
+        `;
+        container.appendChild(item);
+      });
     }
 
     function showToast(msg) {

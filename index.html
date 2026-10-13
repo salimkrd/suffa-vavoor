@@ -1262,18 +1262,18 @@
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
-              <button class="min-h-[48px] py-3 px-5 bg-tertiary-dark hover:bg-tertiary text-white rounded-xl font-label text-xs sm:text-sm font-bold flex items-center justify-center gap-2 shadow active:scale-[0.99] transition-all" type="submit">
+              <button class="min-h-[48px] py-3 px-5 bg-tertiary-dark hover:bg-tertiary text-white rounded-xl font-label text-xs sm:text-sm font-bold flex items-center justify-center gap-2 shadow active:scale-[0.99] transition-all cursor-pointer" type="submit" id="btn-whatsapp-enquiry">
                 <span class="material-symbols-outlined text-[18px]">chat</span>
                 <span>Send via WhatsApp (+91 95626 20731)</span>
               </button>
-              <button class="min-h-[48px] py-3 px-5 bg-primary hover:bg-primary-dark text-white rounded-xl font-label text-xs sm:text-sm font-bold flex items-center justify-center gap-2 shadow active:scale-[0.99] transition-all" type="button" onclick="recordLocalEnquiry()">
+              <button class="min-h-[48px] py-3 px-5 bg-primary hover:bg-primary-dark text-white rounded-xl font-label text-xs sm:text-sm font-bold flex items-center justify-center gap-2 shadow active:scale-[0.99] transition-all cursor-pointer" type="button" id="btn-submit-enquiry" onclick="submitAdmissionsDesk(event)">
                 <span class="material-symbols-outlined text-[18px] text-tertiary-accent">send</span>
                 <span>Submit to Admissions Desk</span>
               </button>
             </div>
 
-            <div class="hidden mt-2 p-3.5 bg-tertiary text-white rounded-xl text-xs sm:text-sm font-medium shadow flex items-center gap-2" id="enquiry-toast">
-              <span class="material-symbols-outlined text-[20px] text-white">check_circle</span>
+            <div class="hidden mt-2 p-3.5 bg-tertiary text-white rounded-xl text-xs sm:text-sm font-medium shadow flex items-center gap-2 transition-all" id="enquiry-toast">
+              <span class="material-symbols-outlined text-[20px] text-white shrink-0" id="toast-icon">check_circle</span>
               <span id="toast-message">✓ Your admission inquiry has been recorded. Our admissions cell will reach out to you shortly.</span>
             </div>
           </form>
@@ -2097,19 +2097,50 @@
     }
 
     // Enquiry WhatsApp & Firebase Handler (Tracked in GA4)
-    function handleEnquirySubmit(e) {
-      e.preventDefault();
-      const name = document.getElementById('enquiry-name').value.trim();
-      const phone = document.getElementById('enquiry-phone').value.trim();
-      const track = document.getElementById('enquiry-track').value;
-      const msg = document.getElementById('enquiry-msg').value.trim();
+    let isEnquirySubmitting = false;
 
-      if (!name || !phone) {
-        alert('Please fill in your name and contact phone number.');
+    function showEnquiryToast(msg, type = 'success') {
+      const toast = document.getElementById('enquiry-toast');
+      const toastMsg = document.getElementById('toast-message');
+      const toastIcon = document.getElementById('toast-icon');
+      if (!toast || !toastMsg) return;
+      toastMsg.innerText = msg;
+      if (type === 'error') {
+        toast.className = 'mt-2 p-3.5 bg-red-600 text-white rounded-xl text-xs sm:text-sm font-medium shadow flex items-center gap-2 transition-all';
+        if (toastIcon) toastIcon.innerText = 'error';
+      } else {
+        toast.className = 'mt-2 p-3.5 bg-tertiary text-white rounded-xl text-xs sm:text-sm font-medium shadow flex items-center gap-2 transition-all';
+        if (toastIcon) toastIcon.innerText = 'check_circle';
+      }
+      toast.classList.remove('hidden');
+    }
+
+    // Enquiry WhatsApp Handler (Sends WhatsApp and records in database)
+    async function handleEnquirySubmit(e) {
+      if (e) e.preventDefault();
+      const nameEl = document.getElementById('enquiry-name');
+      const phoneEl = document.getElementById('enquiry-phone');
+      const trackEl = document.getElementById('enquiry-track');
+      const msgEl = document.getElementById('enquiry-msg');
+
+      const name = (nameEl ? nameEl.value : '').trim();
+      const phone = (phoneEl ? phoneEl.value : '').trim();
+      const track = trackEl ? trackEl.value : "Uloomul Qur’an & Da'wa Studies";
+      const msg = (msgEl ? msgEl.value : '').trim();
+
+      if (!name || name.length < 2) {
+        showEnquiryToast('Please enter the full name of the applicant or guardian.', 'error');
+        if (nameEl) nameEl.focus();
+        return;
+      }
+      const digits = phone.replace(/[^0-9]/g, '');
+      if (!phone || digits.length < 7) {
+        showEnquiryToast('Please enter a valid contact phone number with at least 7 digits.', 'error');
+        if (phoneEl) phoneEl.focus();
         return;
       }
 
-      // Save to Firebase Firestore & Log Analytics
+      // Save in background to Firestore / API without blocking user
       if (window.SuffaFirebase && typeof window.SuffaFirebase.saveEnquiry === 'function') {
         window.SuffaFirebase.saveEnquiry({
           name: name,
@@ -2117,8 +2148,11 @@
           track: track,
           message: msg,
           channel: 'WhatsApp & Web Form'
-        });
-        window.SuffaFirebase.logEvent('admission_enquiry_submitted', { track: track });
+        }).catch(err => console.warn('Background save warning:', err));
+        
+        if (typeof window.SuffaFirebase.logEvent === 'function') {
+          window.SuffaFirebase.logEvent('admission_enquiry_submitted', { track: track });
+        }
       }
 
       // Track Standard GA4 Lead Event
@@ -2133,48 +2167,108 @@
       const text = `Assalamu Alaikum.%0A%0A*ADMISSION ENQUIRY - MA'DIN SUFFA CAMPUS VAVOOR*%0A------------------------------------%0A*Applicant/Guardian:* ${encodeURIComponent(name)}%0A*Phone:* ${encodeURIComponent(phone)}%0A*Program Track:* ${encodeURIComponent(track)}%0A${msg ? `*Message:* ${encodeURIComponent(msg)}%0A` : ''}*Affiliation:* Jamiathul Hind Al Islamiyya (INS7572)%0A------------------------------------%0APlease provide course details and the entrance interview schedule.`;
 
       window.open(`https://wa.me/919562620731?text=${text}`, '_blank');
-
-      const toast = document.getElementById('enquiry-toast');
-      document.getElementById('toast-message').innerText = `✓ Enquiry saved to Admissions Desk & WhatsApp initiated for ${name}.`;
-      toast.classList.remove('hidden');
+      showEnquiryToast(`✓ Enquiry saved to Admissions Desk & WhatsApp initiated for ${name}.`, 'success');
     }
 
-    function recordLocalEnquiry() {
-      const name = document.getElementById('enquiry-name').value.trim();
-      const phone = document.getElementById('enquiry-phone').value.trim();
-      const track = document.getElementById('enquiry-track').value;
-      const msg = document.getElementById('enquiry-msg').value.trim();
+    // Direct Admissions Desk Submission Handler
+    async function submitAdmissionsDesk(e) {
+      if (e && e.preventDefault) e.preventDefault();
+      if (isEnquirySubmitting) return;
 
-      if (!name || !phone) {
-        alert('Please enter your name and phone number before submitting.');
+      const nameEl = document.getElementById('enquiry-name');
+      const phoneEl = document.getElementById('enquiry-phone');
+      const trackEl = document.getElementById('enquiry-track');
+      const msgEl = document.getElementById('enquiry-msg');
+      const submitBtn = document.getElementById('btn-submit-enquiry');
+
+      const name = (nameEl ? nameEl.value : '').trim();
+      const phone = (phoneEl ? phoneEl.value : '').trim();
+      const track = trackEl ? trackEl.value : "Uloomul Qur’an & Da'wa Studies";
+      const msg = (msgEl ? msgEl.value : '').trim();
+
+      // Field validation
+      if (!name || name.length < 2) {
+        showEnquiryToast('Please enter the full name of the applicant or guardian.', 'error');
+        if (nameEl) nameEl.focus();
+        return;
+      }
+      const digits = phone.replace(/[^0-9]/g, '');
+      if (!phone || digits.length < 7) {
+        showEnquiryToast('Please enter a valid contact phone number with at least 7 digits.', 'error');
+        if (phoneEl) phoneEl.focus();
         return;
       }
 
-      // Save directly to Firebase Firestore
-      if (window.SuffaFirebase && typeof window.SuffaFirebase.saveEnquiry === 'function') {
-        window.SuffaFirebase.saveEnquiry({
-          name: name,
-          phone: phone,
-          track: track,
-          message: msg,
-          channel: 'Admissions Desk Direct'
-        });
-        window.SuffaFirebase.logEvent('admission_direct_desk_submitted', { track: track });
+      // Enter submitting state (prevent duplicate clicks, show spinner)
+      isEnquirySubmitting = true;
+      const originalBtnHtml = submitBtn ? submitBtn.innerHTML : '';
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.classList.add('opacity-75', 'cursor-not-allowed');
+        submitBtn.innerHTML = `
+          <span class="material-symbols-outlined text-[18px] animate-spin">progress_activity</span>
+          <span>Submitting to Desk...</span>
+        `;
       }
 
-      // Track Standard GA4 Lead Event
-      if (typeof window.gtag === 'function') {
-        window.gtag('event', 'generate_lead', {
-          event_category: 'Admissions',
-          event_label: track,
-          channel: 'Admissions Desk Direct'
-        });
-      }
+      try {
+        let result = null;
+        if (window.SuffaFirebase && typeof window.SuffaFirebase.saveEnquiry === 'function') {
+          result = await window.SuffaFirebase.saveEnquiry({
+            name: name,
+            phone: phone,
+            track: track,
+            message: msg,
+            channel: 'Admissions Desk Direct'
+          });
+          if (typeof window.SuffaFirebase.logEvent === 'function') {
+            window.SuffaFirebase.logEvent('admission_direct_desk_submitted', { track: track });
+          }
+        } else {
+          const resp = await fetch('/api/admissions/enquiry', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, phone, track, message: msg, channel: 'Admissions Desk Direct' })
+          });
+          result = await resp.json();
+          if (!result || !result.success) {
+            throw new Error(result && result.message ? result.message : 'Failed to record enquiry.');
+          }
+        }
 
-      const toast = document.getElementById('enquiry-toast');
-      document.getElementById('toast-message').innerText = `✓ Thank you, ${name}. Your admission inquiry has been synced with the Admissions Desk. We will contact you at ${phone}.`;
-      toast.classList.remove('hidden');
-      document.getElementById('enquiry-form').reset();
+        // Track Standard GA4 Lead Event
+        if (typeof window.gtag === 'function') {
+          window.gtag('event', 'generate_lead', {
+            event_category: 'Admissions',
+            event_label: track,
+            channel: 'Admissions Desk Direct'
+          });
+        }
+
+        // Success state: show success toast and reset form
+        showEnquiryToast(`✓ Thank you, ${name}. Your admission inquiry has been recorded. Our admissions cell will reach out to you shortly.`, 'success');
+        const form = document.getElementById('enquiry-form');
+        if (form) form.reset();
+
+      } catch (err) {
+        console.error('Admissions submission error:', err);
+        // Error state: retain form values and show clear error
+        showEnquiryToast(`Could not submit enquiry (${err.message || 'Network error'}). Please try again or click 'Send via WhatsApp'.`, 'error');
+      } finally {
+        isEnquirySubmitting = false;
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.classList.remove('opacity-75', 'cursor-not-allowed');
+          submitBtn.innerHTML = originalBtnHtml || `
+            <span class="material-symbols-outlined text-[18px] text-tertiary-accent">send</span>
+            <span>Submit to Admissions Desk</span>
+          `;
+        }
+      }
+    }
+
+    function recordLocalEnquiry() {
+      submitAdmissionsDesk();
     }
 
     // ==============================================================

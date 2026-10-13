@@ -1,0 +1,27 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 1. Gallery Collection
+    // Public read for website visitors, authenticated write for admin users
+    match /gallery/{document=**} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+    
+    // 2. Admissions Enquiries Collection
+    // Public can submit an enquiry with validated payload
+    // Only authenticated administrators can read, update status, or soft-delete
+    match /admissions_enquiries/{enquiryId} {
+      allow create: if request.resource.data.name is string
+                    && request.resource.data.phone is string
+                    && request.resource.data.name.size() >= 2;
+      allow read, update, delete: if request.auth != null;
+    }
+
+    // 3. Activity Audit Logs
+    // Administrative ledger: readable and writeable by authenticated admins
+    match /audit_logs/{logId} {
+      allow read, write: if request.auth != null;
+    }
+  }
+}

@@ -187,7 +187,7 @@
               <span class="material-symbols-outlined text-[20px]">school</span>
               <span>Admissions Desk</span>
             </div>
-            <span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-white text-primary">14 New</span>
+            <span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-white text-primary" id="sidebarAdmissionsBadge">0 Active</span>
           </a>
           <a class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-low font-label-md text-[13px] transition" href="../index.html#admissions" target="_blank">
             <span class="material-symbols-outlined text-[20px] text-outline">visibility</span>
@@ -242,7 +242,7 @@
         <div class="bg-white p-4 rounded-xl border border-outline-variant/30 shadow-sm flex items-center justify-between">
           <div class="flex flex-col">
             <span class="font-label-sm text-[11px] uppercase tracking-wider text-outline font-semibold">Total Applicants</span>
-            <span class="font-headline-sm text-2xl text-primary font-bold mt-0.5" id="statTotalApplicants">48 Candidates</span>
+            <span class="font-headline-sm text-2xl text-primary font-bold mt-0.5" id="statTotalApplicants">0 Candidates</span>
           </div>
           <div class="w-11 h-11 rounded-lg bg-primary-fixed flex items-center justify-center text-primary">
             <span class="material-symbols-outlined text-[24px]">group</span>
@@ -251,7 +251,7 @@
         <div class="bg-white p-4 rounded-xl border border-outline-variant/30 shadow-sm flex items-center justify-between">
           <div class="flex flex-col">
             <span class="font-label-sm text-[11px] uppercase tracking-wider text-outline font-semibold">Pending Review</span>
-            <span class="font-headline-sm text-2xl text-amber-600 font-bold mt-0.5" id="statPendingReview">14 Inquiries</span>
+            <span class="font-headline-sm text-2xl text-amber-600 font-bold mt-0.5" id="statPendingReview">0 Inquiries</span>
           </div>
           <div class="w-11 h-11 rounded-lg bg-amber-50 flex items-center justify-center text-amber-600">
             <span class="material-symbols-outlined text-[24px]">pending_actions</span>
@@ -260,7 +260,7 @@
         <div class="bg-white p-4 rounded-xl border border-outline-variant/30 shadow-sm flex items-center justify-between">
           <div class="flex flex-col">
             <span class="font-label-sm text-[11px] uppercase tracking-wider text-outline font-semibold">Interview Scheduled</span>
-            <span class="font-headline-sm text-2xl text-blue-600 font-bold mt-0.5">22 Huffaz</span>
+            <span class="font-headline-sm text-2xl text-blue-600 font-bold mt-0.5" id="statInterviewScheduled">0 Huffaz</span>
           </div>
           <div class="w-11 h-11 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600">
             <span class="material-symbols-outlined text-[24px]">event_available</span>
@@ -269,7 +269,7 @@
         <div class="bg-white p-4 rounded-xl border border-outline-variant/30 shadow-sm flex items-center justify-between">
           <div class="flex flex-col">
             <span class="font-label-sm text-[11px] uppercase tracking-wider text-outline font-semibold">Seats Confirmed</span>
-            <span class="font-headline-sm text-2xl text-emerald-700 font-bold mt-0.5">12 Enrolled</span>
+            <span class="font-headline-sm text-2xl text-emerald-700 font-bold mt-0.5" id="statConfirmedApplicants">0 Enrolled</span>
           </div>
           <div class="w-11 h-11 rounded-lg bg-emerald-50 flex items-center justify-center text-emerald-600">
             <span class="material-symbols-outlined text-[24px]">verified</span>
@@ -316,147 +316,17 @@
               </tr>
             </thead>
             <tbody class="divide-y divide-slate-100 text-slate-800" id="applicantListBody">
-              <!-- Candidate 1 -->
-              <tr class="applicant-row hover:bg-slate-50 transition" data-program="Islamic Sciences & Hadith" data-status="New Enquiry">
-                <td class="py-3.5 px-4">
-                  <div class="flex items-center gap-2.5">
-                    <div class="w-8 h-8 rounded-full bg-blue-100 text-primary flex items-center justify-center font-bold text-xs">
-                      AH
-                    </div>
-                    <div>
-                      <p class="font-bold text-slate-900 applicant-name">Ahmad Hashim</p>
-                      <p class="text-[11px] text-slate-500">Guardian: Mohammed Hashim</p>
-                    </div>
-                  </div>
-                </td>
-                <td class="py-3.5 px-4">
-                  <p class="font-medium applicant-phone">+91 94471 28900</p>
-                  <p class="text-[11px] text-slate-500">Manjeri, Malappuram</p>
-                </td>
-                <td class="py-3.5 px-4">
-                  <span class="px-2 py-0.5 rounded-full bg-blue-50 text-blue-800 font-label-sm text-[11px] font-semibold">Islamic Sciences & Hadith</span>
-                </td>
-                <td class="py-3.5 px-4 text-slate-500 text-xs">Today, 09:40 AM</td>
-                <td class="py-3.5 px-4">
-                  <span class="status-badge px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 font-label-sm text-[11px] font-bold">New Enquiry</span>
-                </td>
-                <td class="py-3.5 px-4 text-right">
-                  <div class="flex items-center justify-end gap-1.5">
-                    <button onclick="replyWhatsApp('Ahmad Hashim', '919447128900', 'Islamic Sciences & Hadith')" class="px-2.5 py-1 rounded-md bg-emerald-600 hover:bg-emerald-700 text-white font-label-sm text-[11px] font-bold flex items-center gap-1 transition" title="Message on WhatsApp">
-                      <span class="material-symbols-outlined text-[14px]">chat</span> WhatsApp
-                    </button>
-                    <button onclick="scheduleInterview(this, 'Ahmad Hashim')" class="p-1 rounded text-slate-400 hover:text-primary transition" title="Schedule Interview">
-                      <span class="material-symbols-outlined text-[18px]">calendar_add_on</span>
-                    </button>
-                  </div>
+              <tr id="admissionsLoadingRow">
+                <td colspan="6" class="py-12 text-center text-slate-500">
+                  <span class="material-symbols-outlined text-[24px] animate-spin text-primary align-middle">progress_activity</span>
+                  <span class="ml-2 font-medium">Loading live admission records from database...</span>
                 </td>
               </tr>
-
-              <!-- Candidate 2 -->
-              <tr class="applicant-row hover:bg-slate-50 transition" data-program="Sharia & University Dual Degree" data-status="Interview Scheduled">
-                <td class="py-3.5 px-4">
-                  <div class="flex items-center gap-2.5">
-                    <div class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold text-xs">
-                      MF
-                    </div>
-                    <div>
-                      <p class="font-bold text-slate-900 applicant-name">Muhammed Fayis</p>
-                      <p class="text-[11px] text-slate-500">Guardian: Abdul Kareem</p>
-                    </div>
-                  </div>
-                </td>
-                <td class="py-3.5 px-4">
-                  <p class="font-medium applicant-phone">+91 98462 77114</p>
-                  <p class="text-[11px] text-slate-500">Kondotty, Malappuram</p>
-                </td>
-                <td class="py-3.5 px-4">
-                  <span class="px-2 py-0.5 rounded-full bg-purple-50 text-purple-800 font-label-sm text-[11px] font-semibold">Sharia &amp; University Dual Degree</span>
-                </td>
-                <td class="py-3.5 px-4 text-slate-500 text-xs">Yesterday, 04:15 PM</td>
-                <td class="py-3.5 px-4">
-                  <span class="status-badge px-2 py-0.5 rounded-full bg-blue-100 text-blue-800 font-label-sm text-[11px] font-bold">Interview Scheduled</span>
-                </td>
-                <td class="py-3.5 px-4 text-right">
-                  <div class="flex items-center justify-end gap-1.5">
-                    <button onclick="replyWhatsApp('Muhammed Fayis', '919846277114', 'Sharia & University Dual Degree')" class="px-2.5 py-1 rounded-md bg-emerald-600 hover:bg-emerald-700 text-white font-label-sm text-[11px] font-bold flex items-center gap-1 transition" title="Message on WhatsApp">
-                      <span class="material-symbols-outlined text-[14px]">chat</span> WhatsApp
-                    </button>
-                    <button onclick="markConfirmed(this, 'Muhammed Fayis')" class="p-1 rounded text-slate-400 hover:text-emerald-600 transition" title="Confirm Admission">
-                      <span class="material-symbols-outlined text-[18px]">how_to_reg</span>
-                    </button>
-                  </div>
-                </td>
-              </tr>
-
-              <!-- Candidate 3 -->
-              <tr class="applicant-row hover:bg-slate-50 transition" data-program="Tahfeez Advanced Halaqa" data-status="Confirmed">
-                <td class="py-3.5 px-4">
-                  <div class="flex items-center gap-2.5">
-                    <div class="w-8 h-8 rounded-full bg-amber-100 text-amber-800 flex items-center justify-center font-bold text-xs">
-                      SB
-                    </div>
-                    <div>
-                      <p class="font-bold text-slate-900 applicant-name">Sayyid Bilal Al Bukhari</p>
-                      <p class="text-[11px] text-slate-500">Guardian: Sayyid Alavi</p>
-                    </div>
-                  </div>
-                </td>
-                <td class="py-3.5 px-4">
-                  <p class="font-medium applicant-phone">+91 97455 33021</p>
-                  <p class="text-[11px] text-slate-500">Kozhikode City</p>
-                </td>
-                <td class="py-3.5 px-4">
-                  <span class="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-800 font-label-sm text-[11px] font-semibold">Tahfeez Advanced Halaqa</span>
-                </td>
-                <td class="py-3.5 px-4 text-slate-500 text-xs">Oct 01, 2026</td>
-                <td class="py-3.5 px-4">
-                  <span class="status-badge px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-label-sm text-[11px] font-bold">Confirmed</span>
-                </td>
-                <td class="py-3.5 px-4 text-right">
-                  <div class="flex items-center justify-end gap-1.5">
-                    <button onclick="replyWhatsApp('Sayyid Bilal', '919745533021', 'Tahfeez Advanced Halaqa')" class="px-2.5 py-1 rounded-md bg-emerald-600 hover:bg-emerald-700 text-white font-label-sm text-[11px] font-bold flex items-center gap-1 transition" title="Message on WhatsApp">
-                      <span class="material-symbols-outlined text-[14px]">chat</span> WhatsApp
-                    </button>
-                    <span class="p-1 text-emerald-600">
-                      <span class="material-symbols-outlined text-[18px]">verified</span>
-                    </span>
-                  </div>
-                </td>
-              </tr>
-
-              <!-- Candidate 4 -->
-              <tr class="applicant-row hover:bg-slate-50 transition" data-program="Islamic Sciences & Hadith" data-status="New Enquiry">
-                <td class="py-3.5 px-4">
-                  <div class="flex items-center gap-2.5">
-                    <div class="w-8 h-8 rounded-full bg-indigo-100 text-indigo-800 flex items-center justify-center font-bold text-xs">
-                      UR
-                    </div>
-                    <div>
-                      <p class="font-bold text-slate-900 applicant-name">Umar Rashid</p>
-                      <p class="text-[11px] text-slate-500">Guardian: Rashid Ali</p>
-                    </div>
-                  </div>
-                </td>
-                <td class="py-3.5 px-4">
-                  <p class="font-medium applicant-phone">+91 95261 44520</p>
-                  <p class="text-[11px] text-slate-500">Vavoor, Malappuram</p>
-                </td>
-                <td class="py-3.5 px-4">
-                  <span class="px-2 py-0.5 rounded-full bg-blue-50 text-blue-800 font-label-sm text-[11px] font-semibold">Islamic Sciences & Hadith</span>
-                </td>
-                <td class="py-3.5 px-4 text-slate-500 text-xs">Sep 30, 2026</td>
-                <td class="py-3.5 px-4">
-                  <span class="status-badge px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 font-label-sm text-[11px] font-bold">New Enquiry</span>
-                </td>
-                <td class="py-3.5 px-4 text-right">
-                  <div class="flex items-center justify-end gap-1.5">
-                    <button onclick="replyWhatsApp('Umar Rashid', '919526144520', 'Islamic Sciences & Hadith')" class="px-2.5 py-1 rounded-md bg-emerald-600 hover:bg-emerald-700 text-white font-label-sm text-[11px] font-bold flex items-center gap-1 transition" title="Message on WhatsApp">
-                      <span class="material-symbols-outlined text-[14px]">chat</span> WhatsApp
-                    </button>
-                    <button onclick="scheduleInterview(this, 'Umar Rashid')" class="p-1 rounded text-slate-400 hover:text-primary transition" title="Schedule Interview">
-                      <span class="material-symbols-outlined text-[18px]">calendar_add_on</span>
-                    </button>
-                  </div>
+              <tr id="admissionsEmptyRow" class="hidden">
+                <td colspan="6" class="py-12 text-center text-slate-400">
+                  <span class="material-symbols-outlined text-[36px] block mx-auto text-slate-300 mb-2">inbox</span>
+                  <p class="font-medium text-slate-600">No admission enquiries found</p>
+                  <p class="text-[11px] text-slate-400 mt-0.5">Enquiries submitted via the public admission form will appear here automatically.</p>
                 </td>
               </tr>
             </tbody>
@@ -475,7 +345,7 @@
           <span class="material-symbols-outlined">close</span>
         </button>
       </div>
-      <form onsubmit="saveNewApplicant(event)" class="flex flex-col gap-3">
+      <form id="newApplicantForm" onsubmit="saveNewApplicant(event)" class="flex flex-col gap-3">
         <div>
           <label class="text-xs font-semibold text-slate-600">Applicant Full Name (Hafiz)</label>
           <input type="text" id="newAppName" required class="w-full mt-1 px-3 py-2 text-sm border rounded-lg focus:outline-none focus:border-primary">
@@ -511,52 +381,76 @@
     </div>
   </div>
 
+  <!-- DELETE APPLICANT MODAL -->
+  <div id="deleteApplicantModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md p-5 sm:p-6 flex flex-col gap-4 text-xs">
+      <div class="flex items-center gap-3 text-red-600">
+        <div class="w-10 h-10 rounded-xl bg-red-50 flex items-center justify-center shrink-0">
+          <span class="material-symbols-outlined text-[24px]">delete_forever</span>
+        </div>
+        <div>
+          <h3 class="font-bold text-slate-900 text-sm sm:text-base">Delete Admission Enquiry</h3>
+          <p class="text-[11px] text-slate-500">Record will be soft-deleted from active admissions</p>
+        </div>
+      </div>
+      <p class="text-xs sm:text-sm text-slate-700 leading-relaxed">
+        Are you sure you want to delete the enquiry for <strong id="deleteApplicantName" class="text-slate-900 font-bold">Applicant</strong>?
+      </p>
+      <div class="flex items-center justify-end gap-2.5 pt-2 border-t">
+        <button type="button" onclick="closeDeleteModal()" class="px-3.5 py-2 rounded-lg text-slate-600 hover:bg-slate-100 font-semibold transition cursor-pointer">
+          Cancel
+        </button>
+        <button type="button" id="btnConfirmDeleteApplicant" onclick="confirmDeleteApplicant()" class="px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white font-bold transition flex items-center gap-1.5 cursor-pointer shadow-sm">
+          <span class="material-symbols-outlined text-[16px]">delete</span>
+          <span>Confirm Delete</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
   <script>
-    function filterApplicants() {
-      const q = document.getElementById('applicantSearch').value.toLowerCase();
-      const prog = document.getElementById('programFilter').value;
-      const status = document.getElementById('applicantStatusFilter').value;
+    let activeApplicants = [];
+    let pendingDeleteId = null;
+    let pendingDeleteName = '';
 
-      document.querySelectorAll('.applicant-row').forEach(row => {
-        const name = row.querySelector('.applicant-name').textContent.toLowerCase();
-        const phone = row.querySelector('.applicant-phone').textContent.toLowerCase();
-        const rowProg = row.getAttribute('data-program') || '';
-        const rowStatus = row.getAttribute('data-status') || '';
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
 
-        const matchesQ = name.includes(q) || phone.includes(q);
-        const matchesProg = (prog === 'All') || (rowProg.includes(prog));
-        const matchesStatus = (status === 'All') || (rowStatus === status);
-
-        if (matchesQ && matchesProg && matchesStatus) {
-          row.classList.remove('hidden');
+    function formatEnquiryDate(ts) {
+      if (!ts) return 'Recent';
+      try {
+        let d = null;
+        if (typeof ts.toDate === 'function') {
+          d = ts.toDate();
+        } else if (ts._seconds) {
+          d = new Date(ts._seconds * 1000);
         } else {
-          row.classList.add('hidden');
+          d = new Date(ts);
         }
-      });
+        if (isNaN(d.getTime())) return 'Recent';
+        return d.toLocaleDateString('en-IN', {
+          day: 'numeric',
+          month: 'short',
+          year: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        });
+      } catch (e) {
+        return 'Recent';
+      }
     }
 
     function replyWhatsApp(name, phone, track) {
-      const cleanPhone = phone.replace(/[^0-9]/g, '');
-      const msg = `Assalamu Alaikum wa Rahmatullah ${name}.%0A%0AWe have received your admission enquiry for the *${encodeURIComponent(track)}* program at *Ma'din Suffa Campus, Vavoor (Affiliated with Jamiathul Hind Al Islamiyya - INS7572)*.%0A%0AWe are pleased to invite you for the academic aptitude assessment and Tajweed Halaqa review. Please let us know your convenient time.%0A%0AAdmissions Desk%0AMa'din Suffa Campus Vavoor`;
+      const cleanPhone = (phone || '').replace(/[^0-9]/g, '');
+      const msg = `Assalamu Alaikum wa Rahmatullah ${name}.%0A%0AWe have received your admission enquiry for the *${encodeURIComponent(track || 'Specialized Academic Program')}* at *Ma'din Suffa Campus, Vavoor (Affiliated with Jamiathul Hind Al Islamiyya - INS7572)*.%0A%0AWe are pleased to invite you for the academic aptitude assessment and Tajweed Halaqa review. Please let us know your convenient time.%0A%0AAdmissions Desk%0AMa'din Suffa Campus Vavoor`;
       window.open(`https://wa.me/${cleanPhone}?text=${msg}`, '_blank');
-    }
-
-    function scheduleInterview(btn, name) {
-      const row = btn.closest('.applicant-row');
-      const badge = row.querySelector('.status-badge');
-      badge.textContent = 'Interview Scheduled';
-      badge.className = 'status-badge px-2 py-0.5 rounded-full bg-blue-100 text-blue-800 font-label-sm text-[11px] font-bold';
-      row.setAttribute('data-status', 'Interview Scheduled');
-      alert(`Entrance interview slot assigned for ${name}. Guardian notification sent.`);
-    }
-
-    function markConfirmed(btn, name) {
-      const row = btn.closest('.applicant-row');
-      const badge = row.querySelector('.status-badge');
-      badge.textContent = 'Confirmed';
-      badge.className = 'status-badge px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-label-sm text-[11px] font-bold';
-      row.setAttribute('data-status', 'Confirmed');
-      alert(`Admission confirmed for ${name}. Registry enrollment generated.`);
     }
 
     function openAddModal() {
@@ -569,75 +463,213 @@
       document.getElementById('addApplicantModal').classList.remove('flex');
     }
 
-    // Initialize real-time sync with Firebase Firestore
-    document.addEventListener('DOMContentLoaded', () => {
-      if (window.SuffaFirebase && typeof window.SuffaFirebase.onEnquiriesUpdate === 'function') {
-        window.SuffaFirebase.onEnquiriesUpdate(enquiries => {
-          if (!enquiries || enquiries.length === 0) return;
-          const tbody = document.getElementById('applicantListBody');
-          // Add or update dynamic enquiries
-          enquiries.forEach(item => {
-            const existing = document.querySelector(`[data-enquiry-id="${item.id || item.phone}"]`);
-            if (!existing && item.name && item.phone) {
-              const tr = document.createElement('tr');
-              tr.className = 'applicant-row hover:bg-slate-50 transition border-l-4 border-emerald-500';
-              tr.dataset.program = item.track || 'Islamic Sciences & Hadith';
-              tr.dataset.status = item.status || 'New Enquiry';
-              tr.dataset.enquiryId = item.id || item.phone;
-              tr.innerHTML = `
-                <td class="py-3.5 px-4">
-                  <div class="flex items-center gap-2.5">
-                    <div class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold text-xs">
-                      ${item.name.substring(0,2).toUpperCase()}
-                    </div>
-                    <div>
-                      <p class="font-bold text-slate-900 applicant-name">${item.name}</p>
-                      <p class="text-[11px] text-emerald-700 font-semibold flex items-center gap-1">
-                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse"></span> Firebase Live
-                      </p>
-                    </div>
-                  </div>
-                </td>
-                <td class="py-3.5 px-4">
-                  <p class="font-medium applicant-phone">${item.phone}</p>
-                  <p class="text-[11px] text-slate-500">${item.message ? item.message.substring(0, 30) + '...' : 'Web Form Submission'}</p>
-                </td>
-                <td class="py-3.5 px-4">
-                  <span class="px-2 py-0.5 rounded-full bg-blue-50 text-blue-800 font-label-sm text-[11px] font-semibold">${item.track || 'Islamic Sciences'}</span>
-                </td>
-                <td class="py-3.5 px-4 text-slate-500 text-xs">${item.timestampStr || 'Recent'}</td>
-                <td class="py-3.5 px-4">
-                  <span class="status-badge px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 font-label-sm text-[11px] font-bold">${item.status || 'New Enquiry'}</span>
-                </td>
-                <td class="py-3.5 px-4 text-right">
-                  <div class="flex items-center justify-end gap-1.5">
-                    <button onclick="replyWhatsApp('${item.name}', '${item.phone}', '${item.track || ''}')" class="px-2.5 py-1 rounded-md bg-emerald-600 hover:bg-emerald-700 text-white font-label-sm text-[11px] font-bold flex items-center gap-1 transition" title="Message on WhatsApp">
-                      <span class="material-symbols-outlined text-[14px]">chat</span> WhatsApp
-                    </button>
-                    <button onclick="scheduleInterview(this, '${item.name}')" class="p-1 rounded text-slate-400 hover:text-primary transition" title="Schedule Interview">
-                      <span class="material-symbols-outlined text-[18px]">calendar_add_on</span>
-                    </button>
-                  </div>
-                </td>
-              `;
-              tbody.prepend(tr);
-            }
-          });
-          updateApplicantStats();
-        });
+    function openDeleteModal(id, name) {
+      pendingDeleteId = id;
+      pendingDeleteName = name;
+      const nameEl = document.getElementById('deleteApplicantName');
+      if (nameEl) nameEl.textContent = name;
+      const modal = document.getElementById('deleteApplicantModal');
+      if (modal) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
       }
-    });
-
-    function updateApplicantStats() {
-      const allRows = document.querySelectorAll('.applicant-row');
-      const pending = document.querySelectorAll('.applicant-row[data-status="New Enquiry"]');
-      const totalEl = document.getElementById('statTotalApplicants');
-      const pendEl = document.getElementById('statPendingReview');
-      if (totalEl) totalEl.textContent = `${allRows.length} Candidates`;
-      if (pendEl) pendEl.textContent = `${pending.length} Inquiries`;
     }
 
-    function saveNewApplicant(e) {
+    function closeDeleteModal() {
+      pendingDeleteId = null;
+      pendingDeleteName = '';
+      const modal = document.getElementById('deleteApplicantModal');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+    }
+
+    async function confirmDeleteApplicant() {
+      if (!pendingDeleteId) return;
+      const id = pendingDeleteId;
+      const name = pendingDeleteName || 'Applicant';
+      const btn = document.getElementById('btnConfirmDeleteApplicant');
+
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<span class="material-symbols-outlined text-[16px] animate-spin">progress_activity</span> Deleting...';
+      }
+
+      try {
+        if (window.SuffaFirebase && typeof window.SuffaFirebase.deleteEnquiry === 'function') {
+          await window.SuffaFirebase.deleteEnquiry(id);
+        } else {
+          const resp = await fetch(`/api/admissions/enquiries/${encodeURIComponent(id)}`, {
+            method: 'DELETE'
+          });
+          const data = await resp.json();
+          if (!data || !data.success) throw new Error(data && data.message ? data.message : 'Delete failed');
+        }
+
+        activeApplicants = activeApplicants.filter(e => e.id !== id);
+        closeDeleteModal();
+        renderApplicantList();
+        updateApplicantStats();
+      } catch (err) {
+        alert(`Error deleting enquiry: ${err.message || 'Network error'}`);
+      } finally {
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = '<span class="material-symbols-outlined text-[16px]">delete</span><span>Confirm Delete</span>';
+        }
+      }
+    }
+
+    async function updateApplicantStatus(id, newStatus) {
+      if (!id) return;
+      try {
+        if (window.SuffaFirebase && typeof window.SuffaFirebase.updateEnquiryStatus === 'function') {
+          await window.SuffaFirebase.updateEnquiryStatus(id, newStatus);
+        } else {
+          await fetch(`/api/admissions/enquiries/${encodeURIComponent(id)}/status`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ status: newStatus })
+          });
+        }
+        const item = activeApplicants.find(a => a.id === id);
+        if (item) item.status = newStatus;
+        renderApplicantList();
+        updateApplicantStats();
+      } catch (err) {
+        alert(`Error updating status: ${err.message || 'Network error'}`);
+      }
+    }
+
+    function renderApplicantList() {
+      const tbody = document.getElementById('applicantListBody');
+      const loadingRow = document.getElementById('admissionsLoadingRow');
+      const emptyRow = document.getElementById('admissionsEmptyRow');
+      if (!tbody) return;
+
+      if (loadingRow) loadingRow.classList.add('hidden');
+
+      const q = (document.getElementById('applicantSearch')?.value || '').trim().toLowerCase();
+      const prog = document.getElementById('programFilter')?.value || 'All';
+      const status = document.getElementById('applicantStatusFilter')?.value || 'All';
+
+      const filtered = activeApplicants.filter(item => {
+        const name = (item.name || '').toLowerCase();
+        const phone = (item.phone || '').toLowerCase();
+        const msg = (item.message || '').toLowerCase();
+        const track = (item.track || '').toLowerCase();
+        const rowStatus = item.status || 'New Enquiry';
+
+        const matchQ = !q || name.includes(q) || phone.includes(q) || msg.includes(q) || track.includes(q);
+        const matchProg = (prog === 'All') || track.includes(prog.toLowerCase());
+        const matchStatus = (status === 'All') || (rowStatus === status);
+
+        return matchQ && matchProg && matchStatus;
+      });
+
+      Array.from(tbody.children).forEach(child => {
+        if (child.id !== 'admissionsLoadingRow' && child.id !== 'admissionsEmptyRow') {
+          tbody.removeChild(child);
+        }
+      });
+
+      if (filtered.length === 0) {
+        if (emptyRow) emptyRow.classList.remove('hidden');
+        return;
+      }
+
+      if (emptyRow) emptyRow.classList.add('hidden');
+
+      filtered.forEach(item => {
+        const tr = document.createElement('tr');
+        tr.className = 'applicant-row hover:bg-slate-50 transition';
+        tr.setAttribute('data-enquiry-id', item.id || '');
+
+        const initials = (item.name || 'AP').substring(0, 2).toUpperCase();
+        const dateStr = item.timestampStr || formatEnquiryDate(item.timestamp || item.createdAt);
+        const cleanPhone = (item.phone || '').replace(/[^0-9]/g, '');
+        const currentStatus = item.status || 'New Enquiry';
+
+        const statusColors = {
+          'New Enquiry': 'bg-amber-100 text-amber-800 border-amber-300',
+          'Contacted': 'bg-sky-100 text-sky-800 border-sky-300',
+          'Interview Scheduled': 'bg-blue-100 text-blue-800 border-blue-300',
+          'Confirmed': 'bg-emerald-100 text-emerald-800 border-emerald-300',
+          'Rejected': 'bg-rose-100 text-rose-800 border-rose-300'
+        };
+        const statusClass = statusColors[currentStatus] || 'bg-slate-100 text-slate-800 border-slate-300';
+
+        tr.innerHTML = `
+          <td class="py-3.5 px-4">
+            <div class="flex items-center gap-2.5">
+              <div class="w-8 h-8 rounded-full bg-blue-100 text-primary flex items-center justify-center font-bold text-xs shrink-0">
+                ${escapeHtml(initials)}
+              </div>
+              <div class="min-w-0">
+                <p class="font-bold text-slate-900 applicant-name truncate">${escapeHtml(item.name || 'Anonymous')}</p>
+                <p class="text-[11px] text-slate-500 truncate max-w-xs">${escapeHtml(item.message || 'Direct Web Form')}</p>
+              </div>
+            </div>
+          </td>
+          <td class="py-3.5 px-4">
+            <p class="font-medium applicant-phone font-mono">${escapeHtml(item.phone || '—')}</p>
+            <p class="text-[11px] text-slate-500">${escapeHtml(item.channel || 'Admissions Desk')}</p>
+          </td>
+          <td class="py-3.5 px-4">
+            <span class="px-2 py-0.5 rounded-full bg-blue-50 text-blue-800 font-label-sm text-[11px] font-semibold inline-block">
+              ${escapeHtml(item.track || 'General Consultation')}
+            </span>
+          </td>
+          <td class="py-3.5 px-4 text-slate-500 text-xs whitespace-nowrap">${escapeHtml(dateStr)}</td>
+          <td class="py-3.5 px-4">
+            <select onchange="updateApplicantStatus('${escapeHtml(item.id)}', this.value)" class="text-xs font-bold px-2 py-1 rounded-lg border focus:outline-none transition cursor-pointer ${statusClass}">
+              <option value="New Enquiry" ${currentStatus === 'New Enquiry' ? 'selected' : ''}>New Enquiry</option>
+              <option value="Contacted" ${currentStatus === 'Contacted' ? 'selected' : ''}>Contacted</option>
+              <option value="Interview Scheduled" ${currentStatus === 'Interview Scheduled' ? 'selected' : ''}>Interview Scheduled</option>
+              <option value="Confirmed" ${currentStatus === 'Confirmed' ? 'selected' : ''}>Confirmed</option>
+              <option value="Rejected" ${currentStatus === 'Rejected' ? 'selected' : ''}>Rejected</option>
+            </select>
+          </td>
+          <td class="py-3.5 px-4 text-right whitespace-nowrap">
+            <div class="flex items-center justify-end gap-1.5">
+              <button onclick="replyWhatsApp('${escapeHtml(item.name || '')}', '${escapeHtml(cleanPhone)}', '${escapeHtml(item.track || '')}')" class="px-2.5 py-1 rounded-md bg-emerald-600 hover:bg-emerald-700 text-white font-label-sm text-[11px] font-bold flex items-center gap-1 transition" title="Message on WhatsApp">
+                <span class="material-symbols-outlined text-[14px]">chat</span> WhatsApp
+              </button>
+              <button onclick="openDeleteModal('${escapeHtml(item.id)}', '${escapeHtml(item.name || 'Applicant')}')" class="p-1.5 rounded text-slate-400 hover:text-red-600 hover:bg-red-50 transition" title="Delete Enquiry">
+                <span class="material-symbols-outlined text-[18px]">delete</span>
+              </button>
+            </div>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function filterApplicants() {
+      renderApplicantList();
+    }
+
+    function updateApplicantStats() {
+      const totalCount = activeApplicants.length;
+      const pendingCount = activeApplicants.filter(e => (e.status || 'New Enquiry') === 'New Enquiry').length;
+      const interviewCount = activeApplicants.filter(e => e.status === 'Interview Scheduled').length;
+      const confirmedCount = activeApplicants.filter(e => e.status === 'Confirmed').length;
+
+      const totalEl = document.getElementById('statTotalApplicants');
+      const pendEl = document.getElementById('statPendingReview');
+      const interviewEl = document.getElementById('statInterviewScheduled');
+      const confirmedEl = document.getElementById('statConfirmedApplicants');
+      const sidebarBadge = document.getElementById('sidebarAdmissionsBadge');
+
+      if (totalEl) totalEl.textContent = `${totalCount} Candidates`;
+      if (pendEl) pendEl.textContent = `${pendingCount} Inquiries`;
+      if (interviewEl) interviewEl.textContent = `${interviewCount} Huffaz`;
+      if (confirmedEl) confirmedEl.textContent = `${confirmedCount} Enrolled`;
+      if (sidebarBadge) sidebarBadge.textContent = `${totalCount} Active`;
+    }
+
+    async function saveNewApplicant(e) {
       e.preventDefault();
       const name = document.getElementById('newAppName').value.trim();
       const phone = document.getElementById('newAppPhone').value.trim();
@@ -645,77 +677,77 @@
       const track = document.getElementById('newAppTrack').value;
       const place = document.getElementById('newAppPlace').value.trim() || 'Malappuram';
 
-      // Save to Firebase Firestore
-      if (window.SuffaFirebase && typeof window.SuffaFirebase.saveEnquiry === 'function') {
-        window.SuffaFirebase.saveEnquiry({
-          name: name,
-          phone: phone,
-          track: track,
-          message: `Guardian: ${guardian}, Place: ${place}`,
-          channel: 'Walk-in Admission Desk'
-        });
+      if (!name || !phone) {
+        alert('Please enter student name and contact phone.');
+        return;
       }
 
-      const tbody = document.getElementById('applicantListBody');
-      const tr = document.createElement('tr');
-      tr.className = 'applicant-row hover:bg-slate-50 transition';
-      tr.dataset.program = track;
-      tr.dataset.status = 'New Enquiry';
-      tr.innerHTML = `
-        <td class="py-3.5 px-4">
-          <div class="flex items-center gap-2.5">
-            <div class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold text-xs">
-              ${name.substring(0,2).toUpperCase()}
-            </div>
-            <div>
-              <p class="font-bold text-slate-900 applicant-name">${name}</p>
-              <p class="text-[11px] text-slate-500">Guardian: ${guardian}</p>
-            </div>
-          </div>
-        </td>
-        <td class="py-3.5 px-4">
-          <p class="font-medium applicant-phone">${phone}</p>
-          <p class="text-[11px] text-slate-500">${place}</p>
-        </td>
-        <td class="py-3.5 px-4">
-          <span class="px-2 py-0.5 rounded-full bg-blue-50 text-blue-800 font-label-sm text-[11px] font-semibold">${track}</span>
-        </td>
-        <td class="py-3.5 px-4 text-slate-500 text-xs">Just Now</td>
-        <td class="py-3.5 px-4">
-          <span class="status-badge px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 font-label-sm text-[11px] font-bold">New Enquiry</span>
-        </td>
-        <td class="py-3.5 px-4 text-right">
-          <div class="flex items-center justify-end gap-1.5">
-            <button onclick="replyWhatsApp('${name}', '${phone}', '${track}')" class="px-2.5 py-1 rounded-md bg-emerald-600 hover:bg-emerald-700 text-white font-label-sm text-[11px] font-bold flex items-center gap-1 transition" title="Message on WhatsApp">
-              <span class="material-symbols-outlined text-[14px]">chat</span> WhatsApp
-            </button>
-            <button onclick="scheduleInterview(this, '${name}')" class="p-1 rounded text-slate-400 hover:text-primary transition" title="Schedule Interview">
-              <span class="material-symbols-outlined text-[18px]">calendar_add_on</span>
-            </button>
-          </div>
-        </td>
-      `;
-      tbody.prepend(tr);
-      closeAddModal();
-      alert(`Applicant record for ${name} saved successfully.`);
+      try {
+        if (window.SuffaFirebase && typeof window.SuffaFirebase.saveEnquiry === 'function') {
+          await window.SuffaFirebase.saveEnquiry({
+            name: name,
+            phone: phone,
+            track: track,
+            message: `Guardian: ${guardian}, Place: ${place}`,
+            channel: 'Walk-in Admission Desk'
+          });
+        } else {
+          await fetch('/api/admissions/enquiry', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              name,
+              phone,
+              track,
+              message: `Guardian: ${guardian}, Place: ${place}`,
+              channel: 'Walk-in Admission Desk'
+            })
+          });
+        }
+
+        const form = document.getElementById('newApplicantForm');
+        if (form) form.reset();
+        closeAddModal();
+      } catch (err) {
+        alert(`Error saving applicant: ${err.message || 'Network error'}`);
+      }
     }
 
     function exportApplicantsCSV() {
-      let csv = "Applicant Name,Phone,Track,Status,Date\n";
-      document.querySelectorAll('.applicant-row').forEach(r => {
-        const name = r.querySelector('.applicant-name').textContent.trim();
-        const phone = r.querySelector('.applicant-phone').textContent.trim();
-        const track = r.getAttribute('data-program') || '';
-        const status = r.getAttribute('data-status') || '';
-        csv += `"${name}","${phone}","${track}","${status}","2026-10-02"\n`;
+      let csv = "ID,Applicant Name,Phone,Track,Status,Date,Notes\n";
+      activeApplicants.forEach(item => {
+        const dateStr = item.timestampStr || formatEnquiryDate(item.timestamp || item.createdAt);
+        csv += `"${item.id || ''}","${(item.name || '').replace(/"/g, '""')}","${item.phone || ''}","${(item.track || '').replace(/"/g, '""')}","${item.status || 'New Enquiry'}","${dateStr}","${(item.message || '').replace(/"/g, '""')}"\n`;
       });
-      const blob = new Blob([csv], { type: 'text/csv' });
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
       a.download = `madin_suffa_applicants_${Date.now()}.csv`;
       a.click();
     }
+
+    // Initialize real-time sync with Firebase Firestore / API fallback
+    document.addEventListener('DOMContentLoaded', () => {
+      if (window.SuffaFirebase && typeof window.SuffaFirebase.subscribeEnquiries === 'function') {
+        window.SuffaFirebase.subscribeEnquiries(enquiries => {
+          activeApplicants = Array.isArray(enquiries) ? enquiries : [];
+          renderApplicantList();
+          updateApplicantStats();
+        });
+      } else {
+        fetch('/api/admissions/enquiries')
+          .then(res => res.json())
+          .then(data => {
+            if (data && data.success && Array.isArray(data.enquiries)) {
+              activeApplicants = data.enquiries;
+              renderApplicantList();
+              updateApplicantStats();
+            }
+          })
+          .catch(err => console.warn('Fetch fallback error:', err));
+      }
+    });
   </script>
 </body>
 </html>
